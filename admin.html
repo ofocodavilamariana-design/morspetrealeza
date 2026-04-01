@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Admin | Mors Pet Realeza</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+<meta name="robots" content="noindex,nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --orange: #F26522;
+    --orange-dark: #d4521a;
+    --orange-light: #ff8c4a;
+    --orange-pale: #fff4ee;
+    --orange-mid: #fde8d8;
+    --beige: #f9f4ef;
+    --beige-dark: #ede4d8;
+    --white: #ffffff;
+    --dark: #1a1412;
+    --dark2: #2d2019;
+    --gray: #6b6560;
+    --gray-light: #c9c4bf;
+    --gray-pale: #f5f2ef;
+    --green: #22c55e;
+    --green-pale: #f0fdf4;
+    --red: #ef4444;
+    --red-pale: #fef2f2;
+    --yellow: #f59e0b;
+    --yellow-pale: #fffbeb;
+    --sidebar-w: 260px;
+    --topbar-h: 64px;
+    --shadow: 0 2px 16px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 24px rgba(0,0,0,0.1);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--beige); color: var(--dark); min-height: 100vh; display: flex; }
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--beige); }
+  ::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 3px; }
+
+  /* ===== SIDEBAR ===== */
+  .sidebar {
+    width: var(--sidebar-w);
+    min-height: 100vh;
+    background: var(--dark);
+    position: fixed; left: 0; top: 0; bottom: 0;
+    z-index: 100;
+    display: flex; flex-direction: column;
+    transition: var(--transition);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.2);
+  }
+  .sidebar-logo {
+    padding: 24px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .sidebar-logo-icon {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 4px 14px rgba(242,101,34,0.4);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .sidebar-logo-icon img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+  .sidebar-logo-text .name { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 900; color: var(--white); }
+  .sidebar-logo-text .sub { font-size: 10px; font-weight: 600; color: var(--orange-light); letter-spacing: 1.5px; text-transform: uppercase; }
+
+  .sidebar-section { padding: 12px 12px 4px; }
+  .sidebar-section-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.3); padding: 0 8px; margin-bottom: 6px; }
+  .sidebar-nav { display: flex; flex-direction: column; gap: 2px; }
+  .sidebar-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 12px; border-radius: var(--radius-sm);
+    cursor: pointer; transition: var(--transition);
+    text-decoration: none; color: rgba(255,255,255,0.55);
+    font-size: 14px; font-weight: 500;
+    border: none; background: none; width: 100%; font-family: 'DM Sans', sans-serif;
+  }
+  .sidebar-item i { font-size: 16px; width: 20px; text-align: center; }
+  .sidebar-item:hover { background: rgba(255,255,255,0.07); color: var(--white); }
+  .sidebar-item.active { background: rgba(242,101,34,0.18); color: var(--orange-light); font-weight: 600; }
+  .sidebar-item.active i { color: var(--orange); }
+  .sidebar-badge { margin-left: auto; background: var(--orange); color: white; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 10px; min-width: 20px; text-align: center; }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 16px 12px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+  .btn-logout {
+    display: flex; align-items: center; gap: 10px;
+    width: 100%; padding: 11px 12px; border-radius: var(--radius-sm);
+    background: rgba(239,68,68,0.1); color: #fca5a5;
+    border: none; cursor: pointer; font-size: 14px; font-weight: 600;
+    transition: var(--transition); font-family: 'DM Sans', sans-serif;
+  }
+  .btn-logout:hover { background: rgba(239,68,68,0.2); color: #f87171; }
+
+  /* ===== MAIN ===== */
+  .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+
+  /* ===== TOPBAR ===== */
+  .topbar {
+    height: var(--topbar-h);
+    background: var(--white);
+    border-bottom: 1px solid var(--beige-dark);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 28px;
+    position: sticky; top: 0; z-index: 50;
+    box-shadow: var(--shadow);
+  }
+  .topbar-left { display: flex; align-items: center; gap: 16px; }
+  .page-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 900; color: var(--dark); }
+  .page-sub { font-size: 13px; color: var(--gray); }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .topbar-user { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--gray); }
+  .topbar-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--orange), var(--orange-dark)); color: white; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; }
+  .live-badge { display: inline-flex; align-items: center; gap: 6px; background: #f0fdf4; color: var(--green); border: 1px solid #86efac; font-size: 11px; font-weight: 700; padding: 5px 12px; border-radius: 20px; }
+  .live-dot { width: 7px; height: 7px; background: var(--green); border-radius: 50%; animation: blink 1.5s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  /* ===== CONTENT ===== */
+  .content { padding: 28px; flex: 1; }
+
+  /* ===== STATS CARDS ===== */
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+  .stat-card { background: var(--white); border-radius: var(--radius); padding: 22px 24px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.04); display: flex; align-items: center; gap: 16px; transition: var(--transition); }
+  .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .stat-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .stat-icon.orange { background: var(--orange-pale); }
+  .stat-icon.green { background: var(--green-pale); }
+  .stat-icon.red { background: var(--red-pale); }
+  .stat-icon.yellow { background: var(--yellow-pale); }
+  .stat-info .value { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 900; color: var(--dark); line-height: 1; }
+  .stat-info .label { font-size: 12px; font-weight: 600; color: var(--gray); margin-top: 4px; letter-spacing: 0.3px; }
+
+  /* ===== SECTION CARD ===== */
+  .section-card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.04); overflow: hidden; }
+  .section-card-header { padding: 20px 24px; border-bottom: 1px solid var(--beige-dark); display: flex; align-items: center; justify-content: space-between; }
+  .section-card-title { font-size: 16px; font-weight: 700; color: var(--dark); display: flex; align-items: center; gap: 10px; }
+  .section-card-body { padding: 20px 24px; }
+
+  /* ===== FILTERS ===== */
+  .filters-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+  .filter-btn { padding: 7px 18px; border-radius: 20px; font-size: 13px; font-weight: 600; border: 1.5px solid var(--beige-dark); color: var(--gray); background: var(--white); cursor: pointer; transition: var(--transition); font-family: 'DM Sans', sans-serif; }
+  .filter-btn:hover { border-color: var(--orange); color: var(--orange); }
+  .filter-btn.active { background: var(--orange); border-color: var(--orange); color: var(--white); }
+  .search-input {
+    padding: 8px 14px 8px 36px;
+    border: 1.5px solid var(--beige-dark);
+    border-radius: 20px; font-size: 13px;
+    font-family: 'DM Sans', sans-serif; color: var(--dark);
+    background: var(--gray-pale); outline: none; transition: var(--transition);
+    width: 220px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%236b6560' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.242 1.856a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 12px center;
+  }
+  .search-input:focus { border-color: var(--orange); background-color: var(--white); }
+
+  /* ===== BOOKING CARDS ===== */
+  .bookings-list { display: flex; flex-direction: column; gap: 12px; }
+  .booking-card {
+    background: var(--gray-pale);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--beige-dark);
+    padding: 18px 20px;
+    display: flex; align-items: center; gap: 16px;
+    transition: var(--transition);
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .booking-card:hover { background: var(--white); box-shadow: var(--shadow); }
+  .booking-card.status-concluido { border-left: 4px solid var(--green); }
+  .booking-card.status-cancelado { border-left: 4px solid var(--red); opacity: 0.7; }
+  .booking-card.status-confirmado { border-left: 4px solid var(--orange); }
+  .booking-pet-avatar {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--orange-pale), var(--orange-mid));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+  }
+  .booking-info { flex: 1; min-width: 0; }
+  .booking-pet { font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 2px; }
+  .booking-client { font-size: 13px; color: var(--gray); margin-bottom: 4px; }
+  .booking-service { font-size: 12px; font-weight: 600; color: var(--orange); background: var(--orange-pale); display: inline-block; padding: 2px 10px; border-radius: 10px; }
+  .booking-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
+  .booking-datetime { font-size: 13px; font-weight: 700; color: var(--dark); text-align: right; }
+  .booking-datetime span { display: block; font-size: 11px; font-weight: 500; color: var(--gray); }
+  .status-badge { font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 10px; letter-spacing: 0.5px; text-transform: uppercase; }
+  .status-badge.confirmado { background: var(--orange-pale); color: var(--orange); }
+  .status-badge.concluido { background: var(--green-pale); color: var(--green); }
+  .status-badge.cancelado { background: var(--red-pale); color: var(--red); }
+  .booking-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+  .btn-action {
+    display: flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border-radius: 8px;
+    font-size: 12px; font-weight: 700;
+    cursor: pointer; border: 1.5px solid; transition: var(--transition);
+    font-family: 'DM Sans', sans-serif; white-space: nowrap;
+  }
+  .btn-done { border-color: var(--green); color: var(--green); background: var(--green-pale); }
+  .btn-done:hover { background: var(--green); color: white; }
+  .btn-cancel { border-color: var(--yellow); color: var(--yellow); background: var(--yellow-pale); }
+  .btn-cancel:hover { background: var(--yellow); color: white; }
+  .btn-delete { border-color: var(--red); color: var(--red); background: var(--red-pale); }
+  .btn-delete:hover { background: var(--red); color: white; }
+
+  /* ===== HOURS GRID ===== */
+  .hours-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
+  .hour-toggle {
+    padding: 14px 12px; text-align: center; border-radius: var(--radius-sm);
+    cursor: pointer; font-size: 15px; font-weight: 700;
+    border: 2px solid; transition: var(--transition); user-select: none;
+  }
+  .hour-toggle small { display: block; font-size: 10px; font-weight: 500; margin-top: 2px; }
+  .hour-toggle.active { background: linear-gradient(135deg, var(--orange), var(--orange-dark)); border-color: var(--orange); color: white; box-shadow: 0 4px 14px rgba(242,101,34,0.3); }
+  .hour-toggle.inactive { background: var(--red-pale); border-color: #fca5a5; color: var(--red); }
+  .hour-toggle:hover { transform: translateY(-2px); }
+
+  /* ===== EMPTY ===== */
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--gray); }
+  .empty-state .icon { font-size: 56px; margin-bottom: 16px; opacity: 0.5; }
+  .empty-state h4 { font-size: 18px; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
+  .empty-state p { font-size: 14px; }
+
+  /* ===== LOADING ===== */
+  .loading-spinner { display: flex; justify-content: center; padding: 40px; }
+  .loading-spinner::after { content: ''; width: 32px; height: 32px; border: 3px solid var(--orange-mid); border-top-color: var(--orange); border-radius: 50%; animation: spin 0.7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ===== TOAST ===== */
+  .toast-container { position: fixed; bottom: 28px; right: 28px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
+  .toast { background: var(--dark); color: white; padding: 12px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.25); display: flex; align-items: center; gap: 10px; animation: toastIn 0.3s ease; max-width: 300px; }
+  .toast.success { border-left: 4px solid var(--green); }
+  .toast.error { border-left: 4px solid var(--red); }
+  .toast.info { border-left: 4px solid var(--orange); }
+  @keyframes toastIn { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: translateX(0); } }
+
+  /* ===== CONFIRM DIALOG ===== */
+  .confirm-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99999; align-items: center; justify-content: center; backdrop-filter: blur(3px); padding: 20px; }
+  .confirm-overlay.open { display: flex; }
+  .confirm-box { background: var(--white); border-radius: 20px; padding: 32px 28px; max-width: 380px; width: 100%; box-shadow: 0 32px 80px rgba(0,0,0,0.3); text-align: center; animation: fadeInUp 0.2s ease; }
+  @keyframes fadeInUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+  .confirm-icon { font-size: 48px; margin-bottom: 16px; }
+  .confirm-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; margin-bottom: 8px; color: var(--dark); }
+  .confirm-msg { font-size: 14px; color: var(--gray); margin-bottom: 24px; line-height: 1.6; }
+  .confirm-btns { display: flex; gap: 10px; justify-content: center; }
+  .confirm-btn { padding: 11px 24px; border-radius: 50px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: var(--transition); font-family: 'DM Sans', sans-serif; }
+  .confirm-btn-cancel { background: var(--gray-pale); color: var(--gray); }
+  .confirm-btn-cancel:hover { background: var(--beige-dark); }
+  .confirm-btn-ok { background: var(--red); color: white; box-shadow: 0 4px 14px rgba(239,68,68,0.3); }
+  .confirm-btn-ok:hover { background: #dc2626; }
+  .confirm-btn-ok.orange { background: var(--orange); box-shadow: 0 4px 14px rgba(242,101,34,0.3); }
+  .confirm-btn-ok.orange:hover { background: var(--orange-dark); }
+
+  /* ===== HIDDEN SECTION ===== */
+  .admin-section { display: none; }
+  .admin-section.active { display: block; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 1024px) {
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .sidebar { width: 100%; min-height: auto; height: var(--topbar-h); flex-direction: row; align-items: center; justify-content: space-between; padding: 0 16px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .sidebar-nav, .sidebar-section, .sidebar-section-label, .sidebar-footer { display: none; }
+    .sidebar-logo { border: none; padding: 0; }
+    .main { margin-left: 0; margin-top: var(--topbar-h); }
+    .topbar { display: none; }
+    .content { padding: 20px 16px; }
+    .booking-card { flex-wrap: wrap; }
+    .booking-actions { flex-direction: row; flex-wrap: wrap; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .mobile-nav { display: flex; gap: 6px; }
+  }
+  .mobile-nav { display: none; }
+
+  /* ===== TAB (mobile) ===== */
+  .mobile-tabs {
+    display: none;
+    gap: 4px;
+    padding: 12px 16px 0;
+    overflow-x: auto;
+  }
+  .mobile-tab-btn {
+    padding: 8px 16px; border-radius: 20px;
+    font-size: 13px; font-weight: 600;
+    background: var(--white); border: 1.5px solid var(--beige-dark);
+    color: var(--gray); cursor: pointer; white-space: nowrap;
+    font-family: 'DM Sans', sans-serif; transition: var(--transition);
+  }
+  .mobile-tab-btn.active { background: var(--orange); border-color: var(--orange); color: white; }
+  @media (max-width: 768px) { .mobile-tabs { display: flex; } }
+
+  /* ===== EMAIL INFO ===== */
+  .booking-email { font-size: 11px; color: var(--gray-light); margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-icon">
+      <img src="logo.jpg" alt="Logo" onerror="this.parentElement.innerHTML='🐾'">
+    </div>
+    <div class="sidebar-logo-text">
+      <div class="name">Mors Pet</div>
+      <div class="sub">Painel Admin</div>
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">Menu</div>
+    <div class="sidebar-nav">
+      <button class="sidebar-item active" onclick="showSection('agendamentos', this)">
+        <i class="fa-regular fa-calendar-check"></i>
+        <span>Agendamentos</span>
+        <span class="sidebar-badge" id="totalBadge">0</span>
+      </button>
+      <button class="sidebar-item" onclick="showSection('horarios', this)">
+        <i class="fa-regular fa-clock"></i>
+        <span>Horários</span>
+      </button>
+      <a href="index.html" class="sidebar-item" target="_blank">
+        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        <span>Ver Site</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <button class="btn-logout" onclick="adminLogout()">
+      <i class="fa-solid fa-right-from-bracket"></i>
+      Sair do painel
+    </button>
+  </div>
+</aside>
+
+<!-- MOBILE TABS -->
+<div class="mobile-tabs">
+  <button class="mobile-tab-btn active" onclick="showSection('agendamentos', this)">📅 Agendamentos</button>
+  <button class="mobile-tab-btn" onclick="showSection('horarios', this)">🕐 Horários</button>
+  <a href="index.html" target="_blank" style="text-decoration:none"><button class="mobile-tab-btn">🌐 Site</button></a>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div>
+        <div class="page-title" id="pageTitle">Agendamentos</div>
+        <div class="page-sub">Gestão em tempo real</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="live-badge"><div class="live-dot"></div> Ao vivo</div>
+      <div class="topbar-user">
+        <div class="topbar-avatar"><i class="fa-solid fa-user-shield" style="font-size:14px"></i></div>
+        <span>petbemcuidado</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- STATS -->
+    <div class="stats-row" id="statsRow">
+      <div class="stat-card"><div class="stat-icon orange"><i class="fa-regular fa-calendar" style="color:var(--orange)"></i></div><div class="stat-info"><div class="value" id="statTotal">—</div><div class="label">Total</div></div></div>
+      <div class="stat-card"><div class="stat-icon green"><i class="fa-solid fa-circle-check" style="color:var(--green)"></i></div><div class="stat-info"><div class="value" id="statConfirmados">—</div><div class="label">Confirmados</div></div></div>
+      <div class="stat-card"><div class="stat-icon yellow"><i class="fa-solid fa-star" style="color:var(--yellow)"></i></div><div class="stat-info"><div class="value" id="statConcluidos">—</div><div class="label">Concluídos</div></div></div>
+      <div class="stat-card"><div class="stat-icon red"><i class="fa-solid fa-xmark" style="color:var(--red)"></i></div><div class="stat-info"><div class="value" id="statCancelados">—</div><div class="label">Cancelados</div></div></div>
+    </div>
+
+    <!-- AGENDAMENTOS SECTION -->
+    <div id="section-agendamentos" class="admin-section active">
+      <div class="section-card">
+        <div class="section-card-header">
+          <div class="section-card-title">
+            <i class="fa-regular fa-calendar-check" style="color:var(--orange)"></i>
+            Agendamentos
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <input type="text" class="search-input" id="searchInput" placeholder="Buscar pet ou cliente..." oninput="filterBookings()">
+          </div>
+        </div>
+        <div class="section-card-body">
+          <div class="filters-row">
+            <button class="filter-btn active" onclick="setFilter('todos', this)">Todos</button>
+            <button class="filter-btn" onclick="setFilter('confirmado', this)">Confirmados</button>
+            <button class="filter-btn" onclick="setFilter('concluido', this)">Concluídos</button>
+            <button class="filter-btn" onclick="setFilter('cancelado', this)">Cancelados</button>
+            <button class="filter-btn" onclick="setFilter('hoje', this)" style="margin-left:auto">Hoje</button>
+          </div>
+          <div id="bookingsList">
+            <div class="loading-spinner"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HORARIOS SECTION -->
+    <div id="section-horarios" class="admin-section">
+      <div class="section-card">
+        <div class="section-card-header">
+          <div class="section-card-title">
+            <i class="fa-regular fa-clock" style="color:var(--orange)"></i>
+            Gerenciar Horários
+          </div>
+        </div>
+        <div class="section-card-body">
+          <p style="font-size:13px;color:var(--gray);margin-bottom:20px">Clique para ativar/desativar um horário. Horários desativados não aparecem no agendamento.</p>
+          <div id="hoursGrid" class="hours-grid">
+            <div class="loading-spinner"></div>
+          </div>
+          <div style="margin-top:20px;display:flex;gap:16px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gray)">
+              <div style="width:16px;height:16px;border-radius:4px;background:var(--orange)"></div> Ativo
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gray)">
+              <div style="width:16px;height:16px;border-radius:4px;background:var(--red-pale);border:1.5px solid #fca5a5"></div> Desativado
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- TOAST -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- CONFIRM DIALOG -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-icon" id="confirmIcon">⚠️</div>
+    <div class="confirm-title" id="confirmTitle">Confirmar ação</div>
+    <div class="confirm-msg" id="confirmMsg">Tem certeza?</div>
+    <div class="confirm-btns">
+      <button class="confirm-btn confirm-btn-cancel" onclick="closeConfirm()">Cancelar</button>
+      <button class="confirm-btn confirm-btn-ok" id="confirmOkBtn" onclick="confirmAction()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- FIREBASE -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+  import { getFirestore, collection, doc, onSnapshot, updateDoc, deleteDoc, query, orderBy, getDocs, setDoc, where, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+  // ===== AUTH GUARD =====
+  if (sessionStorage.getItem('mors_admin_logged') !== 'true') {
+    window.location.href = 'login.html';
+  }
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyC01CzbeROn2pA9htfnGzQ-wXYI8_YOd-s",
+    authDomain: "mors-pet.firebaseapp.com",
+    projectId: "mors-pet",
+    storageBucket: "mors-pet.firebasestorage.app",
+    messagingSenderId: "871317088909",
+    appId: "1:871317088909:web:02843b8f40e2c23ecc50c4"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const ALL_HOURS = ['09:00','09:30','10:00','10:30','11:00','11:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00'];
+
+  let allBookings = [];
+  let currentFilter = 'todos';
+  let currentSearch = '';
+  let pendingAction = null;
+  let disabledHours = [];
+  let settingsDocId = null;
+
+  // ===== REAL-TIME LISTENER =====
+  const q = query(collection(db, 'bookings'), orderBy('date', 'asc'));
+  const unsubscribe = onSnapshot(q, (snapshot) => {
+    allBookings = [];
+    snapshot.forEach(doc => {
+      allBookings.push({ id: doc.id, ...doc.data() });
+    });
+    updateStats();
+    renderBookings();
+  }, (error) => {
+    showToast('Erro ao conectar com Firestore.', 'error');
+  });
+
+  // ===== STATS =====
+  function updateStats() {
+    const total = allBookings.length;
+    const confirmados = allBookings.filter(b => b.status === 'confirmado').length;
+    const concluidos = allBookings.filter(b => b.status === 'concluido').length;
+    const cancelados = allBookings.filter(b => b.status === 'cancelado').length;
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statConfirmados').textContent = confirmados;
+    document.getElementById('statConcluidos').textContent = concluidos;
+    document.getElementById('statCancelados').textContent = cancelados;
+    document.getElementById('totalBadge').textContent = total;
+  }
+
+  // ===== RENDER BOOKINGS =====
+  function renderBookings() {
+    const list = document.getElementById('bookingsList');
+    let filtered = [...allBookings];
+
+    if (currentFilter === 'hoje') {
+      const today = new Date();
+      const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+      filtered = filtered.filter(b => b.date === todayStr);
+    } else if (currentFilter !== 'todos') {
+      filtered = filtered.filter(b => b.status === currentFilter);
+    }
+
+    if (currentSearch) {
+      const s = currentSearch.toLowerCase();
+      filtered = filtered.filter(b =>
+        (b.petName||'').toLowerCase().includes(s) ||
+        (b.clientName||'').toLowerCase().includes(s) ||
+        (b.service||'').toLowerCase().includes(s) ||
+        (b.userEmail||'').toLowerCase().includes(s)
+      );
+    }
+
+    // Sort: date asc, then time asc
+    filtered.sort((a,b) => {
+      const da = (a.date||'')+(a.time||'');
+      const db2 = (b.date||'')+(b.time||'');
+      return da.localeCompare(db2);
+    });
+
+    if (!filtered.length) {
+      list.innerHTML = `<div class="empty-state"><div class="icon">📅</div><h4>Nenhum agendamento encontrado</h4><p>Quando houver agendamentos, eles aparecerão aqui em tempo real.</p></div>`;
+      return;
+    }
+
+    const getPetEmoji = (type) => type === 'Cachorro' ? '🐶' : type === 'Gato' ? '🐱' : '🐾';
+    const fmtDate = (d) => d ? new Date(d+'T12:00:00').toLocaleDateString('pt-BR') : '-';
+
+    list.innerHTML = filtered.map(b => {
+      const isActive = b.status === 'confirmado';
+      const isConcluido = b.status === 'concluido';
+      const isCancelado = b.status === 'cancelado';
+      return `
+        <div class="booking-card status-${b.status}" id="card-${b.id}">
+          <div class="booking-pet-avatar">${getPetEmoji(b.petType)}</div>
+          <div class="booking-info">
+            <div class="booking-pet">${b.petName || '—'} <span style="font-size:12px;color:var(--gray);font-weight:500">(${b.petType || '—'})</span></div>
+            <div class="booking-client">
+              <i class="fa-regular fa-user" style="font-size:11px;margin-right:4px"></i>${b.clientName || '—'}
+              &nbsp;·&nbsp;
+              <i class="fa-solid fa-phone" style="font-size:11px;margin-right:4px"></i>${b.clientPhone || '—'}
+            </div>
+            <div class="booking-email"><i class="fa-regular fa-envelope" style="font-size:10px;margin-right:4px"></i>${b.userEmail || 'Sem e-mail'}</div>
+            <div style="margin-top:6px"><span class="booking-service">${b.service || '—'}</span></div>
+          </div>
+          <div class="booking-meta">
+            <div class="booking-datetime">
+              ${fmtDate(b.date)}
+              <span>${b.time || '—'}</span>
+            </div>
+            <span class="status-badge ${b.status}">${b.status}</span>
+          </div>
+          <div class="booking-actions">
+            ${isActive ? `<button class="btn-action btn-done" onclick="actionBooking('concluir','${b.id}','${b.petName}')"><i class="fa-solid fa-check"></i> Concluído</button>` : ''}
+            ${isActive ? `<button class="btn-action btn-cancel" onclick="actionBooking('cancelar','${b.id}','${b.petName}')"><i class="fa-solid fa-xmark"></i> Cancelar</button>` : ''}
+            <button class="btn-action btn-delete" onclick="actionBooking('excluir','${b.id}','${b.petName}')"><i class="fa-regular fa-trash-can"></i> Excluir</button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  // ===== FILTERS =====
+  window.setFilter = function(filter, btn) {
+    currentFilter = filter;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderBookings();
+  };
+  window.filterBookings = function() {
+    currentSearch = document.getElementById('searchInput').value;
+    renderBookings();
+  };
+
+  // ===== ACTIONS =====
+  window.actionBooking = function(type, id, name) {
+    const configs = {
+      concluir: { icon: '✅', title: 'Marcar como Concluído', msg: `Confirmar que o atendimento de <strong>${name}</strong> foi concluído?`, okClass: 'orange', okText: 'Confirmar' },
+      cancelar: { icon: '⚠️', title: 'Cancelar Agendamento', msg: `Cancelar o agendamento de <strong>${name}</strong>?`, okClass: '', okText: 'Cancelar' },
+      excluir: { icon: '🗑️', title: 'Excluir Agendamento', msg: `Excluir permanentemente o agendamento de <strong>${name}</strong>? Esta ação não pode ser desfeita.`, okClass: '', okText: 'Excluir' }
+    };
+    const c = configs[type];
+    document.getElementById('confirmIcon').textContent = c.icon;
+    document.getElementById('confirmTitle').textContent = c.title;
+    document.getElementById('confirmMsg').innerHTML = c.msg;
+    const okBtn = document.getElementById('confirmOkBtn');
+    okBtn.textContent = c.okText;
+    okBtn.className = `confirm-btn confirm-btn-ok${c.okClass ? ' '+c.okClass : ''}`;
+    pendingAction = { type, id };
+    document.getElementById('confirmOverlay').classList.add('open');
+  };
+
+  window.closeConfirm = function() {
+    document.getElementById('confirmOverlay').classList.remove('open');
+    pendingAction = null;
+  };
+
+  window.confirmAction = async function() {
+    if (!pendingAction) return;
+    const { type, id } = pendingAction;
+    closeConfirm();
+    try {
+      if (type === 'concluir') {
+        await updateDoc(doc(db, 'bookings', id), { status: 'concluido' });
+        showToast('✅ Marcado como concluído!', 'success');
+      } else if (type === 'cancelar') {
+        await updateDoc(doc(db, 'bookings', id), { status: 'cancelado' });
+        showToast('Agendamento cancelado.', 'info');
+      } else if (type === 'excluir') {
+        await deleteDoc(doc(db, 'bookings', id));
+        showToast('🗑 Agendamento excluído.', 'info');
+      }
+    } catch(e) {
+      showToast('Erro ao executar ação.', 'error');
+    }
+  };
+
+  // ===== HOURS =====
+  async function loadHours() {
+    try {
+      const snap = await getDocs(query(collection(db, 'settings'), where('type', '==', 'disabled_hours')));
+      snap.forEach(d => {
+        disabledHours = d.data().hours || [];
+        settingsDocId = d.id;
+      });
+    } catch(e) {}
+    renderHours();
+  }
+
+  function renderHours() {
+    const grid = document.getElementById('hoursGrid');
+    grid.innerHTML = ALL_HOURS.map(h => {
+      const isOff = disabledHours.includes(h);
+      return `<div class="hour-toggle ${isOff ? 'inactive' : 'active'}" onclick="toggleHour('${h}',this)">
+        ${h}
+        <small>${isOff ? 'Desativado' : 'Ativo'}</small>
+      </div>`;
+    }).join('');
+  }
+
+  window.toggleHour = async function(hour, el) {
+    if (disabledHours.includes(hour)) {
+      disabledHours = disabledHours.filter(h => h !== hour);
+      el.className = 'hour-toggle active';
+      el.innerHTML = `${hour}<small>Ativo</small>`;
+    } else {
+      disabledHours.push(hour);
+      el.className = 'hour-toggle inactive';
+      el.innerHTML = `${hour}<small>Desativado</small>`;
+    }
+    try {
+      if (settingsDocId) {
+        await updateDoc(doc(db, 'settings', settingsDocId), { hours: disabledHours });
+      } else {
+        const ref = await setDoc(doc(collection(db, 'settings')), { type: 'disabled_hours', hours: disabledHours });
+        settingsDocId = ref?.id;
+        // refetch id
+        const snap = await getDocs(query(collection(db, 'settings'), where('type', '==', 'disabled_hours')));
+        snap.forEach(d => { settingsDocId = d.id; });
+      }
+      showToast(disabledHours.includes(hour) ? `Horário ${hour} desativado.` : `Horário ${hour} ativado.`, 'info');
+    } catch(e) {
+      showToast('Erro ao salvar. Verifique permissões do Firestore.', 'error');
+    }
+  };
+
+  // ===== SECTIONS =====
+  window.showSection = function(name, btn) {
+    document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+    document.getElementById(`section-${name}`).classList.add('active');
+    document.querySelectorAll('.sidebar-item, .mobile-tab-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    const titles = { agendamentos: 'Agendamentos', horarios: 'Horários' };
+    const ptEl = document.getElementById('pageTitle');
+    if (ptEl) ptEl.textContent = titles[name] || name;
+  };
+
+  // ===== LOGOUT =====
+  window.adminLogout = function() {
+    sessionStorage.removeItem('mors_admin_logged');
+    sessionStorage.removeItem('mors_admin_user');
+    window.location.href = 'login.html';
+  };
+
+  // ===== TOAST =====
+  window.showToast = function(msg, type = 'info') {
+    const c = document.getElementById('toastContainer');
+    const t = document.createElement('div');
+    t.className = `toast ${type}`;
+    t.textContent = msg;
+    c.appendChild(t);
+    setTimeout(() => t.remove(), 4000);
+  };
+
+  // ===== INIT =====
+  loadHours();
+</script>
+</body>
+</html>
