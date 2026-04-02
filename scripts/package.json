@@ -1,0 +1,11 @@
+{
+  "name": "notificacoes",
+  "version": "1.0.0",
+  "main": "notificar.js",
+  "scripts": {
+    "notificar": "node notificar.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^11.0.1"
+  }
+}
