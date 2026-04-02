@@ -8,6 +8,15 @@
 <title>Mors Pet Realeza | Petshop Banho e Tosa em Vila Mariana – Agendamento Online</title>
 <meta name="description" content="Mors Pet Realeza – O melhor petshop com banho e tosa em Vila Mariana, São Paulo. Agendamento online rápido, atendimento VIP para cães, gatos e coelhos. Terças com 10% OFF! Nota 5.0 no Google.">
 <meta name="keywords" content="petshop Vila Mariana, banho e tosa São Paulo, agendamento pet, Mors Pet Realeza, banho cachorro SP, tosa gato Vila Mariana, petshop agendamento online, banho e tosa perto de mim">
+
+<!-- ===== PWA ===== -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#F26522">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Mors Pet">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="canonical" href="https://morspetrealeza.vercel.app/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
 
@@ -606,6 +615,288 @@
     .floating-sticker { display: none; }
     .stats-row { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   }
+
+  /* ===== PWA INSTALL MODAL ===== */
+  .pwa-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,6,4,0.72);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 999999;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0 0 0 0;
+    animation: pwaFadeIn 0.35s ease;
+  }
+  .pwa-overlay.open { display: flex; }
+  @keyframes pwaFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .pwa-sheet {
+    background: var(--white);
+    border-radius: 28px 28px 0 0;
+    padding: 0;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 -24px 80px rgba(0,0,0,0.22);
+    animation: pwaSlideUp 0.42s cubic-bezier(0.34,1.56,0.64,1);
+    overflow: hidden;
+    position: relative;
+  }
+  @keyframes pwaSlideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+  .pwa-sheet-handle {
+    width: 40px; height: 4px;
+    background: var(--beige-dark);
+    border-radius: 2px;
+    margin: 14px auto 0;
+  }
+
+  .pwa-sheet-hero {
+    background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+    padding: 28px 28px 24px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .pwa-sheet-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.15) 0%, transparent 60%);
+  }
+  .pwa-hero-icon {
+    width: 64px; height: 64px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 18px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px;
+    flex-shrink: 0;
+    border: 1.5px solid rgba(255,255,255,0.3);
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  }
+  .pwa-hero-text { position: relative; z-index: 1; }
+  .pwa-hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 900;
+    color: white; line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .pwa-hero-sub {
+    font-size: 13px; color: rgba(255,255,255,0.85);
+    font-weight: 500; line-height: 1.4;
+  }
+
+  .pwa-sheet-body { padding: 24px 28px; }
+
+  .pwa-benefits {
+    display: flex; flex-direction: column; gap: 12px;
+    margin-bottom: 24px;
+  }
+  .pwa-benefit {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 16px;
+    background: var(--gray-pale);
+    border-radius: 12px;
+    border: 1px solid transparent;
+    transition: var(--transition);
+  }
+  .pwa-benefit-icon {
+    width: 38px; height: 38px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--orange-pale), var(--orange-mid));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .pwa-benefit-text { flex: 1; }
+  .pwa-benefit-text strong {
+    display: block; font-size: 13px; font-weight: 700;
+    color: var(--dark); margin-bottom: 1px;
+  }
+  .pwa-benefit-text span {
+    font-size: 12px; color: var(--gray); line-height: 1.3;
+  }
+
+  .pwa-actions {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .pwa-btn-install {
+    width: 100%; padding: 16px;
+    background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+    color: white; border: none;
+    border-radius: 50px; font-size: 16px; font-weight: 700;
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    box-shadow: 0 8px 28px rgba(242,101,34,0.4);
+    transition: var(--transition);
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .pwa-btn-install:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(242,101,34,0.5); }
+  .pwa-btn-install:active { transform: translateY(0); }
+
+  .pwa-btn-later {
+    width: 100%; padding: 13px;
+    background: transparent; color: var(--gray);
+    border: 1.5px solid var(--beige-dark);
+    border-radius: 50px; font-size: 14px; font-weight: 600;
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: var(--transition);
+  }
+  .pwa-btn-later:hover { border-color: var(--gray-light); color: var(--dark); }
+
+  .pwa-privacy {
+    text-align: center; font-size: 11px;
+    color: var(--gray-light); margin-top: 12px;
+    padding-bottom: 8px;
+  }
+
+  /* ===== NOTIFICATION PERMISSION MODAL ===== */
+  .notif-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(10,6,4,0.72);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 9999999;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    animation: pwaFadeIn 0.3s ease;
+  }
+  .notif-overlay.open { display: flex; }
+
+  .notif-box {
+    background: var(--white);
+    border-radius: 24px;
+    width: 100%; max-width: 400px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.25);
+    overflow: hidden;
+    animation: pwaSlideUp 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  .notif-header {
+    background: linear-gradient(135deg, #1a1412, #2d2019);
+    padding: 28px 28px 22px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .notif-header::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 100px; height: 100px;
+    background: radial-gradient(circle, rgba(242,101,34,0.25), transparent 70%);
+    border-radius: 50%;
+  }
+  .notif-bell {
+    width: 68px; height: 68px;
+    background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+    border-radius: 20px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px;
+    margin: 0 auto 16px;
+    box-shadow: 0 8px 24px rgba(242,101,34,0.4);
+    position: relative; z-index: 1;
+    animation: bellRing 2s ease-in-out infinite;
+  }
+  @keyframes bellRing {
+    0%,100%  { transform: rotate(0deg); }
+    10%,30%  { transform: rotate(-8deg); }
+    20%,40%  { transform: rotate(8deg); }
+    50%      { transform: rotate(0deg); }
+  }
+  .notif-header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 900;
+    color: white; position: relative; z-index: 1;
+    margin-bottom: 6px;
+  }
+  .notif-header-sub {
+    font-size: 13px; color: rgba(255,255,255,0.65);
+    position: relative; z-index: 1; line-height: 1.4;
+  }
+
+  .notif-body { padding: 24px 28px; }
+
+  .notif-preview {
+    background: var(--gray-pale);
+    border: 1px solid var(--beige-dark);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .notif-preview-icon {
+    width: 36px; height: 36px; flex-shrink: 0;
+    border-radius: 9px; overflow: hidden;
+    background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .notif-preview-content { flex: 1; }
+  .notif-preview-title {
+    font-size: 13px; font-weight: 700;
+    color: var(--dark); margin-bottom: 2px;
+  }
+  .notif-preview-body {
+    font-size: 12px; color: var(--gray); line-height: 1.4;
+  }
+  .notif-preview-time {
+    font-size: 11px; color: var(--gray-light);
+    margin-top: 4px;
+  }
+
+  .notif-features {
+    display: flex; flex-direction: column; gap: 8px;
+    margin-bottom: 22px;
+  }
+  .notif-feature {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px; color: var(--gray);
+  }
+  .notif-feature-dot {
+    width: 20px; height: 20px; flex-shrink: 0;
+    background: var(--green-pale);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+  }
+
+  .notif-actions {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .notif-btn-allow {
+    width: 100%; padding: 15px;
+    background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+    color: white; border: none;
+    border-radius: 50px; font-size: 15px; font-weight: 700;
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    box-shadow: 0 6px 24px rgba(242,101,34,0.35);
+    transition: var(--transition);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .notif-btn-allow:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(242,101,34,0.45); }
+
+  .notif-btn-skip {
+    width: 100%; padding: 12px;
+    background: transparent; color: var(--gray);
+    border: 1.5px solid var(--beige-dark);
+    border-radius: 50px; font-size: 14px; font-weight: 600;
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: var(--transition);
+  }
+  .notif-btn-skip:hover { color: var(--dark); border-color: var(--gray-light); }
+
+  .notif-disclaimer {
+    text-align: center; font-size: 11px;
+    color: var(--gray-light); margin-top: 14px;
+    line-height: 1.5;
+  }
+
 </style>
 </head>
 <body>
@@ -981,11 +1272,102 @@
       <div class="footer-col"><h4>Informações</h4><div class="footer-info"><div class="footer-info-item"><div class="fii-dot"></div><span>Rua Jorge Chammas, 32<br>Vila Mariana, SP · 04160-070</span></div><div class="footer-info-item"><div class="fii-dot"></div><span>(11) 97860-0783<br>(11) 94829-5188</span></div><div class="footer-info-item"><div class="fii-dot"></div><span>Seg–Sáb: 09h às 17h30<br>Domingo: Fechado</span></div><div class="footer-info-item"><div class="fii-dot"></div><span>@mors32pet</span></div></div></div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 <span class="accent">Mors Pet Realeza</span>. Todos os direitos reservados.</span>
-      <span>Sistema de agendamento feito por <a href="https://wa.me/5513997595234?text=Vi%20o%20sistema%20que%20vc%20fez%20para%20o%20petshop%20Mors%20Pet%20Realeza%20e%20me%20interessei" target="_blank" class="credit-link">(Luiz do AutoZapp)</a></span>
+      <span>© 2024 <span class="accent">Mors Pet Realeza</span>. Todos os direitos reservados.</span>
+      <span>Sistema de agendamento feito por <a href="https://wa.me/5513997595234?text=Vi%20o%20sistema%20que%20vc%20fez%20para%20o%20petshop%20Mors%20Pet%20Realeza%20e%20gostaria%20me%20interessei" target="_blank" class="credit-link">(Luiz do AutoZapp)</a></span>
     </div>
   </div>
 </footer>
+
+
+<!-- ===== PWA INSTALL MODAL ===== -->
+<div class="pwa-overlay" id="pwaInstallOverlay">
+  <div class="pwa-sheet">
+    <div class="pwa-sheet-handle"></div>
+    <div class="pwa-sheet-hero">
+      <div class="pwa-hero-icon">🐾</div>
+      <div class="pwa-hero-text">
+        <div class="pwa-hero-title">Instale o Mors Pet<br>no seu celular</div>
+        <div class="pwa-hero-sub">Acesso rápido, sem precisar abrir o navegador</div>
+      </div>
+    </div>
+    <div class="pwa-sheet-body">
+      <div class="pwa-benefits">
+        <div class="pwa-benefit">
+          <div class="pwa-benefit-icon">⚡</div>
+          <div class="pwa-benefit-text">
+            <strong>Acesso instantâneo</strong>
+            <span>Ícone direto na tela inicial do seu celular</span>
+          </div>
+        </div>
+        <div class="pwa-benefit">
+          <div class="pwa-benefit-icon">🔔</div>
+          <div class="pwa-benefit-text">
+            <strong>Lembretes do agendamento</strong>
+            <span>Receba notificação no dia do banho do seu pet</span>
+          </div>
+        </div>
+        <div class="pwa-benefit">
+          <div class="pwa-benefit-icon">📶</div>
+          <div class="pwa-benefit-text">
+            <strong>Funciona offline</strong>
+            <span>Veja informações mesmo sem internet</span>
+          </div>
+        </div>
+      </div>
+      <div class="pwa-actions">
+        <button class="pwa-btn-install" id="pwaInstallBtn" onclick="pwaDoInstall()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Instalar agora
+        </button>
+        <button class="pwa-btn-later" onclick="pwaDismiss()">Agora não</button>
+      </div>
+      <p class="pwa-privacy">Gratuito · Sem anúncios · Seus dados protegidos</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== NOTIFICATION PERMISSION MODAL ===== -->
+<div class="notif-overlay" id="notifPermOverlay">
+  <div class="notif-box">
+    <div class="notif-header">
+      <div class="notif-bell">🔔</div>
+      <div class="notif-header-title">Ative os lembretes do seu pet</div>
+      <div class="notif-header-sub">Não perca nenhum horário de banho ou tosa</div>
+    </div>
+    <div class="notif-body">
+      <div class="notif-preview">
+        <div class="notif-preview-icon">🐾</div>
+        <div class="notif-preview-content">
+          <div class="notif-preview-title">Mors Pet Realeza</div>
+          <div class="notif-preview-body">🐶 Amanhã às 14:00 é o horário do Rex para Banho + Tosa. Até lá!</div>
+          <div class="notif-preview-time">hoje às 08:00</div>
+        </div>
+      </div>
+      <div class="notif-features">
+        <div class="notif-feature">
+          <div class="notif-feature-dot">✓</div>
+          <span>Lembrete automático no dia do agendamento às 8h</span>
+        </div>
+        <div class="notif-feature">
+          <div class="notif-feature-dot">✓</div>
+          <span>Notificação apenas quando tiver algo importante</span>
+        </div>
+        <div class="notif-feature">
+          <div class="notif-feature-dot">✓</div>
+          <span>Pode desativar a qualquer momento nas configurações</span>
+        </div>
+      </div>
+      <div class="notif-actions">
+        <button class="notif-btn-allow" onclick="notifRequestPermission()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          Ativar lembretes
+        </button>
+        <button class="notif-btn-skip" onclick="notifSkip()">Prefiro não receber</button>
+      </div>
+      <p class="notif-disclaimer">Ao ativar, você autoriza o Mors Pet Realeza a enviar<br>notificações sobre seus agendamentos.</p>
+    </div>
+  </div>
+</div>
 
 <!-- ===== MASCOTE FLUTUANTE ===== -->
 <div id="mascote-wrap" aria-hidden="true">
@@ -1189,6 +1571,7 @@
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
   import { getFirestore, collection, doc, addDoc, query, where, orderBy, getDocs, onSnapshot, updateDoc, deleteDoc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
   import { getAuth, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signOut, onAuthStateChanged, sendPasswordResetEmail, updateProfile } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+  import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js';
 
   const firebaseConfig = {
     apiKey: "AIzaSyC01CzbeROn2pA9htfnGzQ-wXYI8_YOd-s",
@@ -1998,6 +2381,161 @@
   }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
+
+  // ===== FIREBASE MESSAGING =====
+  let messaging = null;
+  try { messaging = getMessaging(app); } catch(e) {}
+
+  const VAPID_KEY = 'BLx0_thxxUqQWk8lSL2ig925MIQVT-Kc-JA__kHCebOdMz7BjXDvtDJB2a4Kp57tRyi_xeYpvvKfQ-9DacirEiY';
+
+  async function saveFcmToken(userId) {
+    if (!messaging || !userId) return;
+    try {
+      const permission = Notification.permission;
+      if (permission !== 'granted') return;
+      const token = await getToken(messaging, { vapidKey: VAPID_KEY });
+      if (token) {
+        await setDoc(doc(db, 'users', userId), {
+          fcmToken: token,
+          tokenUpdatedAt: serverTimestamp(),
+          email: currentUser?.email || null
+        }, { merge: true });
+      }
+    } catch(e) { console.log('FCM token save:', e.message); }
+  }
+
+  // Listen for foreground messages
+  if (messaging) {
+    onMessage(messaging, (payload) => {
+      const { title, body } = payload.notification || {};
+      if (title) showToast(`🔔 ${title}: ${body}`, 'info');
+    });
+  }
+
+  // ===== PWA + NOTIFICATION SYSTEM =====
+  let deferredPrompt = null;
+  const PWA_INSTALLED_KEY = 'mors_pwa_installed';
+  const PWA_DISMISSED_KEY = 'mors_pwa_dismissed';
+  const NOTIF_ASKED_KEY   = 'mors_notif_asked';
+
+  // Capture the install event
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+  });
+
+  window.addEventListener('appinstalled', () => {
+    localStorage.setItem(PWA_INSTALLED_KEY, '1');
+    deferredPrompt = null;
+  });
+
+  function isPwaInstalled() {
+    return localStorage.getItem(PWA_INSTALLED_KEY) === '1' ||
+           window.matchMedia('(display-mode: standalone)').matches ||
+           window.navigator.standalone === true;
+  }
+
+  // Show PWA modal after 3s if not installed and not permanently dismissed
+  setTimeout(() => {
+    const dismissed = localStorage.getItem(PWA_DISMISSED_KEY) === 'permanent';
+    if (!isPwaInstalled() && !dismissed) {
+      document.getElementById('pwaInstallOverlay').classList.add('open');
+    } else if (isPwaInstalled()) {
+      // Already installed — just ask for notifications if not asked yet
+      setTimeout(() => maybeShowNotifModal(), 1500);
+    }
+  }, 3000);
+
+  window.pwaDoInstall = async function() {
+    const btn = document.getElementById('pwaInstallBtn');
+    if (deferredPrompt) {
+      // Native install prompt available
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Instalando...';
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      if (outcome === 'accepted') {
+        localStorage.setItem(PWA_INSTALLED_KEY, '1');
+        document.getElementById('pwaInstallOverlay').classList.remove('open');
+        setTimeout(() => maybeShowNotifModal(), 800);
+      } else {
+        btn.disabled = false;
+        btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Instalar agora';
+      }
+    } else {
+      // Fallback: iOS / browser doesn't support prompt — show instructions
+      document.getElementById('pwaInstallOverlay').classList.remove('open');
+      showToast('📲 No Safari: toque em Compartilhar → Adicionar à Tela de Início', 'info');
+      setTimeout(() => maybeShowNotifModal(), 1000);
+    }
+  };
+
+  window.pwaDismiss = function() {
+    // "Agora não" = dismissed temporarily, modal will show again next visit
+    // Only set permanent if they've dismissed multiple times
+    const count = parseInt(localStorage.getItem('mors_pwa_dismiss_count') || '0') + 1;
+    localStorage.setItem('mors_pwa_dismiss_count', count);
+    if (count >= 3) {
+      localStorage.setItem(PWA_DISMISSED_KEY, 'permanent');
+    }
+    document.getElementById('pwaInstallOverlay').classList.remove('open');
+    // After PWA modal (install or skip), always show notif modal
+    setTimeout(() => maybeShowNotifModal(), 600);
+  };
+
+  function maybeShowNotifModal() {
+    if (Notification.permission === 'granted') {
+      if (currentUser) saveFcmToken(currentUser.uid);
+      return;
+    }
+    if (Notification.permission === 'denied') return;
+    if (localStorage.getItem(NOTIF_ASKED_KEY) === 'skip') return;
+    document.getElementById('notifPermOverlay').classList.add('open');
+  }
+
+  window.notifRequestPermission = async function() {
+    const btn = document.querySelector('.notif-btn-allow');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Ativando...';
+    try {
+      // Register SW first
+      if ('serviceWorker' in navigator) {
+        await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+      }
+      const permission = await Notification.requestPermission();
+      document.getElementById('notifPermOverlay').classList.remove('open');
+      if (permission === 'granted') {
+        showToast('🔔 Notificações ativadas! Você receberá lembretes dos agendamentos.', 'success');
+        if (currentUser) await saveFcmToken(currentUser.uid);
+      } else {
+        showToast('Notificações bloqueadas. Você pode ativar nas configurações do navegador.', 'info');
+      }
+    } catch(e) {
+      document.getElementById('notifPermOverlay').classList.remove('open');
+      console.log('Notif error:', e);
+    }
+  };
+
+  window.notifSkip = function() {
+    localStorage.setItem(NOTIF_ASKED_KEY, 'skip');
+    document.getElementById('notifPermOverlay').classList.remove('open');
+  };
+
+  // After login, try to save FCM token if permission already granted
+  onAuthStateChanged(auth, (user) => {
+    if (user && Notification.permission === 'granted') {
+      saveFcmToken(user.uid);
+    }
+  });
+
+  // Register service worker on load
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/firebase-messaging-sw.js').catch(() => {});
+    });
+  }
+
   // Se admin já estava logado, manter acesso (não abrir painel automaticamente - só ao clicar no logo)
 
   // ===== MASCOTE FLUTUANTE =====
@@ -2018,10 +2556,10 @@
     var inCooldown   = false;
     var userActive   = false;   // usuário interagiu recentemente
 
-    var INITIAL_DELAY    = 5000;   // ms após load
-    var SHOW_DURATION    = 3500;   // ms visível
+    var INITIAL_DELAY    = 10000;   // ms após load
+    var SHOW_DURATION    = 3800;   // ms visível
     var COOLDOWN         = 50000;  // ms entre aparições
-    var INACTIVITY_WAIT  = 12000;  // ms de inatividade antes de reaparecer
+    var INACTIVITY_WAIT  = 10000;  // ms de inatividade antes de reaparecer
 
     function showMascote() {
       if (isVisible || inCooldown) return;
