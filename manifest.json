@@ -47,12 +47,7 @@
       "type": "image/png",
       "purpose": "any maskable"
     },
-    {
-      "src": "/icons/icon-384.png",
-      "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "any"
-    },
+
     {
       "src": "/icons/icon-512.png",
       "sizes": "512x512",
@@ -66,14 +61,14 @@
       "short_name": "Agendar",
       "description": "Agendar banho e tosa",
       "url": "/#agendamento",
-      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
     },
     {
       "name": "WhatsApp",
       "short_name": "WhatsApp",
       "description": "Falar com o petshop",
       "url": "https://wa.me/5511978600783",
-      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
     }
   ],
   "screenshots": [

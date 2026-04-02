@@ -47,9 +47,12 @@ messaging.onBackgroundMessage((payload) => {
 //  CLIQUE NA NOTIFICAÇÃO
 // =====================================================
 self.addEventListener('notificationclick', (event) => {
-  event.notification.close();
+  if (event.action === 'fechar') {
+    event.notification.close();
+    return;
+  }
 
-  if (event.action === 'fechar') return;
+  event.notification.close();
 
   const targetUrl = event.notification.data?.url
     || 'https://morspetrealeza.vercel.app/#agendamento';
@@ -106,7 +109,8 @@ self.addEventListener('fetch', (event) => {
   if (event.request.url.includes('firebaseio') ||
       event.request.url.includes('googleapis') ||
       event.request.url.includes('gstatic')    ||
-      event.request.url.includes('fonts.')) return;
+      event.request.url.includes('fonts.')     ||
+      event.request.url.includes('firestore')) return;
 
   event.respondWith(
     caches.match(event.request).then((cached) => {
