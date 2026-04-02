@@ -1,12 +1,12 @@
 // =====================================================
 //  MORS PET REALEZA — Firebase Messaging Service Worker
-//  Versão: 1.0.0
+//  Versão: 2.0 (corrigida)
 // =====================================================
 
 importScripts('https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js');
 
-// ⚠️ IMPORTANTE: Esses valores devem ser IDÊNTICOS aos do index.html
+// 🔥 CONFIG FIREBASE (igual ao index.html)
 firebase.initializeApp({
   apiKey:            "AIzaSyC01CzbeROn2pA9htfnGzQ-wXYI8_YOd-s",
   authDomain:        "mors-pet.firebaseapp.com",
@@ -19,65 +19,63 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 // =====================================================
-//  NOTIFICAÇÃO EM BACKGROUND (app fechado / minimizado)
+// 🔔 NOTIFICAÇÃO EM BACKGROUND (APP FECHADO)
 // =====================================================
 messaging.onBackgroundMessage((payload) => {
-  const title = payload.notification?.title || 'Mors Pet Realeza';
-  const body  = payload.notification?.body  || 'Você tem um agendamento.';
+  console.log('📩 Background message:', payload);
+
+  const title = payload.notification?.title || '🐾 Mors Pet Realeza';
+  const body  = payload.notification?.body  || 'Você tem um agendamento hoje!';
   const icon  = payload.notification?.icon  || '/icons/icon-192.png';
 
   self.registration.showNotification(title, {
     body,
     icon,
-    badge:            '/icons/icon-96.png',
-    tag:              'agendamento-lembrete',
-    requireInteraction: true,   // notificação fica visível até o usuário interagir
-    vibrate:          [200, 100, 200],
+    badge: '/icons/icon-96.png',
+    tag: 'agendamento-lembrete',
+    requireInteraction: true,
+    vibrate: [200, 100, 200],
     data: {
       url: payload.fcmOptions?.link || 'https://morspetrealeza.vercel.app/#agendamento'
     },
     actions: [
-      { action: 'ver',    title: '📅 Ver agendamento' },
-      { action: 'fechar', title: 'Fechar'             }
+      { action: 'ver', title: '📅 Ver agendamento' },
+      { action: 'fechar', title: 'Fechar' }
     ]
   });
 });
 
 // =====================================================
-//  CLIQUE NA NOTIFICAÇÃO
+// 📲 CLIQUE NA NOTIFICAÇÃO
 // =====================================================
 self.addEventListener('notificationclick', (event) => {
-  if (event.action === 'fechar') {
-    event.notification.close();
-    return;
-  }
-
   event.notification.close();
 
-  const targetUrl = event.notification.data?.url
-    || 'https://morspetrealeza.vercel.app/#agendamento';
+  if (event.action === 'fechar') return;
+
+  const targetUrl =
+    event.notification.data?.url ||
+    'https://morspetrealeza.vercel.app/#agendamento';
 
   event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-      // Se já há uma aba aberta, foca ela
-      for (const client of clientList) {
-        if (client.url.includes('morspetrealeza') && 'focus' in client) {
-          client.navigate(targetUrl);
-          return client.focus();
+    clients.matchAll({ type: 'window', includeUncontrolled: true })
+      .then((clientList) => {
+        for (const client of clientList) {
+          if (client.url.includes('morspetrealeza') && 'focus' in client) {
+            client.navigate(targetUrl);
+            return client.focus();
+          }
         }
-      }
-      // Caso contrário, abre nova aba
-      if (clients.openWindow) {
         return clients.openWindow(targetUrl);
-      }
-    })
+      })
   );
 });
 
 // =====================================================
-//  CACHE BÁSICO (offline shell)
+// 💾 CACHE OFFLINE (PWA)
 // =====================================================
-const CACHE_NAME = 'mors-pet-v1';
+const CACHE_NAME = 'mors-pet-v2';
+
 const OFFLINE_ASSETS = [
   '/',
   '/index.html',
@@ -88,46 +86,67 @@ const OFFLINE_ASSETS = [
 ];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(OFFLINE_ASSETS))
-  );
   self.skipWaiting();
+
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.addAll(OFFLINE_ASSETS))
+  );
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+      Promise.all(
+        keys
+          .filter((key) => key !== CACHE_NAME)
+          .map((key) => caches.delete(key))
+      )
     )
   );
+
   self.clients.claim();
 });
 
+// =====================================================
+// 🌐 FETCH (CORRIGIDO — NÃO QUEBRA MAIS)
+// =====================================================
 self.addEventListener('fetch', (event) => {
-  // Ignora requisições não-GET e Firebase/APIs externas
   if (event.request.method !== 'GET') return;
-  if (event.request.url.includes('firebaseio') ||
-      event.request.url.includes('googleapis') ||
-      event.request.url.includes('gstatic')    ||
-      event.request.url.includes('fonts.')     ||
-      event.request.url.includes('firestore')) return;
+
+  const url = event.request.url;
+
+  // ignora APIs externas
+  if (
+    url.includes('firebaseio') ||
+    url.includes('googleapis') ||
+    url.includes('gstatic') ||
+    url.includes('fonts.') ||
+    url.includes('firestore')
+  ) return;
 
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) return cached;
-      return fetch(event.request).then((response) => {
-        // Armazena em cache somente respostas válidas e mesma origem
-        if (response && response.status === 200 && response.type === 'basic') {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
-        }
-        return response;
-      }).catch(() => {
-        // Fallback para index.html quando offline
-        if (event.request.destination === 'document') {
-          return caches.match('/index.html');
-        }
-      });
-    })
+    caches.match(event.request)
+      .then((cached) => {
+        if (cached) return cached;
+
+        return fetch(event.request)
+          .then((response) => {
+            if (!response || response.status !== 200) {
+              return response;
+            }
+
+            const clone = response.clone();
+
+            caches.open(CACHE_NAME)
+              .then((cache) => cache.put(event.request, clone));
+
+            return response;
+          })
+          .catch(() => {
+            // 🔥 SEMPRE retorna algo válido
+            return caches.match('/index.html');
+          });
+      })
   );
 });
