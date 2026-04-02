@@ -36,13 +36,31 @@ async function enviarNotificacoes() {
       const userDoc = await db.collection("users").doc(booking.userId).get();
       const token = userDoc.data()?.fcmToken;
 
-      if (!token) continue;
+      if (!token) {
+        console.log(`⚠️ Usuário sem token: ${booking.userId}`);
+        continue;
+      }
 
+      // 🔥 MENSAGEM OTIMIZADA PARA PWA + MOBILE
       const message = {
         token,
         notification: {
-          title: "🐾 Lembrete",
+          title: "🐾 Lembrete de Agendamento",
           body: `Hoje às ${booking.time}, ${booking.petName} tem ${booking.service}`
+        },
+        webpush: {
+          notification: {
+            icon: "/icons/icon-192.png",
+            badge: "/icons/icon-96.png",
+            requireInteraction: true,
+            vibrate: [200, 100, 200]
+          },
+          fcmOptions: {
+            link: "https://morspetrealeza.vercel.app/#agendamento"
+          }
+        },
+        data: {
+          url: "https://morspetrealeza.vercel.app/#agendamento"
         }
       };
 
