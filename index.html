@@ -527,6 +527,42 @@
   .toast.info { border-left: 4px solid var(--orange); }
   @keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
 
+  /* ===== MASCOTE FLUTUANTE ===== */
+  #mascote-wrap {
+    position: fixed;
+    bottom: 220px;
+    right: 20px;
+    z-index: 8999;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: opacity 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+                transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  #mascote-wrap.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  #mascote-wrap.hiding {
+    opacity: 0;
+    transform: translateX(20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  #mascote-video {
+    width: 110px;
+    height: 110px;
+    border-radius: 0;
+    background: transparent;
+    display: block;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 20px rgba(0,0,0,0.15));
+    animation: mascoteFloat 3s ease-in-out infinite;
+  }
+  @keyframes mascoteFloat {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-8px); }
+  }
+
   /* ===== LOGO SECRET CLICK INDICATOR ===== */
   .logo-click-indicator { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: var(--dark); color: var(--orange); padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 700; z-index: 99999; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
   .logo-click-indicator.show { opacity: 1; }
@@ -945,11 +981,23 @@
       <div class="footer-col"><h4>Informações</h4><div class="footer-info"><div class="footer-info-item"><div class="fii-dot"></div><span>Rua Jorge Chammas, 32<br>Vila Mariana, SP · 04160-070</span></div><div class="footer-info-item"><div class="fii-dot"></div><span>(11) 97860-0783<br>(11) 94829-5188</span></div><div class="footer-info-item"><div class="fii-dot"></div><span>Seg–Sáb: 09h às 17h30<br>Domingo: Fechado</span></div><div class="footer-info-item"><div class="fii-dot"></div><span>@mors32pet</span></div></div></div>
     </div>
     <div class="footer-bottom">
-      <span>© 2024 <span class="accent">Mors Pet Realeza</span>. Todos os direitos reservados.</span>
-      <span>Sistema de agendamento feito por <a href="https://wa.me/5513997595234?text=Vi%20o%20sistema%20que%20vc%20fez%20para%20o%20petshop%20Mors%20Pet%20Realeza%20e%20gostaria%20me%20interessei" target="_blank" class="credit-link">(Luiz do AutoZapp)</a></span>
+      <span>© 2026 <span class="accent">Mors Pet Realeza</span>. Todos os direitos reservados.</span>
+      <span>Sistema de agendamento feito por <a href="https://wa.me/5513997595234?text=Vi%20o%20sistema%20que%20vc%20fez%20para%20o%20petshop%20Mors%20Pet%20Realeza%20e%20me%20interessei" target="_blank" class="credit-link">(Luiz do AutoZapp)</a></span>
     </div>
   </div>
 </footer>
+
+<!-- ===== MASCOTE FLUTUANTE ===== -->
+<div id="mascote-wrap" aria-hidden="true">
+  <video
+    id="mascote-video"
+    src="cachorro.webm"
+    autoplay
+    muted
+    playsinline
+    loop
+  ></video>
+</div>
 
 <!-- ===== WHATSAPP FLOAT ===== -->
 <a class="wa-float" href="https://wa.me/5511978600783" target="_blank" title="WhatsApp Mors Pet Realeza">
@@ -1951,6 +1999,123 @@
   document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
   // Se admin já estava logado, manter acesso (não abrir painel automaticamente - só ao clicar no logo)
+
+  // ===== MASCOTE FLUTUANTE =====
+  (function() {
+    var MASCOTES = ['cachorro.webm', 'gatinho.webm'];
+    var currentIndex = 0;
+
+    var wrap  = document.getElementById('mascote-wrap');
+    var video = document.getElementById('mascote-video');
+
+    // Timers
+    var showTimer      = null;  // aguarda para exibir
+    var hideTimer      = null;  // tempo visível antes de esconder
+    var cooldownTimer  = null;  // intervalo mínimo entre aparições
+    var inactivityTimer= null;  // detecta pausa na interação
+
+    var isVisible    = false;
+    var inCooldown   = false;
+    var userActive   = false;   // usuário interagiu recentemente
+
+    var INITIAL_DELAY    = 5000;   // ms após load
+    var SHOW_DURATION    = 3500;   // ms visível
+    var COOLDOWN         = 50000;  // ms entre aparições
+    var INACTIVITY_WAIT  = 12000;  // ms de inatividade antes de reaparecer
+
+    function showMascote() {
+      if (isVisible || inCooldown) return;
+
+      // Trocar fonte antes de exibir
+      var src = MASCOTES[currentIndex % MASCOTES.length];
+      video.src = src;
+      video.load();
+      video.play().catch(function(){});
+
+      isVisible = true;
+      wrap.classList.remove('hiding');
+      wrap.classList.add('visible');
+
+      // Esconder após SHOW_DURATION
+      hideTimer = setTimeout(function() {
+        hideMascote();
+      }, SHOW_DURATION);
+    }
+
+    function hideMascote() {
+      if (!isVisible) return;
+      isVisible = false;
+
+      wrap.classList.remove('visible');
+      wrap.classList.add('hiding');
+
+      // Avança para o próximo mascote no ciclo
+      currentIndex = (currentIndex + 1) % MASCOTES.length;
+
+      // Cooldown antes do próximo
+      inCooldown = true;
+      cooldownTimer = setTimeout(function() {
+        inCooldown = false;
+        scheduleNext();
+      }, COOLDOWN);
+    }
+
+    function scheduleNext() {
+      // Só agenda se não houver timer pendente
+      clearTimeout(showTimer);
+      if (isVisible || inCooldown) return;
+
+      if (userActive) {
+        // Usuário ativo: aguarda inatividade
+        inactivityTimer = setTimeout(function() {
+          userActive = false;
+          showMascote();
+        }, INACTIVITY_WAIT);
+      } else {
+        showMascote();
+      }
+    }
+
+    function onUserInteraction() {
+      userActive = true;
+      clearTimeout(inactivityTimer);
+
+      // Reagenda inatividade caso esteja esperando para aparecer
+      if (!isVisible && !inCooldown) {
+        clearTimeout(showTimer);
+        inactivityTimer = setTimeout(function() {
+          userActive = false;
+          showMascote();
+        }, INACTIVITY_WAIT);
+      }
+    }
+
+    // Registra interações do usuário (throttled)
+    var interactionThrottle = null;
+    function throttledInteraction() {
+      if (interactionThrottle) return;
+      interactionThrottle = setTimeout(function() {
+        interactionThrottle = null;
+      }, 500);
+      onUserInteraction();
+    }
+
+    document.addEventListener('mousemove', throttledInteraction, { passive: true });
+    document.addEventListener('scroll',    throttledInteraction, { passive: true });
+    document.addEventListener('touchstart',throttledInteraction, { passive: true });
+
+    // Primeira aparição após INITIAL_DELAY
+    showTimer = setTimeout(function() {
+      showMascote();
+      // Após a primeira, configura o ciclo de cooldown
+      inCooldown = true;
+      cooldownTimer = setTimeout(function() {
+        inCooldown = false;
+        scheduleNext();
+      }, COOLDOWN);
+    }, INITIAL_DELAY);
+
+  })();
 </script>
 </body>
 </html>
