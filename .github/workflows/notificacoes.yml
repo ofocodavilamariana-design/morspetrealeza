@@ -1,8 +1,11 @@
 name: 🔔 Notificações
 
 on:
+  push:
+    branches:
+      - main
   schedule:
-    - cron: '0 11 * * *' # 08:00 Brasil
+    - cron: '0 11 * * *'
   workflow_dispatch:
 
 jobs:
