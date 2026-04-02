@@ -536,6 +536,20 @@
   .toast.info { border-left: 4px solid var(--orange); }
   @keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
 
+
+  /* ===== HERO CENTRALIZADO (sem card) ===== */
+  .hero-content-centered {
+    grid-template-columns: 1fr !important;
+    justify-items: center;
+    text-align: center;
+    max-width: 760px;
+  }
+  .hero-text-centered { max-width: 720px; }
+  .hero-text-centered .hero-badge { margin-left: auto; margin-right: auto; }
+  .hero-text-centered .hero-subtitle { margin-left: auto; margin-right: auto; }
+  .hero-text-centered .hero-actions { justify-content: center; }
+  .hero-text-centered .hero-stats { justify-content: center; }
+
   /* ===== MASCOTE FLUTUANTE ===== */
   #mascote-wrap {
     position: fixed;
@@ -962,8 +976,8 @@
   </div>
   <div class="hero-bg-shape"></div>
   <div class="hero-dots"></div>
-  <div class="hero-content">
-    <div class="hero-text">
+  <div class="hero-content hero-content-centered">
+    <div class="hero-text hero-text-centered">
       <div class="hero-badge"><span></span> Petshop Premium · Vila Mariana</div>
       <h1 class="hero-title">Mors Pet<br><span class="accent">Realeza</span></h1>
       <p class="hero-subtitle">Banho e Tosa com carinho e cuidado para o seu pet. Tratamento VIP, profissional e cheio de amor. <strong>Terças com 10% OFF!</strong></p>
@@ -979,23 +993,6 @@
         <div class="stat"><span class="stat-num">100%</span><span class="stat-label">Satisfação</span></div>
         <div class="stat"><span class="stat-num">VIP</span><span class="stat-label">Tratamento</span></div>
       </div>
-    </div>
-    <div class="hero-visual">
-      <div class="floating-sticker" style="top:-20px;right:-20px">⭐ 5.0 Google</div>
-      <div class="hero-card">
-        <div class="hero-img-wrap">
-          <img src="logo.jpg" alt="Mors Pet Realeza – Banho e Tosa" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-          <div class="hero-img-fallback" style="display:none">🐶</div>
-        </div>
-        <h3>Seu pet merece o melhor!</h3>
-        <p>Cuidados profissionais com todo o carinho que seu amiguinho merece.</p>
-        <div class="card-badges">
-          <span class="card-badge">🛁 Banho</span>
-          <span class="card-badge">✂️ Tosa</span>
-          <span class="card-badge">💆 Hidratação</span>
-        </div>
-      </div>
-      <div class="floating-sticker" style="bottom:-20px;left:-20px">📍 Vila Mariana · SP</div>
     </div>
   </div>
 </section>
@@ -1654,17 +1651,23 @@
     list.innerHTML = '<div class="loading-spinner"></div>';
 
     try {
-      const q = query(collection(db, 'bookings'), where('userId', '==', currentUser.uid), orderBy('date', 'desc'));
+      // Query simples sem orderBy para evitar necessidade de índice composto
+      const q = query(collection(db, 'bookings'), where('userId', '==', currentUser.uid));
       const snap = await getDocs(q);
       if (snap.empty) {
         list.innerHTML = `<div class="empty-state"><div class="icon">📅</div><h4>Nenhum agendamento encontrado</h4><p>Agende o banho do seu pet agora!</p></div>`;
         return;
       }
+      // Ordenação no cliente (mais recente primeiro)
+      const bookings = [];
+      snap.forEach(docSnap => bookings.push({ id: docSnap.id, ...docSnap.data() }));
+      bookings.sort((a, b2) => (b2.date || '').localeCompare(a.date || ''));
+
       const fmtDate = (d) => d ? new Date(d+'T12:00:00').toLocaleDateString('pt-BR') : '-';
       const getPetEmoji = (t) => t==='Cachorro'?'🐶':t==='Gato'?'🐱':'🐾';
+      const statusLabel = { confirmado: 'Confirmado', concluido: 'Concluído', cancelado: 'Cancelado' };
       list.innerHTML = '';
-      snap.forEach(doc => {
-        const b = doc.data();
+      bookings.forEach(b => {
         const price = calcPrice(b.petType, b.petSize, b.date);
         const isTue = b.date ? new Date(b.date+'T12:00:00').getDay()===2 : false;
         const item = document.createElement('div');
@@ -1672,7 +1675,7 @@
         item.innerHTML = `
           <div style="display:flex;justify-content:space-between;align-items:flex-start">
             <div class="mb-pet">${getPetEmoji(b.petType)} ${b.petName || '—'} <span style="font-weight:400;font-size:13px;color:var(--gray)">(${b.petType||'—'}${b.petSize?' · '+b.petSize:''})</span></div>
-            <span class="mb-status ${b.status}">${b.status}</span>
+            <span class="mb-status ${b.status}">${statusLabel[b.status] || b.status}</span>
           </div>
           <div class="mb-service">✨ ${b.service||'—'}</div>
           <div class="mb-date">📅 ${fmtDate(b.date)} às ${b.time||'—'}</div>
@@ -1681,7 +1684,8 @@
         list.appendChild(item);
       });
     } catch(e) {
-      list.innerHTML = '<p style="color:var(--gray);text-align:center;padding:20px">Erro ao carregar agendamentos.</p>';
+      console.error('Erro ao carregar agendamentos:', e);
+      list.innerHTML = '<p style="color:var(--gray);text-align:center;padding:20px">Erro ao carregar agendamentos. Tente novamente.</p>';
     }
   };
 
@@ -2557,8 +2561,8 @@
     var userActive   = false;   // usuário interagiu recentemente
 
     var INITIAL_DELAY    = 10000;   // ms após load
-    var SHOW_DURATION    = 4000;   // ms visível
-    var COOLDOWN         = 40000;  // ms entre aparições
+    var SHOW_DURATION    = 5000;   // ms visível
+    var COOLDOWN         = 50000;  // ms entre aparições
     var INACTIVITY_WAIT  = 10000;  // ms de inatividade antes de reaparecer
 
     function showMascote() {
