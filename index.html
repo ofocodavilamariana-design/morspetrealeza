@@ -2556,10 +2556,10 @@
     var inCooldown   = false;
     var userActive   = false;   // usuário interagiu recentemente
 
-    var INITIAL_DELAY    = 5000;   // ms após load
-    var SHOW_DURATION    = 2500;   // ms visível
-    var COOLDOWN         = 50000;  // ms entre aparições
-    var INACTIVITY_WAIT  = 12000;  // ms de inatividade antes de reaparecer
+    var INITIAL_DELAY    = 10000;   // ms após load
+    var SHOW_DURATION    = 4000;   // ms visível
+    var COOLDOWN         = 40000;  // ms entre aparições
+    var INACTIVITY_WAIT  = 10000;  // ms de inatividade antes de reaparecer
 
     function showMascote() {
       if (isVisible || inCooldown) return;
