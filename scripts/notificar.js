@@ -2,7 +2,6 @@
 
 const admin = require('firebase-admin');
 
-// 🔐 Credenciais do Firebase
 const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 
 admin.initializeApp({
@@ -15,7 +14,7 @@ async function enviarNotificacoes() {
   try {
     console.log("🚀 Iniciando notificações...");
 
-    // 🇧🇷 Data no horário do Brasil
+    // 🔥 DATA NO FUSO DO BRASIL (CORRETO)
     const hoje = new Date();
     const dataHoje = hoje.toLocaleDateString("sv-SE", {
       timeZone: "America/Sao_Paulo"
@@ -23,7 +22,6 @@ async function enviarNotificacoes() {
 
     console.log("📅 Data considerada:", dataHoje);
 
-    // 🔍 Buscar agendamentos do dia
     const snapshot = await db
       .collection("bookings")
       .where("date", "==", dataHoje)
@@ -35,15 +33,14 @@ async function enviarNotificacoes() {
       return;
     }
 
-    // 🔁 Percorrer agendamentos
     for (const doc of snapshot.docs) {
       const booking = doc.data();
 
-      // Evita duplicidade
+      // 🔥 evita duplicação
       if (booking.notificadoHoje) continue;
 
-      // Buscar usuário
-      const userDoc = await db.collection("users").doc(booking.userId).get();
+      const userRef = db.collection("users").doc(booking.userId);
+      const userDoc = await userRef.get();
       const token = userDoc.data()?.fcmToken;
 
       if (!token) {
@@ -51,69 +48,55 @@ async function enviarNotificacoes() {
         continue;
       }
 
-      // 🔥 NOTIFICAÇÃO PROFISSIONAL
       const message = {
         token,
-
         notification: {
-          title: "🐾 Mors Pet Realeza",
+          title: "🐾 Lembrete de Agendamento",
           body: `Hoje às ${booking.time}, ${booking.petName} tem ${booking.service}`
         },
-
         webpush: {
-          headers: {
-            Urgency: "high"
-          },
-
           notification: {
-            title: "🐾 Mors Pet Realeza",
-            body: `Hoje às ${booking.time}, ${booking.petName} tem ${booking.service}`,
-
-            icon: "/icons/icon-192.png",   // logo principal
-            badge: "/icons/icon-96.png",   // ícone pequeno
-            image: "/logo.jpg",            // banner grande (Android)
-
+            icon: "https://morspetrealeza.vercel.app/icons/icon-192.png",
+            badge: "https://morspetrealeza.vercel.app/icons/icon-96.png",
             requireInteraction: true,
-            vibrate: [200, 100, 200],
-
-            actions: [
-              {
-                action: "ver",
-                title: "📅 Ver agendamento"
-              },
-              {
-                action: "fechar",
-                title: "Fechar"
-              }
-            ]
+            vibrate: [200, 100, 200]
           },
-
           fcmOptions: {
             link: "https://morspetrealeza.vercel.app/#agendamento"
           }
         },
-
         data: {
           url: "https://morspetrealeza.vercel.app/#agendamento"
         }
       };
 
-      // 📤 Enviar notificação
-      await admin.messaging().send(message);
+      try {
+        await admin.messaging().send(message);
 
-      // 📝 Marcar como enviado
-      await db.collection("bookings").doc(doc.id).update({
-        notificadoHoje: true
-      });
+        await db.collection("bookings").doc(doc.id).update({
+          notificadoHoje: true
+        });
 
-      console.log(`✅ Notificação enviada para ${booking.userId}`);
+        console.log(`✅ Enviado para ${booking.userId}`);
+
+      } catch (error) {
+        console.error(`❌ Erro ao enviar para ${booking.userId}:`, error.code);
+
+        // 🔥 REMOVE TOKEN INVÁLIDO AUTOMATICAMENTE
+        if (error.code === 'messaging/registration-token-not-registered') {
+          console.log(`🧹 Removendo token inválido do usuário ${booking.userId}`);
+
+          await userRef.update({
+            fcmToken: admin.firestore.FieldValue.delete()
+          });
+        }
+      }
     }
 
   } catch (err) {
-    console.error("❌ Erro:", err);
+    console.error("❌ Erro geral:", err);
     process.exit(1);
   }
 }
 
-// 🚀 Executar
 enviarNotificacoes();
