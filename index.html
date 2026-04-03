@@ -126,7 +126,12 @@
   .nav-cta:hover { background: var(--orange-dark) !important; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(242,101,34,0.4) !important; }
   .nav-user-btn { display: flex; align-items: center; gap: 8px; background: var(--orange-pale); border: 1.5px solid rgba(242,101,34,0.2); color: var(--orange); font-size: 13px; font-weight: 600; padding: 7px 16px; border-radius: 30px; cursor: pointer; transition: var(--transition); font-family: 'DM Sans', sans-serif; }
   .nav-user-btn:hover { background: var(--orange-mid); }
-  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; border: none; background: none; }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; border: none; background: none; flex-shrink: 0; }
+  .nav-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  @media (max-width: 768px) {
+    .nav-right .nav-user-btn span { display: none; }
+    .nav-right .nav-user-btn { padding: 8px 10px; gap: 0; min-width: 36px; justify-content: center; }
+  }
   .hamburger span { display: block; width: 24px; height: 2px; background: var(--dark); border-radius: 2px; transition: var(--transition); }
   .mobile-menu { display: none; position: fixed; top: 72px; left: 0; right: 0; background: var(--white); border-bottom: 1px solid var(--beige-dark); padding: 20px 24px 28px; z-index: 999; flex-direction: column; gap: 4px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
   .mobile-menu.open { display: flex; }
@@ -338,6 +343,14 @@
   .mb-status.concluido { background: var(--green-pale); color: var(--green); }
   .mb-status.cancelado { background: var(--red-pale); color: var(--red); }
   .mb-price { font-size: 13px; font-weight: 700; color: var(--orange); margin-top: 4px; }
+  .mb-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .mb-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 7px 14px; border-radius: 20px; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: var(--transition); }
+  .mb-btn-confirm { background: var(--green-pale); color: #16a34a; border: 1.5px solid rgba(34,197,94,0.3); }
+  .mb-btn-confirm:hover { background: #bbf7d0; }
+  .mb-btn-reschedule { background: var(--orange-pale); color: var(--orange); border: 1.5px solid rgba(242,101,34,0.25); }
+  .mb-btn-reschedule:hover { background: var(--orange-mid); }
+  .mb-btn-cancel { background: var(--red-pale); color: var(--red); border: 1.5px solid rgba(239,68,68,0.25); }
+  .mb-btn-cancel:hover { background: #fecaca; }
 
   /* ===== ADMIN LOGIN MODAL ===== */
   .admin-login-modal { max-width: 400px; }
@@ -616,6 +629,12 @@
   @media (max-width: 640px) {
     .nav-links { display: none; }
     .hamburger { display: flex; }
+    nav { padding: 0 16px; }
+    .logo-text { display: none; }
+    .nav-right { gap: 6px; }
+    .nav-right .nav-user-btn { padding: 7px 9px; font-size: 12px; }
+    .nav-right .nav-user-btn span { display: none; }
+    .nav-right .nav-user-btn i { font-size: 15px; }
     .hero-content { padding: 40px 0; }
     .form-row { grid-template-columns: 1fr; }
     .footer-grid { grid-template-columns: 1fr; gap: 28px; }
@@ -936,7 +955,7 @@
       <li><a href="#contato">Contato</a></li>
       <li><a href="#agendamento" class="nav-cta">Agendar</a></li>
     </ul>
-    <div style="display:flex;align-items:center;gap:10px">
+    <div class="nav-right">
       <button class="nav-user-btn" id="navMyBookingsBtn" onclick="openMyBookings()" style="display:none;background:var(--green-pale);border-color:rgba(34,197,94,0.3);color:#16a34a">
         <i class="fa-regular fa-calendar-check" style="font-size:14px"></i>
         <span>Meus Agendamentos</span>
@@ -1163,8 +1182,9 @@
           <div class="booking-info-item"><div class="bii-icon">🎉</div><div class="bii-text"><h5>Promoção de Terça!</h5><p>Agende para terça-feira e ganhe 10% de desconto.</p></div></div>
         </div>
       </div>
-      <div id="formulario-agendamento"></div>
       <div id="bookingSection" class="reveal reveal-delay-2">
+        <!-- âncora mobile: aponta para o início deste formulário -->
+        <div id="formulario-agendamento" style="position:relative;top:-80px;visibility:hidden;height:0"></div>
         <!-- Injetado via JS -->
       </div>
     </div>
@@ -1671,6 +1691,9 @@
       bookings.forEach(b => {
         const price = calcPrice(b.petType, b.petSize, b.date);
         const isTue = b.date ? new Date(b.date+'T12:00:00').getDay()===2 : false;
+        const isConcluido = b.status === 'concluido';
+        const isCancelado = b.status === 'cancelado';
+        const safeName = (b.petName||'').replace(/'/g,"\\'");
         const item = document.createElement('div');
         item.className = `my-booking-item status-${b.status}`;
         item.innerHTML = `
@@ -1681,6 +1704,18 @@
           <div class="mb-service">✨ ${b.service||'—'}</div>
           <div class="mb-date">📅 ${fmtDate(b.date)} às ${b.time||'—'}</div>
           ${price ? `<div class="mb-price">💰 R$ ${price.toFixed(2).replace('.',',')}${isTue?' 🎉 (com 10% OFF terça)':''}</div>` : ''}
+          ${!isConcluido && !isCancelado ? `
+          <div class="mb-actions">
+            <button class="mb-btn mb-btn-confirm" onclick="userConfirmBooking('${b.id}','${safeName}')">
+              <i class="fa-solid fa-circle-check"></i> Confirmar
+            </button>
+            <button class="mb-btn mb-btn-reschedule" onclick="userRescheduleBooking('${b.id}','${safeName}')">
+              <i class="fa-solid fa-rotate"></i> Reagendar
+            </button>
+            <button class="mb-btn mb-btn-cancel" onclick="userCancelBooking('${b.id}','${safeName}')">
+              <i class="fa-solid fa-xmark"></i> Cancelar
+            </button>
+          </div>` : ''}
         `;
         list.appendChild(item);
       });
@@ -2543,6 +2578,35 @@
 
   // Se admin já estava logado, manter acesso (não abrir painel automaticamente - só ao clicar no logo)
 
+  // ===== AÇÕES DO USUÁRIO NOS AGENDAMENTOS =====
+  window.userConfirmBooking = async function(id, petName) {
+    if (!confirm('Confirmar presença no agendamento de ' + petName + '?')) return;
+    try {
+      await updateDoc(doc(db, 'bookings', id), { status: 'confirmado', userConfirmed: true });
+      showToast('✅ Presença confirmada! Até lá! 🐾', 'success');
+      openMyBookings();
+    } catch(e) { showToast('Erro ao confirmar. Tente novamente.', 'error'); }
+  };
+
+  window.userCancelBooking = async function(id, petName) {
+    if (!confirm('Tem certeza que deseja cancelar o agendamento de ' + petName + '?')) return;
+    try {
+      await updateDoc(doc(db, 'bookings', id), { status: 'cancelado' });
+      showToast('Agendamento de ' + petName + ' cancelado.', 'info');
+      openMyBookings();
+    } catch(e) { showToast('Erro ao cancelar. Tente novamente.', 'error'); }
+  };
+
+  window.userRescheduleBooking = function(id, petName) {
+    // Fecha o modal de agendamentos, rola até o formulário e pré-seleciona o pet
+    document.getElementById('myBookingsModal').classList.remove('open');
+    showToast('📅 Escolha uma nova data para ' + petName + ' no formulário abaixo.', 'info');
+    setTimeout(() => {
+      const target = document.getElementById('formulario-agendamento') || document.getElementById('agendamento');
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 300);
+  };
+
   // ===== MOBILE: SCROLL DIRETO PARA FORMULÁRIO DE AGENDAMENTO =====
   (function() {
     document.addEventListener('click', function(e) {
@@ -2552,10 +2616,7 @@
       if (isMobile) {
         e.preventDefault();
         var target = document.getElementById('formulario-agendamento');
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-        // Fecha o menu mobile se estiver aberto
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         var menu = document.querySelector('.mobile-menu');
         if (menu) menu.classList.remove('open');
       }
