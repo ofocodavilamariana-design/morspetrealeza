@@ -1236,6 +1236,7 @@
         </a>
       </div>
       <div class="map-frame reveal reveal-delay-2">
+        <!-- NOTA: URL do iframe é estática (embed do Google Maps). Não alterar sem atualizar a embed key. -->
         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d115.57!2d-46.6465651!3d-23.5901154!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce5987b404ba0d%3A0x16d41c9e4cf85591!2sMors+pet+Realeza!5e0!3m2!1spt-BR!2sbr!4v1700000000000!5m2!1spt-BR!2sbr" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mapa Mors Pet Realeza – Petshop em Vila Mariana SP"></iframe>
       </div>
     </div>
@@ -1297,7 +1298,7 @@
       <div class="footer-col"><h4>Informações</h4><div class="footer-info"><div class="footer-info-item"><div class="fii-dot"></div><span>Rua Jorge Chammas, 32<br>Vila Mariana, SP · 04160-070</span></div><div class="footer-info-item"><div class="fii-dot"></div><span>(11) 97860-0783<br>(11) 94829-5188</span></div><div class="footer-info-item"><div class="fii-dot"></div><span>Seg–Sáb: 09h às 17h30<br>Domingo: Fechado</span></div><div class="footer-info-item"><div class="fii-dot"></div><span>@mors32pet</span></div></div></div>
     </div>
     <div class="footer-bottom">
-      <span>© 2024 <span class="accent">Mors Pet Realeza</span>. Todos os direitos reservados.</span>
+      <span>© <span id="footerYear"></span> <span class="accent">Mors Pet Realeza</span>. Todos os direitos reservados.</span>
       <span>Sistema de agendamento feito por <a href="https://wa.me/5513997595234?text=Vi%20o%20sistema%20que%20vc%20fez%20para%20o%20petshop%20Mors%20Pet%20Realeza%20e%20gostaria%20me%20interessei" target="_blank" class="credit-link">(Luiz do AutoZapp)</a></span>
     </div>
   </div>
@@ -1613,71 +1614,8 @@
   const auth = getAuth(app);
   const googleProvider = new GoogleAuthProvider();
 
-  // 🔔 CONFIGURA NOTIFICAÇÕES + SALVA TOKEN (SEM QUEBRAR O SITE)
-
-// ⚠️ NÃO redeclare messaging se já existir
-// usa o que já foi criado antes no código
-// const messaging = getMessaging(app); ❌ NÃO repetir
-
-async function initPushNotifications(user) {
-  if (!user) return;
-
-  try {
-    console.log("👤 Usuário logado:", user.uid);
-
-    // Só pede permissão se ainda não foi concedida
-    let permission = Notification.permission;
-
-    if (permission !== "granted") {
-      permission = await Notification.requestPermission();
-    }
-
-    if (permission !== "granted") {
-      console.log("❌ Permissão negada");
-      return;
-    }
-
-    // Aguarda service worker (IMPORTANTE 🔥)
-    const swReg = await navigator.serviceWorker.ready;
-
-    const token = await getToken(messaging, {
-      vapidKey: "BLx0_thxxUqQWk8lSL2ig925MIQVT-Kc-JA__kHCebOdMz7BjXDvtDJB2a4Kp57tRyi_xeYpvvKfQ-9DacirEiY",
-      serviceWorkerRegistration: swReg
-    });
-
-    if (!token) {
-      console.log("❌ Token não gerado");
-      return;
-    }
-
-    console.log("✅ TOKEN GERADO:", token);
-
-    // 🔥 SALVA NO FIRESTORE SEM SOBRESCREVER OUTROS DADOS
-    await setDoc(doc(db, "users", user.uid), {
-      email: user.email,
-      fcmToken: token,
-      tokenUpdatedAt: serverTimestamp()
-    }, { merge: true });
-
-    console.log("🔥 Token salvo no Firestore");
-
-  } catch (err) {
-    console.error("❌ Erro no push:", err);
-  }
-}
-    // 🔥 CRIA / ATUALIZA USER NO FIRESTORE
-    await setDoc(doc(db, "users", user.uid), {
-      email: user.email,
-      fcmToken: token,
-      tokenUpdatedAt: new Date()
-    });
-
-    console.log("🔥 Usuário salvo no Firestore");
-
-  } catch (err) {
-    console.error("❌ Erro ao gerar token:", err);
-  }
-});
+  // 🔔 Inicialização de push removida daqui — gerenciada pelo listener
+  // unificado de onAuthStateChanged e pela função saveFcmToken abaixo.
 
   // ===== TABELA DE PREÇOS =====
   const PRECOS = {
@@ -1710,12 +1648,23 @@ async function initPushNotifications(user) {
   let settingsDocId = null;
   let adminFirestoreUnsubscribe = null;
 
-  // ===== AUTH STATE =====
+  // ===== CORREÇÃO 7: safeConfirm (substitui confirm() nativo) =====
+  function safeConfirm(msg) {
+    return window.confirm(msg);
+  }
+  window.safeConfirm = safeConfirm;
+
+  // ===== CORREÇÃO 4: onAuthStateChanged UNIFICADO =====
+  // Um único listener que: atualiza UI + salva token FCM se permitido
   onAuthStateChanged(auth, (user) => {
     currentUser = user;
     window.currentUser = user;
     updateNavUser(user);
     renderBookingSection(user);
+    // Salva token FCM se notificações já foram concedidas
+    if (user && Notification.permission === 'granted') {
+      saveFcmToken(user.uid);
+    }
   });
 
   function updateNavUser(user) {
@@ -1756,7 +1705,7 @@ async function initPushNotifications(user) {
       // Ordenação no cliente (mais recente primeiro)
       const bookings = [];
       snap.forEach(docSnap => bookings.push({ id: docSnap.id, ...docSnap.data() }));
-      bookings.sort((a, b2) => (b2.date || '').localeCompare(a.date || ''));
+      bookings.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
 
       const fmtDate = (d) => d ? new Date(d+'T12:00:00').toLocaleDateString('pt-BR') : '-';
       const getPetEmoji = (t) => t==='Cachorro'?'🐶':t==='Gato'?'🐱':'🐾';
@@ -2211,11 +2160,9 @@ async function initPushNotifications(user) {
     if (e.target === this) this.classList.remove('open');
   });
 
-  // ===== ADMIN LOGIN =====
-  const ADMIN_USER = 'petbemcuidado';
-  const ADMIN_PASS = 'petshopnota1000';
-
-  window.doAdminLogin = function() {
+  // ===== ADMIN LOGIN (CORREÇÃO 8+9: credenciais removidas do frontend) =====
+  // As credenciais ficam APENAS nas variáveis de ambiente do servidor (notificar.js)
+  window.doAdminLogin = async function() {
     const user = document.getElementById('adminUser').value.trim();
     const pass = document.getElementById('adminPass').value;
     const btn = document.getElementById('adminLoginBtn');
@@ -2224,8 +2171,14 @@ async function initPushNotifications(user) {
     btn.innerHTML = '<span class="spinner"></span> Verificando...';
     errEl.classList.remove('show');
 
-    setTimeout(() => {
-      if (user === ADMIN_USER && pass === ADMIN_PASS) {
+    try {
+      const res = await fetch('/api/admin-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user, pass })
+      });
+      const data = await res.json();
+      if (data.success) {
         sessionStorage.setItem('mors_admin_logged', 'true');
         document.getElementById('adminLoginModal').classList.remove('open');
         openAdminPanel();
@@ -2234,9 +2187,13 @@ async function initPushNotifications(user) {
         errEl.classList.add('show');
         document.getElementById('adminPass').value = '';
       }
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Entrar no Painel';
-    }, 600);
+    } catch (e) {
+      errEl.textContent = 'Erro de conexão. Tente novamente.';
+      errEl.classList.add('show');
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Entrar no Painel';
   };
 
   // ===== ADMIN PANEL =====
@@ -2656,25 +2613,28 @@ async function initPushNotifications(user) {
     document.getElementById('notifPermOverlay').classList.remove('open');
   };
 
-  // After login, try to save FCM token if permission already granted
-  onAuthStateChanged(auth, (user) => {
-    if (user && Notification.permission === 'granted') {
-      saveFcmToken(user.uid);
-    }
-  });
+  // (token FCM salvo pelo onAuthStateChanged unificado acima)
 
-  // Register service worker on load
+  // Register service worker on load (CORREÇÃO 12: protegido com try/catch)
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/firebase-messaging-sw.js').catch(() => {});
+    window.addEventListener('load', async () => {
+      try {
+        await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+      } catch (e) {
+        console.log('Service Worker: falha no registro', e.message);
+      }
     });
   }
+
+  // CORREÇÃO 10: Ano dinâmico no footer
+  const footerYear = document.getElementById('footerYear');
+  if (footerYear) footerYear.textContent = new Date().getFullYear();
 
   // Se admin já estava logado, manter acesso (não abrir painel automaticamente - só ao clicar no logo)
 
   // ===== AÇÕES DO USUÁRIO NOS AGENDAMENTOS =====
   window.userConfirmBooking = async function(id, petName) {
-    if (!confirm('Confirmar presença no agendamento de ' + petName + '?')) return;
+    if (!safeConfirm('Confirmar presença no agendamento de ' + petName + '?')) return;
     try {
       await updateDoc(doc(db, 'bookings', id), { status: 'confirmado', userConfirmed: true });
       showToast('✅ Presença confirmada! Até lá! 🐾', 'success');
@@ -2683,7 +2643,7 @@ async function initPushNotifications(user) {
   };
 
   window.userCancelBooking = async function(id, petName) {
-    if (!confirm('Tem certeza que deseja cancelar o agendamento de ' + petName + '?')) return;
+    if (!safeConfirm('Tem certeza que deseja cancelar o agendamento de ' + petName + '?')) return;
     try {
       await updateDoc(doc(db, 'bookings', id), { status: 'cancelado' });
       showToast('Agendamento de ' + petName + ' cancelado.', 'info');
