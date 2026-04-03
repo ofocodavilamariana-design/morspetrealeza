@@ -1613,24 +1613,36 @@
   const auth = getAuth(app);
   const googleProvider = new GoogleAuthProvider();
 
-  // 🔔 CONFIGURA NOTIFICAÇÕES + SALVA TOKEN
-const messaging = getMessaging(app);
+  // 🔔 CONFIGURA NOTIFICAÇÕES + SALVA TOKEN (SEM QUEBRAR O SITE)
 
-onAuthStateChanged(auth, async (user) => {
+// ⚠️ NÃO redeclare messaging se já existir
+// usa o que já foi criado antes no código
+// const messaging = getMessaging(app); ❌ NÃO repetir
+
+async function initPushNotifications(user) {
   if (!user) return;
 
   try {
     console.log("👤 Usuário logado:", user.uid);
 
-    const permission = await Notification.requestPermission();
+    // Só pede permissão se ainda não foi concedida
+    let permission = Notification.permission;
+
+    if (permission !== "granted") {
+      permission = await Notification.requestPermission();
+    }
 
     if (permission !== "granted") {
       console.log("❌ Permissão negada");
       return;
     }
 
+    // Aguarda service worker (IMPORTANTE 🔥)
+    const swReg = await navigator.serviceWorker.ready;
+
     const token = await getToken(messaging, {
-      vapidKey: "BLx0_thxxUqQWk8lSL2ig925MIQVT-Kc-JA__kHCebOdMz7BjXDvtDJB2a4Kp57tRyi_xeYpvvKfQ-9DacirEiY"
+      vapidKey: "BLx0_thxxUqQWk8lSL2ig925MIQVT-Kc-JA__kHCebOdMz7BjXDvtDJB2a4Kp57tRyi_xeYpvvKfQ-9DacirEiY",
+      serviceWorkerRegistration: swReg
     });
 
     if (!token) {
@@ -1640,6 +1652,19 @@ onAuthStateChanged(auth, async (user) => {
 
     console.log("✅ TOKEN GERADO:", token);
 
+    // 🔥 SALVA NO FIRESTORE SEM SOBRESCREVER OUTROS DADOS
+    await setDoc(doc(db, "users", user.uid), {
+      email: user.email,
+      fcmToken: token,
+      tokenUpdatedAt: serverTimestamp()
+    }, { merge: true });
+
+    console.log("🔥 Token salvo no Firestore");
+
+  } catch (err) {
+    console.error("❌ Erro no push:", err);
+  }
+}
     // 🔥 CRIA / ATUALIZA USER NO FIRESTORE
     await setDoc(doc(db, "users", user.uid), {
       email: user.email,
