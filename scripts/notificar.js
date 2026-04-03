@@ -15,7 +15,10 @@ async function enviarNotificacoes() {
     console.log("🚀 Iniciando notificações...");
 
     const hoje = new Date();
-    const dataHoje = hoje.toISOString().split("T")[0];
+
+const dataHoje = hoje.toLocaleDateString("sv-SE", {
+  timeZone: "America/Sao_Paulo"
+});
 
     const snapshot = await db
       .collection("bookings")
