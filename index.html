@@ -428,6 +428,8 @@
   .booking-datetime span { display: block; font-size: 11px; font-weight: 500; color: var(--gray); }
   .status-badge { font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 10px; letter-spacing: 0.5px; text-transform: uppercase; }
   .status-badge.confirmado { background: var(--orange-pale); color: var(--orange); }
+  .status-badge.agendado { background: var(--orange-pale); color: var(--orange); }
+  .user-confirmed-badge { display: inline-flex; align-items: center; gap: 5px; background: #dbeafe; color: #1d4ed8; border: 1px solid #93c5fd; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 10px; letter-spacing: 0.3px; margin-top: 5px; }
   .status-badge.concluido { background: var(--green-pale); color: var(--green); }
   .status-badge.cancelado { background: var(--red-pale); color: var(--red); }
   .booking-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
@@ -1509,7 +1511,7 @@
         <!-- STATS -->
         <div class="stats-row" id="statsRow">
           <div class="stat-card"><div class="stat-icon orange"><i class="fa-regular fa-calendar" style="color:var(--orange)"></i></div><div class="stat-info"><div class="value" id="statTotal">—</div><div class="label">Total</div></div></div>
-          <div class="stat-card"><div class="stat-icon green"><i class="fa-solid fa-circle-check" style="color:var(--green)"></i></div><div class="stat-info"><div class="value" id="statConfirmados">—</div><div class="label">Confirmados</div></div></div>
+          <div class="stat-card"><div class="stat-icon orange"><i class="fa-regular fa-calendar-check" style="color:var(--orange)"></i></div><div class="stat-info"><div class="value" id="statConfirmados">—</div><div class="label">Agendados</div></div></div>
           <div class="stat-card"><div class="stat-icon yellow"><i class="fa-solid fa-star" style="color:var(--yellow)"></i></div><div class="stat-info"><div class="value" id="statConcluidos">—</div><div class="label">Concluídos</div></div></div>
           <div class="stat-card"><div class="stat-icon red"><i class="fa-solid fa-xmark" style="color:var(--red)"></i></div><div class="stat-info"><div class="value" id="statCancelados">—</div><div class="label">Cancelados</div></div></div>
           <div class="stat-card"><div class="stat-icon purple"><i class="fa-solid fa-dollar-sign" style="color:#9333ea"></i></div><div class="stat-info"><div class="value" id="statReceita">—</div><div class="label">Receita Est.</div></div></div>
@@ -1527,7 +1529,7 @@
             <div class="section-card-body">
               <div class="filters-row">
                 <button class="filter-btn active" onclick="setAdminFilter('todos', this)">Todos</button>
-                <button class="filter-btn" onclick="setAdminFilter('confirmado', this)">Confirmados</button>
+                <button class="filter-btn" onclick="setAdminFilter('confirmado', this)">Agendados</button>
                 <button class="filter-btn" onclick="setAdminFilter('concluido', this)">Concluídos</button>
                 <button class="filter-btn" onclick="setAdminFilter('cancelado', this)">Cancelados</button>
                 <button class="filter-btn" onclick="setAdminFilter('hoje', this)" style="margin-left:auto">Hoje</button>
@@ -2250,7 +2252,8 @@
         </div>
         <div class="booking-meta">
           <div class="booking-datetime">${fmtDate(b.date)}<span>${b.time||'—'}</span></div>
-          <span class="status-badge ${b.status}">${b.status}</span>
+          <span class="status-badge ${b.status}">${b.status === 'confirmado' ? 'Agendado' : b.status}</span>
+          ${b.userConfirmed ? '<div class="user-confirmed-badge"><i class="fa-solid fa-circle-check"></i> Cliente confirmou presença</div>' : ''}
         </div>
         <div class="booking-actions">
           ${isActive ? `<button class="btn-action btn-done" onclick="adminActionBooking('concluir','${b.id}','${b.petName||'pet'}')"><i class="fa-solid fa-check"></i> Concluído</button>` : ''}
