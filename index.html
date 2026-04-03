@@ -468,6 +468,11 @@
   .confirm-btn-ok:hover { background: #dc2626; }
   .confirm-btn-ok.orange { background: var(--orange); box-shadow: 0 4px 14px rgba(242,101,34,0.3); }
   .confirm-btn-ok.orange:hover { background: var(--orange-dark); }
+  .confirm-booking-info { background: var(--gray-pale); border: 1px solid var(--beige-dark); border-radius: var(--radius-sm); padding: 14px 18px; margin: 16px 0 4px; text-align: left; font-size: 13px; color: var(--dark); }
+  .confirm-booking-info .cbi-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; color: var(--gray); font-size: 13px; }
+  .confirm-booking-info .cbi-row:last-child { margin-bottom: 0; }
+  .confirm-booking-info .cbi-row strong { color: var(--dark); font-weight: 700; }
+  .confirm-booking-info .cbi-pet { font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
   .receita-card { background: linear-gradient(135deg, var(--orange), var(--orange-dark)); border-radius: var(--radius); padding: 28px; color: white; margin-bottom: 24px; }
   .receita-card .receita-label { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: 0.8; margin-bottom: 8px; }
   .receita-card .receita-value { font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 900; line-height: 1; }
@@ -1578,9 +1583,10 @@
       <div class="confirm-icon" id="confirmIcon">⚠️</div>
       <div class="confirm-title" id="confirmTitle">Confirmar ação</div>
       <div class="confirm-msg" id="confirmMsg">Tem certeza?</div>
+      <div class="confirm-booking-info" id="confirmBookingInfo" style="display:none"></div>
       <div class="confirm-btns">
-        <button class="confirm-btn confirm-btn-cancel" onclick="closeConfirm()">Cancelar</button>
-        <button class="confirm-btn confirm-btn-ok" id="confirmOkBtn" onclick="confirmAction()">Confirmar</button>
+        <button class="confirm-btn confirm-btn-cancel" onclick="closeConfirm()">Não</button>
+        <button class="confirm-btn confirm-btn-ok" id="confirmOkBtn" onclick="confirmAction()">Sim</button>
       </div>
     </div>
   </div>
@@ -2307,17 +2313,36 @@
 
   // ===== ADMIN ACTIONS =====
   window.adminActionBooking = function(type, id, name) {
+    const bookingData = allAdminBookings.find(b => b.id === id) || null;
+    const getPetEmoji = (t) => t==='Cachorro'?'🐶':t==='Gato'?'🐱':t==='Coelho'?'🐰':'🐾';
+    const fmtDate = (d) => d ? new Date(d+'T12:00:00').toLocaleDateString('pt-BR') : '-';
     const configs = {
-      concluir: { icon: '✅', title: 'Marcar como Concluído', msg: `Confirmar que o atendimento de <strong>${name}</strong> foi concluído?`, okClass: 'orange', okText: 'Confirmar' },
-      cancelar: { icon: '⚠️', title: 'Cancelar Agendamento', msg: `Cancelar o agendamento de <strong>${name}</strong>?`, okClass: '', okText: 'Cancelar' },
-      excluir: { icon: '🗑️', title: 'Excluir Agendamento', msg: `Excluir permanentemente o agendamento de <strong>${name}</strong>? Esta ação não pode ser desfeita.`, okClass: '', okText: 'Excluir' }
+      concluir: { icon: '✅', title: 'Marcar como Concluído', msg: `Deseja realmente marcar o atendimento de <strong>${name}</strong> como concluído?`, okClass: 'orange' },
+      cancelar: { icon: '⚠️', title: 'Cancelar Agendamento', msg: `Deseja realmente cancelar o agendamento de <strong>${name}</strong>?`, okClass: '' },
+      excluir: { icon: '🗑️', title: 'Excluir Agendamento', msg: `Deseja realmente excluir permanentemente o agendamento de <strong>${name}</strong>? Esta ação não pode ser desfeita.`, okClass: '' }
     };
     const c = configs[type];
     document.getElementById('confirmIcon').textContent = c.icon;
     document.getElementById('confirmTitle').textContent = c.title;
     document.getElementById('confirmMsg').innerHTML = c.msg;
+    // Show booking details if available
+    const infoEl = document.getElementById('confirmBookingInfo');
+    if (bookingData) {
+      const b = bookingData;
+      const petEmoji = getPetEmoji(b.petType);
+      infoEl.style.display = 'block';
+      infoEl.innerHTML = `
+        <div class="cbi-pet">${petEmoji} ${b.petName||'—'} <span style="font-size:12px;font-weight:400;color:var(--gray)">(${b.petType||'—'}${b.petSize?' · '+b.petSize:''})</span></div>
+        <div class="cbi-row"><i class="fa-regular fa-user" style="width:14px"></i> <span>Cliente: <strong>${b.clientName||'—'}</strong></span></div>
+        <div class="cbi-row"><i class="fa-solid fa-scissors" style="width:14px"></i> <span>Serviço: <strong>${b.service||'—'}</strong></span></div>
+        <div class="cbi-row"><i class="fa-regular fa-calendar" style="width:14px"></i> <span>Data: <strong>${fmtDate(b.date)} às ${b.time||'—'}</strong></span></div>
+        ${b.price ? `<div class="cbi-row"><i class="fa-solid fa-tag" style="width:14px;color:var(--orange)"></i> <span>Valor: <strong style="color:var(--orange)">R$ ${b.price.toFixed(2).replace('.',',')}</strong></span></div>` : ''}
+      `;
+    } else {
+      infoEl.style.display = 'none';
+    }
     const okBtn = document.getElementById('confirmOkBtn');
-    okBtn.textContent = c.okText;
+    okBtn.textContent = 'Sim';
     okBtn.className = `confirm-btn confirm-btn-ok${c.okClass?' '+c.okClass:''}`;
     pendingAction = { type, id };
     document.getElementById('confirmOverlay').classList.add('open');
