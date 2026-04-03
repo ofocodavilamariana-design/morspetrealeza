@@ -1163,6 +1163,7 @@
           <div class="booking-info-item"><div class="bii-icon">🎉</div><div class="bii-text"><h5>Promoção de Terça!</h5><p>Agende para terça-feira e ganhe 10% de desconto.</p></div></div>
         </div>
       </div>
+      <div id="formulario-agendamento"></div>
       <div id="bookingSection" class="reveal reveal-delay-2">
         <!-- Injetado via JS -->
       </div>
@@ -2541,6 +2542,25 @@
   }
 
   // Se admin já estava logado, manter acesso (não abrir painel automaticamente - só ao clicar no logo)
+
+  // ===== MOBILE: SCROLL DIRETO PARA FORMULÁRIO DE AGENDAMENTO =====
+  (function() {
+    document.addEventListener('click', function(e) {
+      var link = e.target.closest('a[href="#agendamento"], a[href*="/#agendamento"]');
+      if (!link) return;
+      var isMobile = window.innerWidth < 768;
+      if (isMobile) {
+        e.preventDefault();
+        var target = document.getElementById('formulario-agendamento');
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        // Fecha o menu mobile se estiver aberto
+        var menu = document.querySelector('.mobile-menu');
+        if (menu) menu.classList.remove('open');
+      }
+    });
+  })();
 
   // ===== MASCOTE FLUTUANTE =====
   (function() {
