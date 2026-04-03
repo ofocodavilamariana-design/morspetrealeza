@@ -14,13 +14,11 @@ async function enviarNotificacoes() {
   try {
     console.log("🚀 Iniciando notificações...");
 
-    // 🔥 DATA NO FUSO DO BRASIL (CORRETO)
     const hoje = new Date();
-    const dataHoje = hoje.toLocaleDateString("sv-SE", {
-      timeZone: "America/Sao_Paulo"
-    });
 
-    console.log("📅 Data considerada:", dataHoje);
+const dataHoje = hoje.toLocaleDateString("sv-SE", {
+  timeZone: "America/Sao_Paulo"
+});
 
     const snapshot = await db
       .collection("bookings")
@@ -36,11 +34,9 @@ async function enviarNotificacoes() {
     for (const doc of snapshot.docs) {
       const booking = doc.data();
 
-      // 🔥 evita duplicação
       if (booking.notificadoHoje) continue;
 
-      const userRef = db.collection("users").doc(booking.userId);
-      const userDoc = await userRef.get();
+      const userDoc = await db.collection("users").doc(booking.userId).get();
       const token = userDoc.data()?.fcmToken;
 
       if (!token) {
@@ -48,6 +44,7 @@ async function enviarNotificacoes() {
         continue;
       }
 
+      // 🔥 MENSAGEM OTIMIZADA PARA PWA + MOBILE
       const message = {
         token,
         notification: {
@@ -56,8 +53,8 @@ async function enviarNotificacoes() {
         },
         webpush: {
           notification: {
-            icon: "https://morspetrealeza.vercel.app/icons/icon-192.png",
-            badge: "https://morspetrealeza.vercel.app/icons/icon-96.png",
+            icon: "/icons/icon-192.png",
+            badge: "/icons/icon-96.png",
             requireInteraction: true,
             vibrate: [200, 100, 200]
           },
@@ -70,31 +67,17 @@ async function enviarNotificacoes() {
         }
       };
 
-      try {
-        await admin.messaging().send(message);
+      await admin.messaging().send(message);
 
-        await db.collection("bookings").doc(doc.id).update({
-          notificadoHoje: true
-        });
+      await db.collection("bookings").doc(doc.id).update({
+        notificadoHoje: true
+      });
 
-        console.log(`✅ Enviado para ${booking.userId}`);
-
-      } catch (error) {
-        console.error(`❌ Erro ao enviar para ${booking.userId}:`, error.code);
-
-        // 🔥 REMOVE TOKEN INVÁLIDO AUTOMATICAMENTE
-        if (error.code === 'messaging/registration-token-not-registered') {
-          console.log(`🧹 Removendo token inválido do usuário ${booking.userId}`);
-
-          await userRef.update({
-            fcmToken: admin.firestore.FieldValue.delete()
-          });
-        }
-      }
+      console.log(`✅ Enviado para ${booking.userId}`);
     }
 
   } catch (err) {
-    console.error("❌ Erro geral:", err);
+    console.error("❌ Erro:", err);
     process.exit(1);
   }
 }
