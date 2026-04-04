@@ -938,6 +938,204 @@
     line-height: 1.5;
   }
 
+  /* ===== MODAL DE CONFIRMAÇÃO DE REAGENDAMENTO ===== */
+  .reschedule-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,6,4,0.75);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 9999999;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    animation: pwaFadeIn 0.3s ease;
+  }
+  .reschedule-overlay.open { display: flex; }
+
+  .reschedule-box {
+    background: var(--white);
+    border-radius: 28px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.28);
+    overflow: hidden;
+    animation: pwaSlideUp 0.42s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  .reschedule-header {
+    background: linear-gradient(135deg, #1a1412, #2d2019);
+    padding: 30px 28px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .reschedule-header::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 120px; height: 120px;
+    background: radial-gradient(circle, rgba(242,101,34,0.22), transparent 70%);
+    border-radius: 50%;
+  }
+  .reschedule-header::after {
+    content: '';
+    position: absolute;
+    bottom: -20px; left: -20px;
+    width: 80px; height: 80px;
+    background: radial-gradient(circle, rgba(242,101,34,0.15), transparent 70%);
+    border-radius: 50%;
+  }
+
+  .reschedule-icon-wrap {
+    width: 72px; height: 72px;
+    background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+    border-radius: 22px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 34px;
+    margin: 0 auto 18px;
+    box-shadow: 0 8px 28px rgba(242,101,34,0.45);
+    position: relative; z-index: 1;
+  }
+
+  .reschedule-header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 21px; font-weight: 900;
+    color: white;
+    margin-bottom: 6px;
+    position: relative; z-index: 1;
+    line-height: 1.25;
+  }
+  .reschedule-header-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    position: relative; z-index: 1;
+    line-height: 1.45;
+  }
+
+  .reschedule-body { padding: 26px 28px; }
+
+  .reschedule-pet-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--orange-pale);
+    border: 1.5px solid rgba(242,101,34,0.18);
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+  }
+  .reschedule-pet-emoji {
+    font-size: 36px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .reschedule-pet-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1.2;
+  }
+  .reschedule-pet-label {
+    font-size: 12px;
+    color: var(--orange);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+  }
+
+  .reschedule-warning {
+    background: #fef9ec;
+    border: 1.5px solid #f5d76e;
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .reschedule-warning-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .reschedule-warning-text {
+    font-size: 13.5px;
+    color: #7a5c00;
+    line-height: 1.55;
+    font-weight: 500;
+  }
+  .reschedule-warning-text strong {
+    color: #5c4200;
+    font-weight: 700;
+  }
+
+  .reschedule-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .reschedule-step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--gray);
+  }
+  .reschedule-step-num {
+    width: 26px; height: 26px;
+    min-width: 26px;
+    background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+  }
+  .reschedule-step span { line-height: 1.4; }
+
+  .reschedule-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .reschedule-btn-confirm {
+    width: 100%; padding: 16px;
+    background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+    color: white; border: none;
+    border-radius: 50px; font-size: 15px; font-weight: 700;
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    box-shadow: 0 8px 28px rgba(242,101,34,0.38);
+    transition: var(--transition);
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .reschedule-btn-confirm:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(242,101,34,0.5); }
+  .reschedule-btn-confirm:active { transform: translateY(0); }
+  .reschedule-btn-confirm:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+
+  .reschedule-btn-cancel {
+    width: 100%; padding: 13px;
+    background: transparent;
+    color: var(--gray);
+    border: 1.5px solid var(--beige-dark);
+    border-radius: 50px; font-size: 14px; font-weight: 600;
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: var(--transition);
+  }
+  .reschedule-btn-cancel:hover { border-color: var(--gray-light); color: var(--dark); }
+
+  .reschedule-disclaimer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--gray-light);
+    margin-top: 12px;
+    line-height: 1.5;
+    padding-bottom: 4px;
+  }
+
 </style>
 </head>
 <body>
@@ -1671,6 +1869,61 @@
   </div>
 </div>
 
+<!-- ===== MODAL DE CONFIRMAÇÃO DE REAGENDAMENTO ===== -->
+<div class="reschedule-overlay" id="rescheduleConfirmOverlay">
+  <div class="reschedule-box">
+    <div class="reschedule-header">
+      <div class="reschedule-icon-wrap">📅</div>
+      <div class="reschedule-header-title">Confirmar Reagendamento</div>
+      <div class="reschedule-header-sub">Por favor, leia com atenção antes de continuar</div>
+    </div>
+    <div class="reschedule-body">
+      <div class="reschedule-pet-info" id="reschedulePetInfo">
+        <div class="reschedule-pet-emoji" id="reschedulePetEmoji">🐾</div>
+        <div>
+          <div class="reschedule-pet-label">Agendamento de</div>
+          <div class="reschedule-pet-name" id="reschedulePetName">—</div>
+        </div>
+      </div>
+
+      <div class="reschedule-warning">
+        <div class="reschedule-warning-icon">⚠️</div>
+        <div class="reschedule-warning-text">
+          Para reagendar, <strong>o agendamento atual será cancelado automaticamente</strong> no sistema. Você precisará realizar um novo agendamento com a data e horário desejados.
+        </div>
+      </div>
+
+      <div class="reschedule-steps">
+        <div class="reschedule-step">
+          <div class="reschedule-step-num">1</div>
+          <span>O agendamento atual será <strong>cancelado</strong> no sistema</span>
+        </div>
+        <div class="reschedule-step">
+          <div class="reschedule-step-num">2</div>
+          <span>Você será direcionado ao formulário de agendamento</span>
+        </div>
+        <div class="reschedule-step">
+          <div class="reschedule-step-num">3</div>
+          <span>Escolha a <strong>nova data e horário</strong> desejados</span>
+        </div>
+      </div>
+
+      <div class="reschedule-actions">
+        <button class="reschedule-btn-confirm" id="rescheduleConfirmBtn" onclick="confirmReschedule()">
+          <i class="fa-solid fa-rotate"></i> Sim, cancelar e reagendar
+        </button>
+        <button class="reschedule-btn-cancel" onclick="closeRescheduleModal()">
+          Não, manter agendamento atual
+        </button>
+      </div>
+      <div class="reschedule-disclaimer">
+        Esta ação irá cancelar seu agendamento atual no sistema da Mors Pet Realeza.<br>
+        O novo horário não está garantido até a conclusão do novo agendamento.
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ===== FIREBASE + SCRIPTS ===== -->
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
@@ -1763,6 +2016,9 @@
     if (currentUser) openUserModal();
     else openLoginModal('login');
   };
+
+  // Cache dos agendamentos do usuário para uso no modal de reagendamento
+  let _userBookingsCache = {};
 
   // ===== MEUS AGENDAMENTOS =====
   window.openMyBookings = async function() {
@@ -2753,22 +3009,92 @@
     } catch(e) { showToast('Erro ao cancelar. Tente novamente.', 'error'); }
   };
 
+  // ===== REAGENDAMENTO: variáveis de estado =====
+  let _rescheduleBookingId = null;
+  let _rescheduleBookingData = null;
+
   window.userRescheduleBooking = function(id, petName) {
-    // Fecha o modal de agendamentos, rola até o formulário e pré-seleciona o pet
-    document.getElementById('myBookingsModal').classList.remove('open');
-    showToast('📅 Escolha uma nova data para ' + petName + ' no formulário abaixo.', 'info');
-    setTimeout(() => {
-      const target = document.getElementById('bookingSection') || document.getElementById('agendamento');
-      if (target) {
-        const headerOffset = 80;
-        const y = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
-        if ('scrollBehavior' in document.documentElement.style) {
-          window.scrollTo({ top: y, behavior: 'smooth' });
-        } else {
-          window.scrollTo(0, y);
+    // Busca os dados completos do agendamento pelo id
+    const bookingData = { id, petName };
+    // Tenta enriquecer com dados do Firestore (já listados no DOM)
+    // Guarda estado
+    _rescheduleBookingId   = id;
+    _rescheduleBookingData = bookingData;
+
+    // Determina emoji do pet (tenta via DOM)
+    let petEmoji = '🐾';
+    let displayName = petName;
+
+    // Popula o modal com info do pet
+    document.getElementById('reschedulePetEmoji').textContent = petEmoji;
+    document.getElementById('reschedulePetName').textContent  = displayName;
+
+    // Reseta o botão
+    const btn = document.getElementById('rescheduleConfirmBtn');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-rotate"></i> Sim, cancelar e reagendar';
+
+    // Abre o modal de confirmação
+    document.getElementById('rescheduleConfirmOverlay').classList.add('open');
+  };
+
+  window.closeRescheduleModal = function() {
+    document.getElementById('rescheduleConfirmOverlay').classList.remove('open');
+    _rescheduleBookingId   = null;
+    _rescheduleBookingData = null;
+  };
+
+  // Fechar ao clicar fora
+  document.getElementById('rescheduleConfirmOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeRescheduleModal();
+  });
+
+  window.confirmReschedule = async function() {
+    if (!_rescheduleBookingId) return;
+
+    const btn = document.getElementById('rescheduleConfirmBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Cancelando agendamento...';
+
+    try {
+      // 1. Cancela o agendamento anterior no Firestore
+      await updateDoc(doc(db, 'bookings', _rescheduleBookingId), {
+        status: 'cancelado',
+        cancelledAt: serverTimestamp(),
+        cancelledBy: 'user_reschedule'
+      });
+
+      const petName = _rescheduleBookingData?.petName || 'seu pet';
+
+      // 2. Fecha o modal de confirmação de reagendamento
+      closeRescheduleModal();
+
+      // 3. Fecha o modal de "Meus Agendamentos"
+      document.getElementById('myBookingsModal').classList.remove('open');
+
+      // 4. Feedback ao usuário
+      showToast('✅ Agendamento cancelado. Agora escolha uma nova data para ' + petName + '!', 'success');
+
+      // 5. Rola suavemente até o formulário de agendamento
+      setTimeout(() => {
+        const target = document.getElementById('bookingSection') || document.getElementById('agendamento');
+        if (target) {
+          const headerOffset = 80;
+          const y = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+          if ('scrollBehavior' in document.documentElement.style) {
+            window.scrollTo({ top: y, behavior: 'smooth' });
+          } else {
+            window.scrollTo(0, y);
+          }
         }
-      }
-    }, 300);
+      }, 350);
+
+    } catch(e) {
+      console.error('Erro ao cancelar para reagendamento:', e);
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-rotate"></i> Sim, cancelar e reagendar';
+      showToast('Erro ao processar o reagendamento. Tente novamente.', 'error');
+    }
   };
 
   // ===== MOBILE: SCROLL DIRETO PARA FORMULÁRIO DE AGENDAMENTO =====
