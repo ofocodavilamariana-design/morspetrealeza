@@ -1190,8 +1190,6 @@
         </div>
       </div>
       <div id="bookingSection" class="reveal reveal-delay-2">
-        <!-- âncora mobile: aponta para o início deste formulário -->
-        <div id="formulario-agendamento" style="position:relative;top:-80px;visibility:hidden;height:0"></div>
         <!-- Injetado via JS -->
       </div>
     </div>
@@ -2656,7 +2654,7 @@
     document.getElementById('myBookingsModal').classList.remove('open');
     showToast('📅 Escolha uma nova data para ' + petName + ' no formulário abaixo.', 'info');
     setTimeout(() => {
-      const target = document.getElementById('formulario-agendamento') || document.getElementById('agendamento');
+      const target = document.getElementById('bookingSection') || document.getElementById('agendamento');
       if (target) {
         const headerOffset = 80;
         const y = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
@@ -2686,7 +2684,7 @@
       var link = e.target.closest('a[href="#agendamento"], a[href*="/#agendamento"]');
       if (!link) return;
       e.preventDefault();
-      var target = document.getElementById('formulario-agendamento') || document.getElementById('agendamento');
+      var target = document.getElementById('bookingSection') || document.getElementById('agendamento');
       smoothScrollTo(target);
       var menu = document.querySelector('.mobile-menu');
       if (menu) menu.classList.remove('open');
