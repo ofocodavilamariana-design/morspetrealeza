@@ -1,23 +1,23 @@
 #!/usr/bin/env node
 
-// =====================================================================
-// MUDANÇAS FEITAS:
-// - CORREÇÃO 9: Adicionado endpoint POST /admin-login seguro, que lê
-//   as credenciais APENAS via process.env.ADMIN_USER / ADMIN_PASS.
-//   As credenciais foram REMOVIDAS do frontend (index.html).
-// - CORREÇÃO 13: Adicionado timeout de 10s por envio de notificação
-//   usando Promise.race, para evitar que a função trave indefinidamente.
-// - Dependência 'express' adicionada para servir o endpoint HTTP.
-//   Rode: npm install express   (ou já conste no package.json do projeto)
-// =====================================================================
-
 const admin = require('firebase-admin');
-const express = require('express');
 
 // -----------------------------------------------------------------------
-// FIREBASE ADMIN
+// 🔐 FIREBASE ADMIN (COM VALIDAÇÃO)
 // -----------------------------------------------------------------------
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+if (!process.env.FIREBASE_SERVICE_ACCOUNT) {
+  console.error("❌ FIREBASE_SERVICE_ACCOUNT não definido!");
+  process.exit(1);
+}
+
+let serviceAccount;
+
+try {
+  serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+} catch (e) {
+  console.error("❌ Erro ao fazer parse do JSON do Firebase:", e.message);
+  process.exit(1);
+}
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -26,35 +26,7 @@ admin.initializeApp({
 const db = admin.firestore();
 
 // -----------------------------------------------------------------------
-// CORREÇÃO 9: Servidor Express com endpoint seguro /admin-login
-// As credenciais vivem SOMENTE nas variáveis de ambiente do servidor.
-// Nunca retornar a senha; nunca expor no frontend.
-// -----------------------------------------------------------------------
-const app = express();
-app.use(express.json());
-
-app.post('/admin-login', (req, res) => {
-  const { user, pass } = req.body || {};
-
-  // Valida contra variáveis de ambiente — jamais hardcoded
-  if (
-    user === process.env.ADMIN_USER &&
-    pass === process.env.ADMIN_PASS
-  ) {
-    return res.json({ success: true });
-  }
-
-  // 401 sem revelar qual campo está errado
-  return res.status(401).json({ success: false });
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🔒 Servidor admin rodando na porta ${PORT}`);
-});
-
-// -----------------------------------------------------------------------
-// NOTIFICAÇÕES
+// 🚀 NOTIFICAÇÕES
 // -----------------------------------------------------------------------
 async function enviarNotificacoes() {
   try {
@@ -65,6 +37,8 @@ async function enviarNotificacoes() {
     const dataHoje = hoje.toLocaleDateString("sv-SE", {
       timeZone: "America/Sao_Paulo"
     });
+
+    console.log("📅 Data considerada:", dataHoje);
 
     const snapshot = await db
       .collection("bookings")
@@ -77,13 +51,32 @@ async function enviarNotificacoes() {
       return;
     }
 
+    console.log(`📦 ${snapshot.size} agendamentos encontrados`);
+
     for (const doc of snapshot.docs) {
       const booking = doc.data();
 
-      if (booking.notificadoHoje) continue;
+      if (!booking) continue;
+
+      if (booking.notificadoHoje) {
+        console.log(`⏭ Já notificado: ${doc.id}`);
+        continue;
+      }
+
+      if (!booking.userId) {
+        console.log(`⚠️ Sem userId no booking: ${doc.id}`);
+        continue;
+      }
 
       const userDoc = await db.collection("users").doc(booking.userId).get();
-      const token = userDoc.data()?.fcmToken;
+
+      if (!userDoc.exists) {
+        console.log(`⚠️ Usuário não encontrado: ${booking.userId}`);
+        continue;
+      }
+
+      const userData = userDoc.data();
+      const token = userData?.fcmToken;
 
       if (!token) {
         console.log(`⚠️ Usuário sem token: ${booking.userId}`);
@@ -94,7 +87,7 @@ async function enviarNotificacoes() {
         token,
         notification: {
           title: "🐾 Lembrete de Agendamento",
-          body: `Hoje às ${booking.time}, ${booking.petName} tem ${booking.service}`
+          body: `Hoje às ${booking.time || '--:--'}, ${booking.petName || 'seu pet'} tem ${booking.service || 'um serviço'}`
         },
         webpush: {
           notification: {
@@ -112,8 +105,9 @@ async function enviarNotificacoes() {
         }
       };
 
-      // CORREÇÃO 13: Timeout de 10s por envio para não travar o processo
+      // ⏱ Timeout de 10s
       const sendNotification = () => admin.messaging().send(message);
+
       const timeout = new Promise((_, reject) =>
         setTimeout(() => reject(new Error("Timeout ao enviar notificação")), 10000)
       );
@@ -126,16 +120,21 @@ async function enviarNotificacoes() {
         });
 
         console.log(`✅ Enviado para ${booking.userId}`);
+
       } catch (sendErr) {
-        // Erro isolado por usuário — não interrompe o loop
         console.error(`❌ Erro ao enviar para ${booking.userId}:`, sendErr.message);
       }
     }
 
+    console.log("🏁 Processo finalizado com sucesso");
+
   } catch (err) {
-    console.error("❌ Erro geral:", err);
+    console.error("❌ Erro geral:", err.message);
     process.exit(1);
   }
 }
 
+// -----------------------------------------------------------------------
+// ▶ EXECUÇÃO
+// -----------------------------------------------------------------------
 enviarNotificacoes();
