@@ -431,6 +431,9 @@
   .user-confirmed-badge { display: inline-flex; align-items: center; gap: 5px; background: #dbeafe; color: #1d4ed8; border: 1px solid #93c5fd; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 10px; letter-spacing: 0.3px; margin-top: 5px; }
   .status-badge.concluido { background: var(--green-pale); color: var(--green); }
   .status-badge.cancelado { background: var(--red-pale); color: var(--red); }
+  .status-badge.atrasado { background: #fff1f2; color: #e11d48; border: 1.5px solid rgba(225,29,72,0.35); animation: pulseBadge 1.8s ease-in-out infinite; }
+  @keyframes pulseBadge { 0%,100%{opacity:1} 50%{opacity:0.55} }
+  .booking-card.status-atrasado { border-left: 4px solid #e11d48 !important; background: linear-gradient(135deg, #fff8f8 0%, #fff 100%) !important; }
   .booking-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
   .btn-action { display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; border: 1.5px solid; transition: var(--transition); font-family: 'DM Sans', sans-serif; white-space: nowrap; }
   .btn-done { border-color: var(--green); color: var(--green); background: var(--green-pale); }
@@ -2276,6 +2279,14 @@
     document.getElementById('adminPanel').classList.add('open');
     document.body.style.overflow = 'hidden';
     initAdminFirestore();
+    // Re-renderiza a cada 60s para detectar novos "atrasados" sem precisar de novo dado
+    if (!window._adminRefreshTimer) {
+      window._adminRefreshTimer = setInterval(() => {
+        if (document.getElementById('adminPanel').classList.contains('open')) {
+          renderAdminBookings();
+        }
+      }, 60000);
+    }
   }
 
   window.adminLogout = function() {
@@ -2283,6 +2294,7 @@
     document.getElementById('adminPanel').classList.remove('open');
     document.body.style.overflow = '';
     if (adminFirestoreUnsubscribe) { adminFirestoreUnsubscribe(); adminFirestoreUnsubscribe = null; }
+    if (window._adminRefreshTimer) { clearInterval(window._adminRefreshTimer); window._adminRefreshTimer = null; }
     allAdminBookings = [];
   };
 
@@ -2319,6 +2331,19 @@
   function renderAdminBookings() {
     const list = document.getElementById('adminBookingsList');
     let filtered = [...allAdminBookings];
+
+    // ── Calcula status "atrasado" em memória (sem gravar no Firestore) ──
+    const now = new Date();
+    filtered = filtered.map(b => {
+      if (b.status === 'confirmado' && b.date && b.time) {
+        const [h, m] = (b.time || '00:00').split(':').map(Number);
+        const appt = new Date(b.date + 'T00:00:00');
+        appt.setHours(h, m, 0, 0);
+        const diffMin = (now - appt) / 60000; // minutos passados
+        if (diffMin > 10) return { ...b, _displayStatus: 'atrasado' };
+      }
+      return { ...b, _displayStatus: b.status };
+    });
     if (adminCurrentFilter === 'hoje') {
       const today = new Date();
       const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
@@ -2341,9 +2366,11 @@
     }
     const getPetEmoji = (t) => t==='Cachorro'?'🐶':t==='Gato'?'🐱':t==='Coelho'?'🐰':'🐾';
     const fmtDate = (d) => d ? new Date(d+'T12:00:00').toLocaleDateString('pt-BR') : '-';
+    const statusLabel = { confirmado: 'Agendado', atrasado: '⚠️ Atrasado', concluido: 'Concluído', cancelado: 'Cancelado' };
     list.innerHTML = filtered.map(b => {
-      const isActive = b.status === 'confirmado';
-      return `<div class="booking-card status-${b.status}" id="card-${b.id}">
+      const ds = b._displayStatus; // status visual (pode ser "atrasado")
+      const isActive = b.status === 'confirmado'; // ações sempre baseadas no status real
+      return `<div class="booking-card status-${ds}" id="card-${b.id}">
         <div class="booking-pet-avatar">${getPetEmoji(b.petType)}</div>
         <div class="booking-info">
           <div class="booking-pet">${b.petName||'—'} <span style="font-size:12px;color:var(--gray);font-weight:500">(${b.petType||'—'}${b.petSize?' · '+b.petSize:''})</span></div>
@@ -2356,7 +2383,7 @@
         </div>
         <div class="booking-meta">
           <div class="booking-datetime">${fmtDate(b.date)}<span>${b.time||'—'}</span></div>
-          <span class="status-badge ${b.status}">${b.status === 'confirmado' ? 'Agendado' : b.status}</span>
+          <span class="status-badge ${ds}">${statusLabel[ds] || ds}</span>
           ${b.userConfirmed ? '<div class="user-confirmed-badge"><i class="fa-solid fa-circle-check"></i> Cliente confirmou presença</div>' : ''}
         </div>
         <div class="booking-actions">
