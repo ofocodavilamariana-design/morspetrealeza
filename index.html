@@ -2657,23 +2657,39 @@
     showToast('📅 Escolha uma nova data para ' + petName + ' no formulário abaixo.', 'info');
     setTimeout(() => {
       const target = document.getElementById('formulario-agendamento') || document.getElementById('agendamento');
-      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (target) {
+        const headerOffset = 80;
+        const y = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+        if ('scrollBehavior' in document.documentElement.style) {
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        } else {
+          window.scrollTo(0, y);
+        }
+      }
     }, 300);
   };
 
   // ===== MOBILE: SCROLL DIRETO PARA FORMULÁRIO DE AGENDAMENTO =====
   (function() {
+    function smoothScrollTo(targetEl) {
+      if (!targetEl) return;
+      var headerOffset = 80;
+      var y = targetEl.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+      if ('scrollBehavior' in document.documentElement.style) {
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      } else {
+        window.scrollTo(0, y);
+      }
+    }
+
     document.addEventListener('click', function(e) {
       var link = e.target.closest('a[href="#agendamento"], a[href*="/#agendamento"]');
       if (!link) return;
-      var isMobile = window.innerWidth < 768;
-      if (isMobile) {
-        e.preventDefault();
-        var target = document.getElementById('formulario-agendamento');
-        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        var menu = document.querySelector('.mobile-menu');
-        if (menu) menu.classList.remove('open');
-      }
+      e.preventDefault();
+      var target = document.getElementById('formulario-agendamento') || document.getElementById('agendamento');
+      smoothScrollTo(target);
+      var menu = document.querySelector('.mobile-menu');
+      if (menu) menu.classList.remove('open');
     });
   })();
 
