@@ -320,6 +320,29 @@
   .cat-price-summary { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
   .cat-price-chip { font-size: 11px; font-weight: 700; color: var(--gray); background: var(--gray-pale); padding: 2px 8px; border-radius: 6px; }
   .cat-price-chip span { color: var(--orange); }
+  .cat-no-price { font-size: 11px; color: var(--gray); }
+
+  /* Layout interno do card admin */
+  .cat-card-inner { display: flex; align-items: center; gap: 14px; padding: 14px 18px; }
+  .cat-card-emoji { width: 48px; height: 48px; font-size: 26px; border-radius: 12px; background: var(--orange-pale); border: 1.5px solid rgba(242,101,34,0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .cat-card-info { flex: 1; min-width: 0; }
+  .cat-card-name-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
+  .cat-card-name { font-size: 15px; font-weight: 800; color: var(--dark); }
+  .cat-card-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+  /* Botoes de acao do card admin */
+  .cat-btn { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; font-family: "DM Sans", sans-serif; transition: var(--transition); border: 1.5px solid; }
+  .cat-btn-edit { background: var(--orange-pale); border-color: rgba(242,101,34,0.3); color: var(--orange); }
+  .cat-btn-edit:hover { background: var(--orange); color: white; border-color: var(--orange); }
+  .cat-btn-deactivate { background: var(--yellow-pale); border-color: #f5d76e; color: #92400e; }
+  .cat-btn-deactivate:hover { background: var(--yellow); color: white; border-color: var(--yellow); }
+  .cat-btn-activate { background: var(--green-pale); border-color: rgba(34,197,94,0.3); color: #15803d; }
+  .cat-btn-activate:hover { background: var(--green); color: white; border-color: var(--green); }
+  .cat-btn-delete { background: var(--red-pale); border-color: rgba(239,68,68,0.2); color: var(--red); width: 36px; height: 36px; padding: 0; justify-content: center; font-size: 13px; }
+  .cat-btn-delete:hover { background: var(--red); color: white; border-color: var(--red); }
+
+  /* Hover no botao de adicionar servico */
+  #addServicoBtnCard:hover { border-color: var(--orange) !important; background: var(--orange-pale) !important; }
 
   /* ===== AVALIAÇÕES ===== */
   #avaliacoes { background: var(--white); }
@@ -1959,7 +1982,7 @@
           <div id="catalogoServicosLista"></div>
 
           <!-- Botão adicionar novo serviço -->
-          <div class="section-card" id="addServicoBtnCard" style="margin-top:12px;cursor:pointer;border:2px dashed var(--beige-dark);box-shadow:none;background:var(--gray-pale);transition:var(--transition)" onclick="adminAdicionarServico()" onmouseenter="this.style.borderColor='var(--orange)';this.style.background='var(--orange-pale)'" onmouseleave="this.style.borderColor='var(--beige-dark)';this.style.background='var(--gray-pale)'">
+          <div class="section-card" id="addServicoBtnCard" style="margin-top:12px;cursor:pointer;border:2px dashed var(--beige-dark);box-shadow:none;background:var(--gray-pale);transition:var(--transition)" onclick="adminAdicionarServico()">
             <div style="padding:16px 24px;display:flex;align-items:center;gap:12px;color:var(--orange);font-weight:700;font-size:14px">
               <div style="width:36px;height:36px;border-radius:10px;background:var(--orange-pale);display:flex;align-items:center;justify-content:center;font-size:18px;border:1.5px solid rgba(242,101,34,0.3)">➕</div>
               Adicionar novo serviço
@@ -2128,19 +2151,6 @@
     Gato: { P: 95, M: 110, G: 115 },
     Coelho: { Único: 80 }
   };
-
-  function calcPrice(petType, petSize, dateStr) {
-    if (!petType || !petSize || !dateStr) return null;
-    // Usa preços dinâmicos do admin se disponíveis, senão usa os padrões
-    const precosAtivos = window._precosAdmin || PRECOS;
-    const prices = precosAtivos[petType];
-    if (!prices || prices[petSize] === undefined) return null;
-    const base = prices[petSize];
-    const d = new Date(dateStr + 'T12:00:00');
-    const isTuesday = d.getDay() === 2;
-    return isTuesday ? +(base * 0.9).toFixed(2) : base;
-  }
-  window.calcPrice = calcPrice;
 
   // ===== GLOBALS =====
   const ALL_HOURS = ['09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00'];
@@ -3104,42 +3114,44 @@
   }
 
   function _renderCardServico(srv, i) {
-    // Resumo de preços para exibir no card
     const animSummary = ANIMAIS_CONFIG.map(a => {
       const vals = a.portes.map(p => srv.precos?.[a.key]?.[p] || 0).filter(v => v > 0);
       if (!vals.length) return null;
       const min = Math.min(...vals);
-      return `<span class="cat-price-chip">${a.label.split(' ')[0]} <span>a partir R$${min}</span></span>`;
+      return '<span class="cat-price-chip">' + a.label.split(' ')[0] + ' <span>a partir R$' + min + '</span></span>';
     }).filter(Boolean).join('');
 
     const statusBadge = srv.ativo
-      ? `<span class="cat-active-badge">✓ Ativo</span>`
-      : `<span class="cat-inactive-badge">✕ Inativo</span>`;
+      ? '<span class="cat-active-badge">&#10003; Ativo</span>'
+      : '<span class="cat-inactive-badge">&#10005; Inativo</span>';
 
-    return `
-    <div class="catalogo-servico-card ${srv.ativo ? '' : 'inactive'}" id="cat-card-${i}">
-      <div style="display:flex;align-items:center;gap:14px;padding:14px 18px">
-        <div style="width:48px;height:48px;font-size:26px;border-radius:12px;background:var(--orange-pale);border:1.5px solid rgba(242,101,34,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">${srv.emoji}</div>
-        <div style="flex:1;min-width:0">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-            <span style="font-size:15px;font-weight:800;color:var(--dark)">${srv.nome}</span>
-            ${statusBadge}
-          </div>
-          <div class="cat-price-summary">${animSummary || '<span style="font-size:11px;color:var(--gray)">Sem preços cadastrados</span>'}</div>
-        </div>
-        <div style="display:flex;gap:8px;flex-shrink:0">
-          <button onclick="openSrvEdit(${i})" style="display:flex;align-items:center;gap:6px;padding:8px 14px;background:var(--orange-pale);border:1.5px solid rgba(242,101,34,0.3);color:var(--orange);border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif;transition:var(--transition)" title="Editar serviço" onmouseenter="this.style.background='var(--orange)';this.style.color='white'" onmouseleave="this.style.background='var(--orange-pale)';this.style.color='var(--orange)'">
-            <i class="fa-solid fa-pen"></i> Editar
-          </button>
-          <button onclick="adminToggleServico(${i})" style="display:flex;align-items:center;gap:6px;padding:8px 14px;background:${srv.ativo ? 'var(--yellow-pale)' : 'var(--green-pale)'};border:1.5px solid ${srv.ativo ? '#f5d76e' : 'rgba(34,197,94,0.3)'};color:${srv.ativo ? '#92400e' : '#15803d'};border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif;transition:var(--transition)" title="${srv.ativo ? 'Desativar' : 'Ativar'} serviço" id="cat-toggle-btn-${i}">
-            <i class="fa-solid fa-${srv.ativo ? 'eye-slash' : 'eye'}"></i> ${srv.ativo ? 'Desativar' : 'Ativar'}
-          </button>
-          <button onclick="adminRemoverServico(${i})" style="width:36px;height:36px;background:var(--red-pale);border:1.5px solid rgba(239,68,68,0.2);color:var(--red);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:var(--transition)" title="Remover serviço" onmouseenter="this.style.background='var(--red)';this.style.color='white'" onmouseleave="this.style.background='var(--red-pale)';this.style.color='var(--red)'">
-            <i class="fa-solid fa-trash"></i>
-          </button>
-        </div>
-      </div>
-    </div>`;
+    const toggleClass = srv.ativo ? 'cat-btn-deactivate' : 'cat-btn-activate';
+    const toggleIcon  = srv.ativo ? 'eye-slash' : 'eye';
+    const toggleLabel = srv.ativo ? 'Desativar' : 'Ativar';
+
+    return '<div class="catalogo-servico-card' + (srv.ativo ? '' : ' inactive') + '" id="cat-card-' + i + '">'
+      + '<div class="cat-card-inner">'
+        + '<div class="cat-card-emoji">' + srv.emoji + '</div>'
+        + '<div class="cat-card-info">'
+          + '<div class="cat-card-name-row">'
+            + '<span class="cat-card-name">' + srv.nome + '</span>'
+            + statusBadge
+          + '</div>'
+          + '<div class="cat-price-summary">' + (animSummary || '<span class="cat-no-price">Sem pre&#231;os cadastrados</span>') + '</div>'
+        + '</div>'
+        + '<div class="cat-card-actions">'
+          + '<button class="cat-btn cat-btn-edit" onclick="openSrvEdit(' + i + ')" title="Editar">'
+            + '<i class="fa-solid fa-pen"></i> Editar'
+          + '</button>'
+          + '<button class="cat-btn ' + toggleClass + '" onclick="adminToggleServico(' + i + ')" id="cat-toggle-btn-' + i + '">'
+            + '<i class="fa-solid fa-' + toggleIcon + '"></i> ' + toggleLabel
+          + '</button>'
+          + '<button class="cat-btn cat-btn-delete" onclick="adminRemoverServico(' + i + ')" title="Remover">'
+            + '<i class="fa-solid fa-trash"></i>'
+          + '</button>'
+        + '</div>'
+      + '</div>'
+    + '</div>';
   }
 
   // ── Toggle ativo/inativo sem modal ──────────────────────────────────────
