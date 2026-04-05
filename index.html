@@ -1144,42 +1144,53 @@
     padding-bottom: 4px;
   }
 
-  /* ===== ADMIN SERVIÇOS & PREÇOS ===== */
-  .admin-servicos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-  @media (max-width: 960px) { .admin-servicos-grid { grid-template-columns: 1fr; } }
+  /* ===== ADMIN CATÁLOGO DE SERVIÇOS & PREÇOS ===== */
+  .catalogo-servico-card { margin-bottom: 16px; border-radius: var(--radius); overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.05); background: var(--white); }
+  .catalogo-servico-header { display: flex; align-items: center; gap: 14px; padding: 16px 20px; background: var(--white); border-bottom: 1px solid var(--beige-dark); cursor: pointer; user-select: none; transition: var(--transition); }
+  .catalogo-servico-header:hover { background: var(--gray-pale); }
+  .catalogo-servico-header.ativo { background: var(--orange-pale); border-bottom-color: rgba(242,101,34,0.2); }
+  .catalogo-emoji-btn { width: 44px; height: 44px; font-size: 22px; border-radius: 12px; background: var(--white); border: 1.5px solid var(--beige-dark); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); flex-shrink: 0; }
+  .catalogo-emoji-btn:hover { border-color: var(--orange); transform: scale(1.08); }
+  .catalogo-nome-wrap { flex: 1; }
+  .catalogo-nome-input { width: 100%; font-size: 15px; font-weight: 700; color: var(--dark); border: none; background: transparent; outline: none; font-family: 'DM Sans', sans-serif; padding: 0; }
+  .catalogo-nome-input:focus { color: var(--orange); }
+  .catalogo-status-toggle { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; }
+  .toggle-switch { position: relative; width: 40px; height: 22px; flex-shrink: 0; }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+  .toggle-slider { position: absolute; inset: 0; background: var(--gray-light); border-radius: 11px; cursor: pointer; transition: var(--transition); }
+  .toggle-slider::before { content: ''; position: absolute; width: 16px; height: 16px; left: 3px; top: 3px; background: white; border-radius: 50%; transition: var(--transition); }
+  .toggle-switch input:checked + .toggle-slider { background: var(--green); }
+  .toggle-switch input:checked + .toggle-slider::before { transform: translateX(18px); }
+  .catalogo-expand-btn { width: 30px; height: 30px; border-radius: 8px; background: var(--gray-pale); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--gray); transition: var(--transition); font-size: 12px; flex-shrink: 0; }
+  .catalogo-expand-btn:hover { background: var(--orange-pale); color: var(--orange); }
+  .catalogo-del-btn { width: 30px; height: 30px; border-radius: 8px; background: var(--red-pale); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--red); transition: var(--transition); font-size: 12px; flex-shrink: 0; }
+  .catalogo-del-btn:hover { background: var(--red); color: white; }
+  .catalogo-precos-body { padding: 20px; display: none; background: var(--gray-pale); }
+  .catalogo-precos-body.open { display: block; }
+  .catalogo-precos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+  .catalogo-animal-block { background: var(--white); border-radius: 12px; padding: 16px; border: 1px solid var(--beige-dark); }
+  .catalogo-animal-title { font-size: 13px; font-weight: 700; color: var(--dark); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+  .catalogo-preco-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .catalogo-preco-row:last-child { margin-bottom: 0; }
+  .catalogo-preco-label { font-size: 11px; font-weight: 800; color: var(--orange); text-transform: uppercase; letter-spacing: 0.5px; min-width: 28px; }
+  .catalogo-preco-prefix { font-size: 13px; color: var(--gray); font-weight: 600; }
+  .catalogo-preco-input { flex: 1; padding: 7px 10px; border: 1.5px solid var(--beige-dark); border-radius: 8px; font-size: 14px; font-weight: 700; color: var(--dark); font-family: 'DM Sans', sans-serif; background: var(--gray-pale); outline: none; transition: var(--transition); }
+  .catalogo-preco-input:focus { border-color: var(--orange); background: var(--white); box-shadow: 0 0 0 3px rgba(242,101,34,0.1); }
+  .catalogo-terca-preview { margin-top: 8px; font-size: 11px; color: var(--orange); font-weight: 600; background: var(--orange-pale); padding: 4px 8px; border-radius: 6px; display: inline-block; }
 
-  .preco-animal-admin { margin-bottom: 28px; }
-  .preco-animal-admin:last-child { margin-bottom: 0; }
-  .preco-animal-admin-title { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--beige-dark); padding-bottom: 8px; }
-  .preco-edit-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; background: var(--gray-pale); border-radius: 8px; padding: 8px 12px; }
-  .preco-edit-label { font-size: 12px; font-weight: 700; color: var(--orange); min-width: 36px; text-transform: uppercase; }
-  .preco-edit-input { flex: 1; padding: 8px 12px; border: 1.5px solid var(--beige-dark); border-radius: 8px; font-size: 14px; font-weight: 600; font-family: 'DM Sans', sans-serif; color: var(--dark); background: var(--white); outline: none; transition: var(--transition); }
-  .preco-edit-input:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(242,101,34,0.1); }
-  .preco-edit-prefix { font-size: 13px; font-weight: 600; color: var(--gray); }
   .btn-save-precos { display: flex; align-items: center; gap: 8px; padding: 11px 22px; background: var(--orange); color: white; border: none; border-radius: 50px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: var(--transition); box-shadow: 0 4px 16px rgba(242,101,34,0.3); }
   .btn-save-precos:hover { background: var(--orange-dark); transform: translateY(-1px); }
   .btn-save-precos:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
 
-  .servicos-lista { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-  .servico-item-admin { display: flex; align-items: center; gap: 10px; background: var(--gray-pale); border-radius: 10px; padding: 10px 14px; border: 1px solid var(--beige-dark); transition: var(--transition); }
-  .servico-item-admin:hover { background: var(--white); border-color: rgba(242,101,34,0.2); }
-  .servico-emoji-edit { width: 34px; height: 34px; font-size: 18px; display: flex; align-items: center; justify-content: center; background: var(--white); border: 1.5px solid var(--beige-dark); border-radius: 8px; cursor: pointer; flex-shrink: 0; transition: var(--transition); }
-  .servico-emoji-edit:hover { border-color: var(--orange); }
-  .servico-nome-edit { flex: 1; padding: 8px 12px; border: 1.5px solid var(--beige-dark); border-radius: 8px; font-size: 14px; font-weight: 600; font-family: 'DM Sans', sans-serif; color: var(--dark); background: var(--white); outline: none; transition: var(--transition); }
-  .servico-nome-edit:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(242,101,34,0.1); }
-  .btn-del-servico { width: 30px; height: 30px; border-radius: 8px; border: none; background: var(--red-pale); color: var(--red); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; transition: var(--transition); flex-shrink: 0; }
-  .btn-del-servico:hover { background: var(--red); color: white; }
-  .add-servico-row { display: flex; gap: 10px; align-items: center; margin-top: 4px; }
-  .add-servico-emoji { width: 44px; height: 44px; font-size: 20px; display: flex; align-items: center; justify-content: center; background: var(--white); border: 1.5px dashed var(--beige-dark); border-radius: 8px; cursor: pointer; flex-shrink: 0; transition: var(--transition); outline: none; font-family: 'DM Sans', sans-serif; }
-  .add-servico-emoji:hover { border-color: var(--orange); }
-  .add-servico-input { flex: 1; padding: 11px 14px; border: 1.5px dashed var(--beige-dark); border-radius: 8px; font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--dark); background: var(--white); outline: none; transition: var(--transition); }
-  .add-servico-input:focus { border-color: var(--orange); border-style: solid; box-shadow: 0 0 0 3px rgba(242,101,34,0.1); }
-  .btn-add-servico { display: flex; align-items: center; gap: 6px; padding: 11px 18px; background: var(--orange-pale); color: var(--orange); border: 1.5px solid rgba(242,101,34,0.25); border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: var(--transition); white-space: nowrap; }
-  .btn-add-servico:hover { background: var(--orange); color: white; }
+  .emoji-picker-popup { background: var(--white); border: 1px solid var(--beige-dark); border-radius: 14px; padding: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.18); display: flex; flex-wrap: wrap; gap: 6px; max-width: 260px; }
+  .emoji-picker-popup span { font-size: 24px; cursor: pointer; padding: 5px; border-radius: 8px; transition: var(--transition); line-height: 1; }
+  .emoji-picker-popup span:hover { background: var(--orange-pale); transform: scale(1.15); }
 
-  .emoji-picker-popup { position: absolute; background: var(--white); border: 1px solid var(--beige-dark); border-radius: 12px; padding: 10px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); z-index: 1000; display: flex; flex-wrap: wrap; gap: 6px; max-width: 240px; }
-  .emoji-picker-popup span { font-size: 22px; cursor: pointer; padding: 4px; border-radius: 6px; transition: var(--transition); }
-  .emoji-picker-popup span:hover { background: var(--orange-pale); }
+  /* Tabela front dinâmica */
+  .front-tabela-servico-group { margin-bottom: 24px; }
+  .front-tabela-servico-group:last-child { margin-bottom: 0; }
+  .front-tabela-servico-title { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--beige-dark); padding-bottom: 8px; }
+  .front-servico-grid-cards { display: flex; flex-wrap: wrap; gap: 8px; }
 
 </style>
 </head>
@@ -1299,7 +1310,8 @@
       <h2 class="section-title">O que oferecemos</h2>
       <p class="section-desc">Do banho à tosa, cuidamos do seu pet com técnica, carinho e produtos de qualidade. Petshop completo em Vila Mariana.</p>
     </div>
-    <div class="services-grid">
+    <div class="services-grid" id="frontServicosGrid">
+      <!-- Gerado dinamicamente via JS -->
       <div class="service-card reveal reveal-delay-1"><span class="service-icon">🛁</span><div class="service-name">Banho</div><p class="service-desc">Banho completo com shampoo e condicionador especial para pets, secagem e escovação.</p><span class="service-price">Ver tabela de preços</span></div>
       <div class="service-card reveal reveal-delay-2"><span class="service-icon">✂️</span><div class="service-name">Tosa</div><p class="service-desc">Tosa higiênica ou estética, personalizada para a raça e preferência do dono.</p><span class="service-price">Ver tabela de preços</span></div>
       <div class="service-card reveal reveal-delay-3"><span class="service-icon">🌟</span><div class="service-name">Banho + Tosa</div><p class="service-desc">Pacote completo: banho, tosa, unhas e limpeza de ouvidos. Tudo de uma vez!</p><span class="service-price">Melhor custo-benefício</span></div>
@@ -1318,72 +1330,20 @@
       <h2 class="section-title">🐾 Tabela de Serviços</h2>
       <p class="section-desc" style="margin:0 auto">Preços transparentes para cuidar do seu pet. <strong>Terças-feiras com 10% de desconto!</strong></p>
     </div>
-    <div class="preco-grid">
-      <!-- DIAS NORMAIS -->
-      <div class="preco-card reveal reveal-delay-1">
-        <div class="preco-card-header">
-          <h3>📅 Seg, Qua, Qui, Sex e Sáb</h3>
-          <p>Valores normais de banho e tosa</p>
-        </div>
-        <div class="preco-card-body">
-          <div class="preco-animal-group">
-            <div class="preco-animal-title">🐶 Cachorros</div>
-            <div class="preco-list">
-              <div class="preco-item"><span class="size">PP</span><span class="value">R$ 45</span></div>
-              <div class="preco-item"><span class="size">P</span><span class="value">R$ 65</span></div>
-              <div class="preco-item"><span class="size">M</span><span class="value">R$ 80</span></div>
-              <div class="preco-item"><span class="size">G</span><span class="value">R$ 140</span></div>
-              <div class="preco-item"><span class="size">GG</span><span class="value">R$ 170</span></div>
-            </div>
-          </div>
-          <div class="preco-animal-group">
-            <div class="preco-animal-title">🐱 Gatos</div>
-            <div class="preco-list">
-              <div class="preco-item"><span class="size">P</span><span class="value">R$ 95</span></div>
-              <div class="preco-item"><span class="size">M</span><span class="value">R$ 110</span></div>
-              <div class="preco-item"><span class="size">G</span><span class="value">R$ 115</span></div>
-            </div>
-          </div>
-          <div class="preco-animal-group">
-            <div class="preco-animal-title">🐰 Coelhos</div>
-            <div class="preco-list">
-              <div class="preco-item"><span class="size">Único</span><span class="value">R$ 80</span></div>
-            </div>
+    <!-- Gerado dinamicamente via JS -->
+    <div id="frontTabelaPrecos">
+      <div class="preco-grid">
+        <div class="preco-card reveal reveal-delay-1">
+          <div class="preco-card-header"><h3>📅 Seg, Qua, Qui, Sex e Sáb</h3><p>Valores normais</p></div>
+          <div class="preco-card-body" id="frontTabelaNormal">
+            <div style="text-align:center;padding:20px;color:var(--gray);font-size:14px">Carregando preços...</div>
           </div>
         </div>
-      </div>
-
-      <!-- TERÇA PROMOCIONAL -->
-      <div class="preco-card promo-card reveal reveal-delay-2">
-        <div class="preco-card-header promo">
-          <h3>🎉 Terça-Feira Promocional</h3>
-          <p>10% de desconto em todos os serviços!</p>
-        </div>
-        <div class="preco-card-body">
-          <div class="preco-discount-badge"><i class="fa-solid fa-tag"></i> 10% OFF todo dia de terça!</div>
-          <div class="preco-animal-group">
-            <div class="preco-animal-title">🐶 Cachorros</div>
-            <div class="preco-list">
-              <div class="preco-item"><span class="size">PP</span><span class="value">R$ 40,50</span></div>
-              <div class="preco-item"><span class="size">P</span><span class="value">R$ 58,50</span></div>
-              <div class="preco-item"><span class="size">M</span><span class="value">R$ 72</span></div>
-              <div class="preco-item"><span class="size">G</span><span class="value">R$ 126</span></div>
-              <div class="preco-item"><span class="size">GG</span><span class="value">R$ 153</span></div>
-            </div>
-          </div>
-          <div class="preco-animal-group">
-            <div class="preco-animal-title">🐱 Gatos</div>
-            <div class="preco-list">
-              <div class="preco-item"><span class="size">P</span><span class="value">R$ 85,50</span></div>
-              <div class="preco-item"><span class="size">M</span><span class="value">R$ 99</span></div>
-              <div class="preco-item"><span class="size">G</span><span class="value">R$ 103,05</span></div>
-            </div>
-          </div>
-          <div class="preco-animal-group">
-            <div class="preco-animal-title">🐰 Coelhos</div>
-            <div class="preco-list">
-              <div class="preco-item"><span class="size">Único</span><span class="value">R$ 72</span></div>
-            </div>
+        <div class="preco-card promo-card reveal reveal-delay-2">
+          <div class="preco-card-header promo"><h3>🎉 Terça-Feira Promocional</h3><p>10% de desconto em todos os serviços!</p></div>
+          <div class="preco-card-body" id="frontTabelaTerca">
+            <div class="preco-discount-badge"><i class="fa-solid fa-tag"></i> 10% OFF todo dia de terça!</div>
+            <div style="text-align:center;padding:20px;color:var(--gray);font-size:14px">Carregando preços...</div>
           </div>
         </div>
       </div>
@@ -1901,41 +1861,32 @@
 
         <!-- SERVIÇOS & PREÇOS SECTION -->
         <div id="admin-section-servicos" class="admin-section">
-          <div class="admin-servicos-grid">
-            <!-- PREÇOS POR PORTE -->
-            <div class="section-card">
-              <div class="section-card-header">
-                <div class="section-card-title"><i class="fa-solid fa-tag" style="color:var(--orange)"></i> Preços por Porte</div>
-                <button class="btn-save-precos" id="btnSavePrecos" onclick="adminSavePrecos()">
-                  <i class="fa-solid fa-floppy-disk"></i> Salvar Preços
-                </button>
-              </div>
-              <div class="section-card-body">
-                <p style="font-size:13px;color:var(--gray);margin-bottom:20px">Edite os valores base (dias normais). A promoção de terça (10% OFF) é calculada automaticamente.</p>
-                <div id="precosEditorContainer"><div class="loading-spinner"></div></div>
-              </div>
+          <!-- Cabeçalho com botão salvar -->
+          <div class="section-card" style="margin-bottom:24px">
+            <div class="section-card-header">
+              <div class="section-card-title"><i class="fa-solid fa-tags" style="color:var(--orange)"></i> Catálogo de Serviços & Preços</div>
+              <button class="btn-save-precos" id="btnSaveCatalogo" onclick="adminSaveCatalogo()">
+                <i class="fa-solid fa-floppy-disk"></i> Salvar Tudo
+              </button>
             </div>
-            <!-- LISTA DE SERVIÇOS -->
-            <div class="section-card">
-              <div class="section-card-header">
-                <div class="section-card-title"><i class="fa-solid fa-scissors" style="color:var(--orange)"></i> Serviços Disponíveis</div>
-                <button class="btn-save-precos" id="btnSaveServicos" onclick="adminSaveServicos()">
-                  <i class="fa-solid fa-floppy-disk"></i> Salvar Serviços
-                </button>
-              </div>
-              <div class="section-card-body">
-                <p style="font-size:13px;color:var(--gray);margin-bottom:16px">Gerencie os serviços exibidos no formulário de agendamento. Clique no emoji para trocar.</p>
-                <div class="servicos-lista" id="servicosListaAdmin"></div>
-                <div class="add-servico-row">
-                  <button class="add-servico-emoji" id="newServicoEmoji" onclick="openEmojiPicker('new')" title="Escolher emoji">➕</button>
-                  <input class="add-servico-input" id="newServicoNome" placeholder="Nome do novo serviço..." maxlength="40">
-                  <button class="btn-add-servico" onclick="adminAddServico()"><i class="fa-solid fa-plus"></i> Adicionar</button>
-                </div>
-              </div>
+            <div class="section-card-body" style="padding-bottom:8px">
+              <p style="font-size:13px;color:var(--gray)">Gerencie os serviços e os valores por tipo e porte de animal. Os preços de terça (-10%) são calculados automaticamente. As alterações refletem imediatamente no site e no formulário de agendamento.</p>
             </div>
           </div>
-          <!-- EMOJI PICKER (global, posicionado via JS) -->
-          <div class="emoji-picker-popup" id="emojiPickerPopup" style="display:none"></div>
+
+          <!-- Lista de serviços -->
+          <div id="catalogoServicosLista"></div>
+
+          <!-- Botão adicionar novo serviço -->
+          <div class="section-card" id="addServicoBtnCard" style="margin-top:16px;cursor:pointer;border:2px dashed var(--beige-dark);box-shadow:none;background:var(--gray-pale)" onclick="adminAdicionarServico()">
+            <div style="padding:18px 24px;display:flex;align-items:center;gap:12px;color:var(--orange);font-weight:700;font-size:14px">
+              <div style="width:36px;height:36px;border-radius:10px;background:var(--orange-pale);display:flex;align-items:center;justify-content:center;font-size:18px">➕</div>
+              Adicionar novo serviço
+            </div>
+          </div>
+
+          <!-- Emoji picker global -->
+          <div class="emoji-picker-popup" id="emojiPickerPopup" style="display:none;position:fixed;z-index:999999"></div>
         </div>
       </div>
     </main>
@@ -2237,7 +2188,7 @@
             </select>
           </div>
           <div class="form-group"><label>Serviço Desejado *</label>
-            <select id="service" required>
+            <select id="service" required onchange="updatePriceDisplay()">
               <option value="">Selecione o serviço...</option>
               <option value="Banho">🛁 Banho</option>
               <option value="Tosa">✂️ Tosa</option>
@@ -2276,29 +2227,10 @@
       updatePriceDisplay();
     });
 
-    // Carrega serviços e preços dinâmicos do Firestore
-    try {
-      const snapServicos = await getDocs(query(collection(db, 'settings'), where('type', '==', 'servicos')));
-      if (!snapServicos.empty) {
-        snapServicos.forEach(d2 => {
-          const srvs = d2.data().servicos;
-          if (srvs) {
-            const serviceSelect = document.getElementById('service');
-            if (serviceSelect) {
-              serviceSelect.innerHTML = '<option value="">Selecione o serviço...</option>' +
-                srvs.map(s => `<option value="${s.nome}">${s.emoji} ${s.nome}</option>`).join('');
-            }
-          }
-        });
-      }
-      const snapPrecos = await getDocs(query(collection(db, 'settings'), where('type', '==', 'precos')));
-      if (!snapPrecos.empty) {
-        snapPrecos.forEach(d2 => {
-          const p = d2.data().precos;
-          if (p) { window._precosAdmin = p; Object.assign(PRECOS, p); }
-        });
-      }
-    } catch(e) {}
+    // Atualiza select de serviços com catálogo atual
+    if (window._catalogoAtivo && window._catalogoAtivo.length) {
+      atualizarSelectServicos(window._catalogoAtivo);
+    }
   }
 
   // ===== SIZE OPTIONS =====
@@ -2319,11 +2251,12 @@
     const type = document.getElementById('petType')?.value;
     const size = document.getElementById('petSize')?.value;
     const date = document.getElementById('bookingDate')?.value;
+    const service = document.getElementById('service')?.value;
     const display = document.getElementById('priceDisplay');
     const priceVal = document.getElementById('priceValue');
     const promoTag = document.getElementById('promoTag');
     if (!display) return;
-    const price = calcPrice(type, size, date);
+    const price = calcPrice(type, size, date, service);
     if (price === null) { display.classList.remove('show'); return; }
     display.classList.add('show');
     priceVal.textContent = `R$ ${price.toFixed(2).replace('.',',')}`;
@@ -2683,35 +2616,9 @@
     loadSettingsForFrontend();
   }
 
-  // Carrega preços e serviços do Firestore para o frontend (form de agendamento)
+  // Carrega preços e serviços do Firestore para o frontend (via catálogo unificado)
   async function loadSettingsForFrontend() {
-    try {
-      const snapPrecos = await getDocs(query(collection(db, 'settings'), where('type', '==', 'precos')));
-      if (!snapPrecos.empty) {
-        snapPrecos.forEach(d => {
-          const p = d.data().precos;
-          if (p) {
-            window._precosAdmin = p;
-            Object.assign(PRECOS, p);
-          }
-        });
-      }
-      const snapServicos = await getDocs(query(collection(db, 'settings'), where('type', '==', 'servicos')));
-      if (!snapServicos.empty) {
-        snapServicos.forEach(d => {
-          const srvs = d.data().servicos;
-          if (srvs) updateBookingFormServicos(srvs);
-        });
-      }
-    } catch(e) {}
-  }
-
-  function updateBookingFormServicos(servicos) {
-    const serviceSelect = document.getElementById('service');
-    if (!serviceSelect) return;
-    const current = serviceSelect.value;
-    serviceSelect.innerHTML = '<option value="">Selecione o serviço...</option>' +
-      servicos.map(s => `<option value="${s.nome}"${s.nome===current?' selected':''}>${s.emoji} ${s.nome}</option>`).join('');
+    // Noop — o initFrontCatalogo() já cuida disso
   }
 
   function updateAdminStats() {
@@ -2953,237 +2860,368 @@
     if (name === 'servicos') loadAdminServicosPrecos();
   };
 
-  // ===== SERVIÇOS & PREÇOS ADMIN =====
+  // ===== CATÁLOGO DE SERVIÇOS & PREÇOS (ADMIN + FRONT) =====
 
-  // Preços padrão (fallback caso não haja doc no Firestore)
-  const PRECOS_DEFAULT = {
-    Cachorro: { PP: 45, P: 65, M: 80, G: 140, GG: 170 },
-    Gato: { P: 95, M: 110, G: 115 },
-    Coelho: { Único: 80 }
-  };
+  // Estrutura do catálogo: array de serviços, cada um com preços por animal/porte
+  // { id, emoji, nome, ativo, precos: { Cachorro:{PP,P,M,G,GG}, Gato:{P,M,G}, Coelho:{Único} } }
 
-  // Serviços padrão
-  const SERVICOS_DEFAULT = [
-    { emoji: '🛁', nome: 'Banho' },
-    { emoji: '✂️', nome: 'Tosa' },
-    { emoji: '🌟', nome: 'Banho + Tosa' },
-    { emoji: '💆', nome: 'Hidratação' },
-    { emoji: '💅', nome: 'Corte de Unhas' },
-    { emoji: '👂', nome: 'Limpeza de Ouvidos' }
+  const CATALOGO_DEFAULT = [
+    { id:'srv1', emoji:'🛁', nome:'Banho',            ativo:true, descricao:'Banho completo com shampoo e condicionador especial para pets, secagem e escovação.',        precos:{ Cachorro:{PP:45,P:65,M:80,G:140,GG:170}, Gato:{P:95,M:110,G:115}, Coelho:{Único:80} } },
+    { id:'srv2', emoji:'✂️', nome:'Tosa',             ativo:true, descricao:'Tosa higiênica ou estética, personalizada para a raça e preferência do dono.',               precos:{ Cachorro:{PP:45,P:65,M:80,G:140,GG:170}, Gato:{P:95,M:110,G:115}, Coelho:{Único:80} } },
+    { id:'srv3', emoji:'🌟', nome:'Banho + Tosa',     ativo:true, descricao:'Pacote completo: banho, tosa, unhas e limpeza de ouvidos. Tudo de uma vez!',                 precos:{ Cachorro:{PP:80,P:110,M:140,G:250,GG:290}, Gato:{P:160,M:185,G:195}, Coelho:{Único:140} } },
+    { id:'srv4', emoji:'💆', nome:'Hidratação',       ativo:true, descricao:'Tratamento especial para pelagem, deixando o pelo macio, brilhoso e saudável.',              precos:{ Cachorro:{PP:30,P:40,M:50,G:70,GG:90}, Gato:{P:50,M:60,G:65}, Coelho:{Único:50} } },
+    { id:'srv5', emoji:'💅', nome:'Corte de Unhas',   ativo:true, descricao:'Corte cuidadoso e seguro das unhas, garantindo conforto ao caminhar.',                       precos:{ Cachorro:{PP:20,P:20,M:25,G:30,GG:35}, Gato:{P:25,M:25,G:30}, Coelho:{Único:20} } },
+    { id:'srv6', emoji:'👂', nome:'Limpeza de Ouvidos',ativo:true,descricao:'Higienização delicada dos ouvidos para prevenir infecções e manter a saúde do pet.',         precos:{ Cachorro:{PP:15,P:15,M:20,G:25,GG:25}, Gato:{P:20,M:20,G:25}, Coelho:{Único:15} } },
   ];
 
-  let adminPrecosData = JSON.parse(JSON.stringify(PRECOS_DEFAULT));
-  let adminServicosData = [...SERVICOS_DEFAULT];
-  let precosDocId = null;
-  let servicosDocId = null;
-  let emojiPickerTarget = null; // 'new' ou índice numérico
+  const ANIMAIS_CONFIG = [
+    { key:'Cachorro', label:'🐶 Cachorros', portes:['PP','P','M','G','GG'] },
+    { key:'Gato',     label:'🐱 Gatos',     portes:['P','M','G'] },
+    { key:'Coelho',   label:'🐰 Coelhos',   portes:['Único'] },
+  ];
 
-  const PET_EMOJIS = ['🐶','🐱','🐰','🐾','🦮','🐩','🐈','🐇','🦜','🐠','🐢','🦎','🐹','🦊','🐺','🐗','🐴','🦄'];
-  const SERVICOS_EMOJIS = ['🛁','✂️','🌟','💆','💅','👂','🐾','🧴','🪮','💊','🩺','🦷','🧽','🏥','🎀','🧸','🪴','🌿','💉','🔬'];
+  const SERVICOS_EMOJIS = ['🛁','✂️','🌟','💆','💅','👂','🐾','🧴','🪮','💊','🩺','🦷','🧽','🏥','🎀','🧸','🪴','🌿','🔬','🫧','🎗️','🐕','🐈','🐇','🦮','🐩'];
 
-  async function loadAdminServicosPrecos() {
-    renderPrecosEditor(adminPrecosData);
-    renderServicosListaAdmin();
+  let catalogoData = [];
+  let catalogoDocId = null;
+  let emojiPickerTarget = null; // índice do serviço
 
+  // ── Carrega do Firestore ──────────────────────────────────────────────────
+  async function loadCatalogo() {
     try {
-      // Carrega preços do Firestore
-      const snapPrecos = await getDocs(query(collection(db, 'settings'), where('type', '==', 'precos')));
-      if (!snapPrecos.empty) {
-        snapPrecos.forEach(d => {
-          adminPrecosData = d.data().precos || PRECOS_DEFAULT;
-          precosDocId = d.id;
-        });
+      const snap = await getDocs(query(collection(db, 'settings'), where('type', '==', 'catalogo')));
+      if (!snap.empty) {
+        snap.forEach(d => { catalogoData = d.data().catalogo || []; catalogoDocId = d.id; });
       } else {
-        adminPrecosData = JSON.parse(JSON.stringify(PRECOS_DEFAULT));
+        catalogoData = JSON.parse(JSON.stringify(CATALOGO_DEFAULT));
       }
-      renderPrecosEditor(adminPrecosData);
-
-      // Carrega serviços do Firestore
-      const snapServicos = await getDocs(query(collection(db, 'settings'), where('type', '==', 'servicos')));
-      if (!snapServicos.empty) {
-        snapServicos.forEach(d => {
-          adminServicosData = d.data().servicos || SERVICOS_DEFAULT;
-          servicosDocId = d.id;
-        });
-      } else {
-        adminServicosData = JSON.parse(JSON.stringify(SERVICOS_DEFAULT));
-      }
-      renderServicosListaAdmin();
-      // Atualiza a PRECOS global usada no calcPrice
-      window._precosAdmin = adminPrecosData;
     } catch(e) {
-      showToast('Erro ao carregar dados de serviços.', 'error');
+      catalogoData = JSON.parse(JSON.stringify(CATALOGO_DEFAULT));
     }
+    // Garante que cada serviço tem o campo descricao
+    catalogoData = catalogoData.map(s => ({ descricao: '', ...s }));
+    window._catalogoAtivo = catalogoData;
+    return catalogoData;
   }
 
-  function renderPrecosEditor(precos) {
-    const container = document.getElementById('precosEditorContainer');
-    if (!container) return;
-    const animals = [
-      { key: 'Cachorro', label: '🐶 Cachorros', sizes: ['PP','P','M','G','GG'] },
-      { key: 'Gato', label: '🐱 Gatos', sizes: ['P','M','G'] },
-      { key: 'Coelho', label: '🐰 Coelhos', sizes: ['Único'] }
-    ];
-    container.innerHTML = animals.map(a => `
-      <div class="preco-animal-admin">
-        <div class="preco-animal-admin-title">${a.label}</div>
-        ${a.sizes.map(s => `
-          <div class="preco-edit-row">
-            <span class="preco-edit-label">${s}</span>
-            <span class="preco-edit-prefix">R$</span>
-            <input class="preco-edit-input" type="number" min="0" step="0.01"
-              data-animal="${a.key}" data-size="${s}"
-              value="${(precos[a.key]?.[s] ?? 0)}"
-              oninput="adminUpdatePreco(this)">
-          </div>
-        `).join('')}
-      </div>
-    `).join('');
-  }
-
-  window.adminUpdatePreco = function(input) {
-    const animal = input.dataset.animal;
-    const size = input.dataset.size;
-    const val = parseFloat(input.value) || 0;
-    if (!adminPrecosData[animal]) adminPrecosData[animal] = {};
-    adminPrecosData[animal][size] = val;
-  };
-
-  window.adminSavePrecos = async function() {
-    const btn = document.getElementById('btnSavePrecos');
+  // ── Salva no Firestore e atualiza front ──────────────────────────────────
+  window.adminSaveCatalogo = async function() {
+    const btn = document.getElementById('btnSaveCatalogo');
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span> Salvando...';
+    // Coleta valores dos inputs antes de salvar
+    _coletarValoresDoDOM();
     try {
-      if (precosDocId) {
-        await updateDoc(doc(db, 'settings', precosDocId), { precos: adminPrecosData });
+      if (catalogoDocId) {
+        await updateDoc(doc(db, 'settings', catalogoDocId), { catalogo: catalogoData });
       } else {
         const newRef = doc(collection(db, 'settings'));
-        await setDoc(newRef, { type: 'precos', precos: adminPrecosData });
-        precosDocId = newRef.id;
+        await setDoc(newRef, { type: 'catalogo', catalogo: catalogoData });
+        catalogoDocId = newRef.id;
       }
-      // Atualiza a tabela PRECOS usada pelo calcPrice em tempo real
-      Object.assign(PRECOS, adminPrecosData);
-      showToast('✅ Preços salvos com sucesso!', 'success');
+      window._catalogoAtivo = catalogoData;
+      renderFrontServicos(catalogoData);
+      renderFrontTabelaPrecos(catalogoData);
+      atualizarSelectServicos(catalogoData);
+      showToast('✅ Catálogo salvo e publicado no site!', 'success');
     } catch(e) {
-      showToast('Erro ao salvar preços. Verifique permissões.', 'error');
+      showToast('Erro ao salvar. Verifique permissões do Firestore.', 'error');
     }
     btn.disabled = false;
-    btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Salvar Preços';
+    btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Salvar Tudo';
   };
 
-  function renderServicosListaAdmin() {
-    const lista = document.getElementById('servicosListaAdmin');
+  function _coletarValoresDoDOM() {
+    catalogoData.forEach((srv, i) => {
+      const nomeEl = document.getElementById(`cat-nome-${i}`);
+      if (nomeEl) srv.nome = nomeEl.value.trim() || srv.nome;
+      const descEl = document.getElementById(`cat-desc-${i}`);
+      if (descEl) srv.descricao = descEl.value.trim();
+      const toggleEl = document.getElementById(`cat-toggle-${i}`);
+      if (toggleEl) srv.ativo = toggleEl.checked;
+      ANIMAIS_CONFIG.forEach(a => {
+        a.portes.forEach(p => {
+          const inp = document.getElementById(`cat-preco-${i}-${a.key}-${p}`);
+          if (inp) {
+            if (!srv.precos) srv.precos = {};
+            if (!srv.precos[a.key]) srv.precos[a.key] = {};
+            srv.precos[a.key][p] = parseFloat(inp.value) || 0;
+          }
+        });
+      });
+    });
+  }
+
+  // ── Carrega e renderiza aba admin ────────────────────────────────────────
+  async function loadAdminServicosPrecos() {
+    const lista = document.getElementById('catalogoServicosLista');
+    if (lista) lista.innerHTML = '<div style="padding:32px;text-align:center"><div class="loading-spinner"></div></div>';
+    await loadCatalogo();
+    renderAdminCatalogo();
+  }
+
+  function renderAdminCatalogo() {
+    const lista = document.getElementById('catalogoServicosLista');
     if (!lista) return;
-    lista.innerHTML = adminServicosData.map((s, i) => `
-      <div class="servico-item-admin" id="servico-row-${i}">
-        <button class="servico-emoji-edit" onclick="openEmojiPicker(${i})" title="Trocar emoji">${s.emoji}</button>
-        <input class="servico-nome-edit" type="text" value="${s.nome.replace(/"/g,'&quot;')}"
-          oninput="adminServicosData[${i}].nome = this.value"
-          placeholder="Nome do serviço" maxlength="40">
-        <button class="btn-del-servico" onclick="adminRemoveServico(${i})" title="Remover serviço">
-          <i class="fa-solid fa-xmark"></i>
+    if (!catalogoData.length) {
+      lista.innerHTML = '<div style="padding:32px;text-align:center;color:var(--gray);font-size:14px">Nenhum serviço cadastrado. Clique em "Adicionar novo serviço".</div>';
+      return;
+    }
+    lista.innerHTML = catalogoData.map((srv, i) => _renderCardServico(srv, i)).join('');
+  }
+
+  function _renderCardServico(srv, i) {
+    const precosHTML = ANIMAIS_CONFIG.map(a => `
+      <div class="catalogo-animal-block">
+        <div class="catalogo-animal-title">${a.label}</div>
+        ${a.portes.map(p => {
+          const val = srv.precos?.[a.key]?.[p] ?? 0;
+          const terca = (val * 0.9).toFixed(2).replace('.',',');
+          return `
+          <div class="catalogo-preco-row">
+            <span class="catalogo-preco-label">${p}</span>
+            <span class="catalogo-preco-prefix">R$</span>
+            <input class="catalogo-preco-input" type="number" min="0" step="0.50" id="cat-preco-${i}-${a.key}-${p}"
+              value="${val}" placeholder="0"
+              oninput="updateTercaPreview(this, ${i}, '${a.key}', '${p}')">
+          </div>
+          <div class="catalogo-terca-preview" id="preview-${i}-${a.key}-${p}">🎉 Terça: R$ ${terca}</div>`;
+        }).join('')}
+      </div>`).join('');
+
+    return `
+    <div class="catalogo-servico-card" id="cat-card-${i}">
+      <div class="catalogo-servico-header ${srv.ativo ? 'ativo' : ''}" onclick="toggleCatalogoBody(${i})">
+        <button class="catalogo-emoji-btn" id="cat-emoji-btn-${i}"
+          onclick="event.stopPropagation(); openEmojiPicker(${i})"
+          title="Trocar emoji">${srv.emoji}</button>
+        <div class="catalogo-nome-wrap">
+          <input class="catalogo-nome-input" id="cat-nome-${i}" type="text"
+            value="${srv.nome.replace(/"/g,'&quot;')}"
+            placeholder="Nome do serviço" maxlength="50"
+            onclick="event.stopPropagation()"
+            oninput="catalogoData[${i}].nome = this.value">
+          <div style="font-size:11px;color:var(--gray);margin-top:2px">${ANIMAIS_CONFIG.map(a => a.label.split(' ')[0]).join(' · ')}</div>
+        </div>
+        <div class="catalogo-status-toggle" onclick="event.stopPropagation()">
+          <label class="toggle-switch" title="${srv.ativo ? 'Ativo':'Inativo'}">
+            <input type="checkbox" id="cat-toggle-${i}" ${srv.ativo ? 'checked' : ''}
+              onchange="catalogoData[${i}].ativo = this.checked; document.getElementById('cat-card-${i}').querySelector('.catalogo-servico-header').classList.toggle('ativo', this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+          <span style="color:${srv.ativo ? 'var(--green)' : 'var(--gray-light)'};font-size:11px">${srv.ativo ? 'Ativo' : 'Inativo'}</span>
+        </div>
+        <button class="catalogo-expand-btn" id="cat-expand-${i}" title="Editar preços">
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <button class="catalogo-del-btn" onclick="event.stopPropagation(); adminRemoverServico(${i})" title="Remover serviço">
+          <i class="fa-solid fa-trash"></i>
         </button>
       </div>
-    `).join('');
+      <div class="catalogo-precos-body" id="cat-body-${i}">
+        <div style="margin-bottom:14px">
+          <label style="font-size:12px;font-weight:600;color:var(--gray);display:block;margin-bottom:6px">Descrição (exibida no site)</label>
+          <input type="text" id="cat-desc-${i}" class="catalogo-preco-input" style="width:100%;border-radius:8px;padding:9px 12px"
+            value="${(srv.descricao||'').replace(/"/g,'&quot;')}"
+            placeholder="Ex: Banho completo com produtos especiais, secagem e escovação"
+            maxlength="120"
+            oninput="catalogoData[${i}].descricao = this.value">
+        </div>
+        <p style="font-size:12px;color:var(--gray);margin-bottom:14px">💡 Preços por porte — os valores de Terça (-10%) são calculados automaticamente.</p>
+        <div class="catalogo-precos-grid">${precosHTML}</div>
+      </div>
+    </div>`;
   }
 
-  window.adminRemoveServico = function(i) {
-    if (adminServicosData.length <= 1) { showToast('Deve haver pelo menos 1 serviço.', 'error'); return; }
-    adminServicosData.splice(i, 1);
-    renderServicosListaAdmin();
+  window.toggleCatalogoBody = function(i) {
+    const body = document.getElementById(`cat-body-${i}`);
+    const btn = document.getElementById(`cat-expand-${i}`);
+    if (!body) return;
+    body.classList.toggle('open');
+    if (btn) btn.innerHTML = body.classList.contains('open')
+      ? '<i class="fa-solid fa-chevron-up"></i>'
+      : '<i class="fa-solid fa-chevron-down"></i>';
   };
 
-  window.adminAddServico = function() {
-    const nomeInput = document.getElementById('newServicoNome');
-    const emojiBtn = document.getElementById('newServicoEmoji');
-    const nome = nomeInput.value.trim();
-    const emoji = emojiBtn.textContent === '➕' ? '🐾' : emojiBtn.textContent;
-    if (!nome) { showToast('Digite o nome do serviço.', 'error'); nomeInput.focus(); return; }
-    adminServicosData.push({ emoji, nome });
-    renderServicosListaAdmin();
-    nomeInput.value = '';
-    emojiBtn.textContent = '➕';
-    showToast(`Serviço "${nome}" adicionado! Clique em Salvar Serviços.`, 'info');
+  window.updateTercaPreview = function(input, i, animal, porte) {
+    const val = parseFloat(input.value) || 0;
+    if (!catalogoData[i]) return;
+    if (!catalogoData[i].precos) catalogoData[i].precos = {};
+    if (!catalogoData[i].precos[animal]) catalogoData[i].precos[animal] = {};
+    catalogoData[i].precos[animal][porte] = val;
+    const preview = document.getElementById(`preview-${i}-${animal}-${porte}`);
+    if (preview) preview.textContent = `🎉 Terça: R$ ${(val * 0.9).toFixed(2).replace('.',',')}`;
   };
 
-  window.adminSaveServicos = async function() {
-    const btn = document.getElementById('btnSaveServicos');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> Salvando...';
-    // Coleta valores atuais dos inputs antes de salvar
-    document.querySelectorAll('.servico-nome-edit').forEach((inp, i) => {
-      if (adminServicosData[i]) adminServicosData[i].nome = inp.value.trim() || adminServicosData[i].nome;
+  window.adminAdicionarServico = function() {
+    const novoId = 'srv' + Date.now();
+    catalogoData.push({
+      id: novoId, emoji: '🐾', nome: 'Novo Serviço', ativo: true, descricao: '',
+      precos: {
+        Cachorro: { PP:0, P:0, M:0, G:0, GG:0 },
+        Gato: { P:0, M:0, G:0 },
+        Coelho: { Único: 0 }
+      }
     });
-    try {
-      if (servicosDocId) {
-        await updateDoc(doc(db, 'settings', servicosDocId), { servicos: adminServicosData });
-      } else {
-        const newRef = doc(collection(db, 'settings'));
-        await setDoc(newRef, { type: 'servicos', servicos: adminServicosData });
-        servicosDocId = newRef.id;
-      }
-      // Atualiza o select de serviços no formulário de agendamento em tempo real
-      const serviceSelect = document.getElementById('service');
-      if (serviceSelect) {
-        const current = serviceSelect.value;
-        serviceSelect.innerHTML = '<option value="">Selecione o serviço...</option>' +
-          adminServicosData.map(s => `<option value="${s.nome}"${s.nome===current?' selected':''}>${s.emoji} ${s.nome}</option>`).join('');
-      }
-      showToast('✅ Serviços salvos com sucesso!', 'success');
-    } catch(e) {
-      showToast('Erro ao salvar serviços. Verifique permissões.', 'error');
-    }
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Salvar Serviços';
+    renderAdminCatalogo();
+    // Abre o último card e faz scroll
+    const newIndex = catalogoData.length - 1;
+    setTimeout(() => {
+      toggleCatalogoBody(newIndex);
+      const card = document.getElementById(`cat-card-${newIndex}`);
+      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const nomeInput = document.getElementById(`cat-nome-${newIndex}`);
+      if (nomeInput) { nomeInput.focus(); nomeInput.select(); }
+    }, 50);
   };
 
-  // ===== EMOJI PICKER =====
-  window.openEmojiPicker = function(target) {
-    emojiPickerTarget = target;
+  window.adminRemoverServico = function(i) {
+    if (catalogoData.length <= 1) { showToast('Deve haver pelo menos 1 serviço.', 'error'); return; }
+    const nome = catalogoData[i]?.nome || 'serviço';
+    if (!confirm(`Remover "${nome}"?`)) return;
+    catalogoData.splice(i, 1);
+    renderAdminCatalogo();
+    showToast(`"${nome}" removido. Clique em Salvar Tudo para confirmar.`, 'info');
+  };
+
+  // ── Emoji Picker ────────────────────────────────────────────────────────
+  window.openEmojiPicker = function(targetIndex) {
+    emojiPickerTarget = targetIndex;
     const popup = document.getElementById('emojiPickerPopup');
     popup.innerHTML = SERVICOS_EMOJIS.map(e =>
       `<span onclick="selectEmoji('${e}')" title="${e}">${e}</span>`
     ).join('');
-    // Posiciona próximo ao botão clicado
-    let refEl;
-    if (target === 'new') {
-      refEl = document.getElementById('newServicoEmoji');
-    } else {
-      refEl = document.querySelector(`#servico-row-${target} .servico-emoji-edit`);
-    }
-    if (refEl) {
-      const rect = refEl.getBoundingClientRect();
-      const adminPanel = document.getElementById('adminPanel');
-      const panelRect = adminPanel.getBoundingClientRect();
-      popup.style.top = (rect.bottom - panelRect.top + adminPanel.scrollTop + 4) + 'px';
-      popup.style.left = (rect.left - panelRect.left) + 'px';
-      popup.style.position = 'absolute';
+    const btn = document.getElementById(`cat-emoji-btn-${targetIndex}`);
+    if (btn) {
+      const rect = btn.getBoundingClientRect();
+      popup.style.top = (rect.bottom + window.scrollY + 6) + 'px';
+      popup.style.left = Math.min(rect.left + window.scrollX, window.innerWidth - 280) + 'px';
     }
     popup.style.display = 'flex';
-    // Fecha ao clicar fora
-    setTimeout(() => {
-      document.addEventListener('click', closeEmojiPickerOutside, { once: true });
-    }, 50);
+    setTimeout(() => document.addEventListener('click', _closeEmojiOutside, { once: true }), 50);
+  };
+  function _closeEmojiOutside(e) {
+    const popup = document.getElementById('emojiPickerPopup');
+    if (popup && !popup.contains(e.target)) popup.style.display = 'none';
+  }
+  window.selectEmoji = function(emoji) {
+    document.getElementById('emojiPickerPopup').style.display = 'none';
+    if (emojiPickerTarget === null) return;
+    if (catalogoData[emojiPickerTarget]) catalogoData[emojiPickerTarget].emoji = emoji;
+    const btn = document.getElementById(`cat-emoji-btn-${emojiPickerTarget}`);
+    if (btn) btn.textContent = emoji;
   };
 
-  function closeEmojiPickerOutside(e) {
-    const popup = document.getElementById('emojiPickerPopup');
-    if (popup && !popup.contains(e.target)) {
-      popup.style.display = 'none';
-    }
+  // ── FRONT: Renderiza seção Serviços ────────────────────────────────────
+  function renderFrontServicos(catalogo) {
+    const grid = document.getElementById('frontServicosGrid');
+    if (!grid) return;
+    const ativos = catalogo.filter(s => s.ativo);
+    if (!ativos.length) return;
+    const delays = ['reveal-delay-1','reveal-delay-2','reveal-delay-3'];
+    grid.innerHTML = ativos.map((s, i) => {
+      // Calcula faixa de preços para exibir no card
+      let minVal = Infinity, maxVal = 0;
+      Object.values(s.precos || {}).forEach(portes => {
+        Object.values(portes).forEach(v => { if (v > 0) { minVal = Math.min(minVal, v); maxVal = Math.max(maxVal, v); } });
+      });
+      const faixaLabel = minVal === Infinity
+        ? 'Consulte o preço'
+        : minVal === maxVal
+          ? `R$ ${minVal.toFixed(0).replace('.',',')}`
+          : `A partir de R$ ${minVal.toFixed(0)}`;
+      return `
+      <div class="service-card reveal ${delays[i % 3]}">
+        <span class="service-icon">${s.emoji}</span>
+        <div class="service-name">${s.nome}</div>
+        <p class="service-desc">${s.descricao || 'Serviço profissional com carinho e cuidado para o seu pet.'}</p>
+        <span class="service-price">${faixaLabel}</span>
+      </div>`;
+    }).join('');
+    // Reativa o IntersectionObserver nos novos elementos
+    grid.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
   }
 
-  window.selectEmoji = function(emoji) {
-    const popup = document.getElementById('emojiPickerPopup');
-    popup.style.display = 'none';
-    if (emojiPickerTarget === 'new') {
-      document.getElementById('newServicoEmoji').textContent = emoji;
-    } else {
-      const btn = document.querySelector(`#servico-row-${emojiPickerTarget} .servico-emoji-edit`);
-      if (btn) btn.textContent = emoji;
-      if (adminServicosData[emojiPickerTarget]) adminServicosData[emojiPickerTarget].emoji = emoji;
+  // ── FRONT: Renderiza Tabela de Preços ──────────────────────────────────
+  function renderFrontTabelaPrecos(catalogo) {
+    const normalEl = document.getElementById('frontTabelaNormal');
+    const tercaEl = document.getElementById('frontTabelaTerca');
+    if (!normalEl || !tercaEl) return;
+    const ativos = catalogo.filter(s => s.ativo);
+    if (!ativos.length) {
+      normalEl.innerHTML = '<p style="color:var(--gray);font-size:14px">Nenhum serviço ativo.</p>';
+      tercaEl.innerHTML = '<p style="color:var(--gray);font-size:14px">Nenhum serviço ativo.</p>';
+      return;
     }
-  };
+    const buildAnimalGroups = (srv, desconto) => ANIMAIS_CONFIG.map(a => {
+      const portes = a.portes.filter(p => (srv.precos?.[a.key]?.[p] ?? 0) > 0);
+      if (!portes.length) return '';
+      return `
+      <div class="preco-animal-group">
+        <div class="preco-animal-title">${a.label}</div>
+        <div class="preco-list">
+          ${portes.map(p => {
+            const base = srv.precos[a.key][p];
+            const val = desconto ? (base * 0.9) : base;
+            const fmt = val % 1 === 0 ? val.toFixed(0) : val.toFixed(2).replace('.',',');
+            return `<div class="preco-item"><span class="size">${p}</span><span class="value">R$ ${fmt}</span></div>`;
+          }).join('')}
+        </div>
+      </div>`;
+    }).join('');
+
+    const makeSection = (desconto) => ativos.map(srv => {
+      const grupos = buildAnimalGroups(srv, desconto);
+      if (!grupos.trim()) return '';
+      return `
+      <div class="front-tabela-servico-group">
+        <div class="front-tabela-servico-title">${srv.emoji} ${srv.nome}</div>
+        ${grupos}
+      </div>`;
+    }).join('');
+
+    normalEl.innerHTML = makeSection(false) || '<p style="font-size:13px;color:var(--gray)">Sem preços cadastrados.</p>';
+    tercaEl.innerHTML = `<div class="preco-discount-badge"><i class="fa-solid fa-tag"></i> 10% OFF todo dia de terça!</div>` + (makeSection(true) || '');
+  }
+
+  // ── Atualiza o select do form de agendamento ───────────────────────────
+  function atualizarSelectServicos(catalogo) {
+    const sel = document.getElementById('service');
+    if (!sel) return;
+    const current = sel.value;
+    const ativos = catalogo.filter(s => s.ativo);
+    sel.innerHTML = '<option value="">Selecione o serviço...</option>' +
+      ativos.map(s => `<option value="${s.nome}"${s.nome === current ? ' selected' : ''}>${s.emoji} ${s.nome}</option>`).join('');
+  }
+
+  // ── calcPrice via catálogo ──────────────────────────────────────────────
+  function calcPrice(petType, petSize, dateStr, servicoNome) {
+    if (!petType || !petSize || !dateStr) return null;
+    const cat = window._catalogoAtivo || [];
+    let preco = null;
+    if (servicoNome && cat.length) {
+      const srv = cat.find(s => s.nome === servicoNome && s.ativo);
+      if (srv) preco = srv.precos?.[petType]?.[petSize] ?? null;
+    }
+    // fallback para PRECOS legado se não encontrar
+    if (preco === null) {
+      const precosAtivos = window._precosAdmin || PRECOS;
+      preco = precosAtivos[petType]?.[petSize] ?? null;
+    }
+    if (preco === null) return null;
+    const d = new Date(dateStr + 'T12:00:00');
+    return d.getDay() === 2 ? +(preco * 0.9).toFixed(2) : preco;
+  }
+  window.calcPrice = calcPrice;
+
+  // ── Inicialização do front (carrega catálogo para todos os usuários) ───
+  async function initFrontCatalogo() {
+    await loadCatalogo();
+    renderFrontServicos(catalogoData);
+    renderFrontTabelaPrecos(catalogoData);
+    atualizarSelectServicos(catalogoData);
+  }
+  // chamada feita após revealObserver ser declarado (ver abaixo)
 
   // ===== TOAST =====
   window.showToast = function(msg, type = 'info') {
@@ -3208,6 +3246,9 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // Inicializa catálogo após revealObserver estar disponível
+  initFrontCatalogo();
 
 
   // ===== FIREBASE MESSAGING =====
