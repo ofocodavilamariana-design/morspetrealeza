@@ -1982,6 +1982,58 @@
       </div>
     </div>
   </div>
+
+  <!-- ===== MODAL ADMIN: NOVO AGENDAMENTO ===== -->
+  <div id="adminNewBookingModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200000;align-items:center;justify-content:center;backdrop-filter:blur(4px);padding:20px">
+    <div class="modal-box" style="max-width:560px;max-height:90vh;overflow-y:auto;position:relative">
+      <button class="modal-close" onclick="closeAdminNewBooking()">✕</button>
+      <h2 class="modal-title" style="text-align:left;font-size:22px;margin-bottom:4px">📅 Novo Agendamento</h2>
+      <p class="modal-sub" style="text-align:left;margin-bottom:20px;font-size:13px">Cadastre um agendamento manualmente para um cliente.</p>
+      <div class="modal-form" id="adminNewBookingForm">
+        <div class="form-row">
+          <div class="form-group"><label>Nome do Cliente *</label><input type="text" id="anb_clientName" placeholder="Nome completo" style="width:100%"></div>
+          <div class="form-group"><label>Telefone *</label><input type="tel" id="anb_clientPhone" placeholder="(11) 99999-9999" style="width:100%"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Nome do Pet *</label><input type="text" id="anb_petName" placeholder="Nome do pet" style="width:100%"></div>
+          <div class="form-group"><label>Tipo do Animal *</label>
+            <select id="anb_petType" onchange="anb_updateSizes()" style="width:100%">
+              <option value="">Selecione...</option>
+              <option value="Cachorro">🐶 Cachorro</option>
+              <option value="Gato">🐱 Gato</option>
+              <option value="Coelho">🐰 Coelho</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group" id="anb_petSizeGroup" style="display:none">
+          <label>Porte do Animal *</label>
+          <select id="anb_petSize" onchange="anb_updatePrice()" style="width:100%">
+            <option value="">Selecione o porte...</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Serviço *</label>
+          <select id="anb_service" onchange="anb_updatePrice()" style="width:100%">
+            <option value="">Selecione o serviço...</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Data *</label><input type="date" id="anb_date" onchange="anb_loadHours()" style="width:100%"></div>
+          <div class="form-group"><label>Horário *</label>
+            <select id="anb_time" style="width:100%"><option value="">Selecione a data primeiro</option></select>
+          </div>
+        </div>
+        <div id="anb_priceDisplay" style="display:none;margin-bottom:16px;background:var(--orange-pale);border-radius:12px;padding:14px 18px;justify-content:space-between;align-items:center">
+          <div><div style="font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">Valor estimado</div><div id="anb_priceValue" style="font-size:20px;font-weight:800;color:var(--dark)">—</div></div>
+          <div id="anb_promoTag"></div>
+        </div>
+        <div id="anb_errorMsg" class="error-msg" style="margin-bottom:10px"></div>
+        <button onclick="adminSubmitNewBooking()" id="anb_submitBtn" class="form-submit" style="margin-top:0">
+          <i class="fa-solid fa-calendar-plus"></i> Confirmar Agendamento
+        </button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- ===== MODAL EDITAR SERVIÇO (ADMIN) ===== -->
@@ -2050,57 +2102,6 @@
   </div>
 </div>
 
-
-<!-- ===== MODAL ADMIN: NOVO AGENDAMENTO ===== -->
-<div class="modal-overlay" id="adminNewBookingModal" style="z-index:99999">
-  <div class="modal-box" style="max-width:560px;max-height:90vh;overflow-y:auto">
-    <button class="modal-close" onclick="closeAdminNewBooking()">✕</button>
-    <h2 class="modal-title" style="text-align:left;font-size:22px;margin-bottom:4px">📅 Novo Agendamento</h2>
-    <p class="modal-sub" style="text-align:left;margin-bottom:20px;font-size:13px">Cadastre um agendamento manualmente para um cliente.</p>
-    <div class="modal-form" id="adminNewBookingForm">
-      <div class="form-row">
-        <div class="form-group"><label>Nome do Cliente *</label><input type="text" id="anb_clientName" placeholder="Nome completo" style="width:100%"></div>
-        <div class="form-group"><label>Telefone *</label><input type="tel" id="anb_clientPhone" placeholder="(11) 99999-9999" style="width:100%"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Nome do Pet *</label><input type="text" id="anb_petName" placeholder="Nome do pet" style="width:100%"></div>
-        <div class="form-group"><label>Tipo do Animal *</label>
-          <select id="anb_petType" onchange="anb_updateSizes()" style="width:100%">
-            <option value="">Selecione...</option>
-            <option value="Cachorro">🐶 Cachorro</option>
-            <option value="Gato">🐱 Gato</option>
-            <option value="Coelho">🐰 Coelho</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group" id="anb_petSizeGroup" style="display:none">
-        <label>Porte do Animal *</label>
-        <select id="anb_petSize" onchange="anb_updatePrice()" style="width:100%">
-          <option value="">Selecione o porte...</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Serviço *</label>
-        <select id="anb_service" onchange="anb_updatePrice()" style="width:100%">
-          <option value="">Selecione o serviço...</option>
-        </select>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Data *</label><input type="date" id="anb_date" onchange="anb_loadHours()" style="width:100%"></div>
-        <div class="form-group"><label>Horário *</label>
-          <select id="anb_time" style="width:100%"><option value="">Selecione a data primeiro</option></select>
-        </div>
-      </div>
-      <div class="price-display" id="anb_priceDisplay" style="display:none;margin-bottom:16px;background:var(--orange-pale);border-radius:12px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center">
-        <div><div style="font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">Valor estimado</div><div id="anb_priceValue" style="font-size:20px;font-weight:800;color:var(--dark)">—</div></div>
-        <div id="anb_promoTag"></div>
-      </div>
-      <div id="anb_errorMsg" class="error-msg" style="margin-bottom:10px"></div>
-      <button onclick="adminSubmitNewBooking()" id="anb_submitBtn" class="form-submit" style="margin-top:0">
-        <i class="fa-solid fa-calendar-plus"></i> Confirmar Agendamento
-      </button>
-    </div>
-  </div>
-</div>
 
 <!-- ===== MODAL DE CONFIRMAÇÃO DE REAGENDAMENTO ===== -->
 <div class="reschedule-overlay" id="rescheduleConfirmOverlay">
@@ -2247,7 +2248,7 @@
   // ===== ADMIN: NOVO AGENDAMENTO MANUAL =====
   window.openAdminNewBooking = function() {
     const modal = document.getElementById('adminNewBookingModal');
-    modal.classList.add('open');
+    modal.style.display = 'flex';
     // Preencher select de serviços com catálogo atual
     const svcSelect = document.getElementById('anb_service');
     svcSelect.innerHTML = '<option value="">Selecione o serviço...</option>';
@@ -2271,17 +2272,22 @@
     document.getElementById('anb_clientName').value = '';
     document.getElementById('anb_clientPhone').value = '';
     document.getElementById('anb_petSizeGroup').style.display = 'none';
-    document.getElementById('anb_priceDisplay').style.display = 'none';
+    anb_showPrice(false);
     document.getElementById('anb_errorMsg').classList.remove('show');
   };
 
   window.closeAdminNewBooking = function() {
-    document.getElementById('adminNewBookingModal').classList.remove('open');
+    document.getElementById('adminNewBookingModal').style.display = 'none';
   };
 
   document.getElementById('adminNewBookingModal').addEventListener('click', function(e) {
     if (e.target === this) closeAdminNewBooking();
   });
+  // anb_priceDisplay helper
+  function anb_showPrice(show) {
+    const el = document.getElementById('anb_priceDisplay');
+    if (el) el.style.display = show ? 'flex' : 'none';
+  }
 
   window.anb_updateSizes = function() {
     const type = document.getElementById('anb_petType').value;
@@ -2299,15 +2305,14 @@
     const size = document.getElementById('anb_petSize')?.value;
     const date = document.getElementById('anb_date').value;
     const service = document.getElementById('anb_service').value;
-    const display = document.getElementById('anb_priceDisplay');
     const priceVal = document.getElementById('anb_priceValue');
     const promoTag = document.getElementById('anb_promoTag');
     const price = calcPrice(type, size, date, service);
-    if (price === null) { display.style.display = 'none'; return; }
-    display.style.display = 'flex';
-    priceVal.textContent = 'R$ ' + price.toFixed(2).replace('.',',');
+    if (price === null) { anb_showPrice(false); return; }
+    anb_showPrice(true);
+    if (priceVal) priceVal.textContent = 'R$ ' + price.toFixed(2).replace('.',',');
     const isTue = date ? new Date(date+'T12:00:00').getDay() === 2 : false;
-    promoTag.innerHTML = isTue ? '<span class="price-promo">🎉 Terça -10%</span>' : '';
+    if (promoTag) promoTag.innerHTML = isTue ? '<span class="price-promo">🎉 Terça -10%</span>' : '';
   };
 
   window.anb_loadHours = async function() {
