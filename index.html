@@ -223,18 +223,33 @@
   /* ===== SERVICES ===== */
   #servicos { background: var(--beige); }
   .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; margin-top: 48px; }
-  .service-card { background: var(--white); border-radius: var(--radius); padding: 32px 28px; border: 1px solid rgba(242,101,34,0.08); box-shadow: 0 2px 16px rgba(0,0,0,0.04); transition: var(--transition); cursor: default; position: relative; overflow: hidden; }
+  .service-card { background: var(--white); border-radius: var(--radius); padding: 32px 28px; border: 1px solid rgba(242,101,34,0.08); box-shadow: 0 2px 16px rgba(0,0,0,0.04); transition: var(--transition); cursor: default; position: relative; overflow: hidden; display: flex; flex-direction: column; }
   .service-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--orange), var(--orange-light)); transform: scaleX(0); transform-origin: left; transition: var(--transition); }
   .service-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
   .service-card:hover::before { transform: scaleX(1); }
   .service-icon { font-size: 44px; margin-bottom: 16px; display: block; }
   .service-name { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--dark); margin-bottom: 10px; }
-  .service-desc { font-size: 14px; color: var(--gray); line-height: 1.7; margin-bottom: 16px; }
+  .service-desc { font-size: 14px; color: var(--gray); line-height: 1.7; margin-bottom: 16px; flex: 1; }
+  .service-price-area { margin-top: auto; }
+  .service-price-range { font-size: 13px; font-weight: 700; color: var(--orange); margin-bottom: 10px; }
   .service-price { display: inline-block; font-size: 12px; font-weight: 700; color: var(--orange); background: var(--orange-pale); padding: 5px 14px; border-radius: 20px; letter-spacing: 0.3px; }
+  .service-portes-mini { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .service-porte-pill { background: var(--gray-pale); border: 1px solid var(--beige-dark); border-radius: 8px; padding: 4px 10px; display: flex; flex-direction: column; align-items: center; }
+  .service-porte-pill .sp-label { font-size: 9px; font-weight: 800; color: var(--orange); text-transform: uppercase; letter-spacing: 0.5px; }
+  .service-porte-pill .sp-val { font-size: 12px; font-weight: 800; color: var(--dark); }
+  .service-animal-group { margin-bottom: 8px; }
+  .service-animal-name { font-size: 10px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
 
   /* ===== TABELA DE PREÇOS ===== */
   #tabela-precos { background: var(--white); }
-  .preco-header { text-align: center; margin-bottom: 48px; }
+  .preco-header { text-align: center; margin-bottom: 32px; }
+
+  /* Filtro de serviço na tabela */
+  .preco-servico-tabs { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 32px; }
+  .preco-tab-btn { padding: 8px 18px; border-radius: 30px; border: 1.5px solid var(--beige-dark); background: var(--white); color: var(--gray); font-size: 13px; font-weight: 600; cursor: pointer; transition: var(--transition); font-family: 'DM Sans', sans-serif; }
+  .preco-tab-btn:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-pale); }
+  .preco-tab-btn.active { border-color: var(--orange); background: var(--orange); color: var(--white); box-shadow: 0 4px 14px rgba(242,101,34,0.3); }
+
   .preco-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
   .preco-card { border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); border: 1px solid rgba(242,101,34,0.12); }
   .preco-card-header { padding: 20px 28px; background: linear-gradient(135deg, var(--orange), var(--orange-dark)); color: var(--white); }
@@ -252,6 +267,59 @@
   .preco-card.promo-card .preco-item { background: var(--beige); }
   .preco-card.promo-card .preco-item .size { color: var(--gray); }
   .preco-discount-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(242,101,34,0.15); color: var(--orange); font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(242,101,34,0.3); margin-bottom: 16px; }
+
+  /* Servico vazio */
+  .preco-empty { text-align: center; padding: 32px; color: var(--gray); font-size: 14px; }
+
+  /* ===== MODAL EDITAR SERVIÇO (ADMIN) ===== */
+  .srv-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(10,6,4,0.75); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 9999998; align-items: center; justify-content: center; padding: 20px; animation: pwaFadeIn 0.25s ease; }
+  .srv-modal-overlay.open { display: flex; }
+  .srv-modal-box { background: var(--white); border-radius: 24px; width: 100%; max-width: 680px; max-height: 90vh; overflow-y: auto; box-shadow: 0 32px 80px rgba(0,0,0,0.28); animation: pwaSlideUp 0.38s cubic-bezier(0.34,1.56,0.64,1); }
+  .srv-modal-header { padding: 24px 28px 20px; border-bottom: 1px solid var(--beige-dark); display: flex; align-items: center; gap: 14px; position: sticky; top: 0; background: var(--white); z-index: 1; border-radius: 24px 24px 0 0; }
+  .srv-modal-header-icon { width: 52px; height: 52px; font-size: 26px; border-radius: 14px; background: var(--orange-pale); border: 1.5px solid rgba(242,101,34,0.2); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); flex-shrink: 0; }
+  .srv-modal-header-icon:hover { border-color: var(--orange); transform: scale(1.06); }
+  .srv-modal-title { flex: 1; }
+  .srv-modal-title h3 { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 900; color: var(--dark); margin-bottom: 2px; }
+  .srv-modal-title p { font-size: 12px; color: var(--gray); }
+  .srv-modal-close { width: 34px; height: 34px; border-radius: 8px; background: var(--gray-pale); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--gray); font-size: 14px; transition: var(--transition); flex-shrink: 0; }
+  .srv-modal-close:hover { background: var(--red-pale); color: var(--red); }
+  .srv-modal-body { padding: 24px 28px; }
+  .srv-modal-field { margin-bottom: 18px; }
+  .srv-modal-field label { display: block; font-size: 12px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 7px; }
+  .srv-modal-input { width: 100%; padding: 11px 14px; border: 1.5px solid var(--beige-dark); border-radius: 10px; font-size: 14px; font-weight: 600; color: var(--dark); font-family: 'DM Sans', sans-serif; background: var(--gray-pale); outline: none; transition: var(--transition); }
+  .srv-modal-input:focus { border-color: var(--orange); background: var(--white); box-shadow: 0 0 0 3px rgba(242,101,34,0.1); }
+  .srv-modal-status-row { display: flex; align-items: center; gap: 12px; background: var(--gray-pale); border-radius: 10px; padding: 12px 16px; border: 1.5px solid var(--beige-dark); }
+  .srv-modal-status-row label { font-size: 13px; font-weight: 600; color: var(--dark); flex: 1; cursor: pointer; }
+  .srv-modal-prices-title { font-size: 13px; font-weight: 700; color: var(--dark); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .srv-modal-animal-block { background: var(--gray-pale); border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid var(--beige-dark); }
+  .srv-modal-animal-title { font-size: 13px; font-weight: 800; color: var(--dark); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+  .srv-modal-portes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
+  .srv-modal-porte { display: flex; flex-direction: column; gap: 4px; }
+  .srv-modal-porte-label { font-size: 10px; font-weight: 800; color: var(--orange); text-transform: uppercase; letter-spacing: 0.5px; }
+  .srv-modal-porte-wrap { display: flex; align-items: center; gap: 4px; background: var(--white); border: 1.5px solid var(--beige-dark); border-radius: 8px; padding: 6px 10px; transition: var(--transition); }
+  .srv-modal-porte-wrap:focus-within { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(242,101,34,0.1); }
+  .srv-modal-porte-prefix { font-size: 11px; color: var(--gray); font-weight: 600; }
+  .srv-modal-porte-input { flex: 1; border: none; background: transparent; font-size: 13px; font-weight: 700; color: var(--dark); font-family: 'DM Sans', sans-serif; outline: none; min-width: 0; }
+  .srv-modal-terca-hint { font-size: 10px; color: var(--orange); font-weight: 600; margin-top: 3px; }
+  .srv-modal-footer { padding: 16px 28px 24px; border-top: 1px solid var(--beige-dark); display: flex; gap: 10px; align-items: center; position: sticky; bottom: 0; background: var(--white); border-radius: 0 0 24px 24px; }
+  .srv-modal-btn-save { flex: 1; padding: 14px; background: linear-gradient(135deg, var(--orange), var(--orange-dark)); color: white; border: none; border-radius: 50px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; box-shadow: 0 6px 20px rgba(242,101,34,0.35); transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .srv-modal-btn-save:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(242,101,34,0.45); }
+  .srv-modal-btn-cancel { padding: 14px 20px; background: transparent; color: var(--gray); border: 1.5px solid var(--beige-dark); border-radius: 50px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: var(--transition); }
+  .srv-modal-btn-cancel:hover { border-color: var(--gray-light); color: var(--dark); }
+
+  /* Admin card melhorado */
+  .catalogo-servico-card { margin-bottom: 12px; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1.5px solid rgba(0,0,0,0.06); background: var(--white); transition: var(--transition); }
+  .catalogo-servico-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.1); border-color: rgba(242,101,34,0.2); }
+  .catalogo-servico-card.inactive { opacity: 0.6; }
+
+  /* Badge de inativo no card admin */
+  .cat-inactive-badge { font-size: 10px; font-weight: 700; background: var(--red-pale); color: var(--red); padding: 3px 8px; border-radius: 20px; border: 1px solid rgba(239,68,68,0.2); }
+  .cat-active-badge { font-size: 10px; font-weight: 700; background: var(--green-pale); color: #16a34a; padding: 3px 8px; border-radius: 20px; border: 1px solid rgba(34,197,94,0.2); }
+
+  /* Preços sumário no card admin */
+  .cat-price-summary { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .cat-price-chip { font-size: 11px; font-weight: 700; color: var(--gray); background: var(--gray-pale); padding: 2px 8px; border-radius: 6px; }
+  .cat-price-chip span { color: var(--orange); }
 
   /* ===== AVALIAÇÕES ===== */
   #avaliacoes { background: var(--white); }
@@ -663,6 +731,15 @@
     .booking-form-container { padding: 28px 20px; }
     .floating-sticker { display: none; }
     .stats-row { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    /* Service modal mobile */
+    .srv-modal-box { max-height: 96vh; border-radius: 20px 20px 0 0; }
+    .srv-modal-overlay { padding: 0; align-items: flex-end; }
+    .srv-modal-portes-grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
+    /* Price tabs mobile */
+    .preco-servico-tabs { gap: 6px; }
+    .preco-tab-btn { font-size: 12px; padding: 7px 14px; }
+    /* Admin catalog card mobile */
+    .catalogo-servico-card > div { flex-wrap: wrap; gap: 10px; }
   }
 
   /* ===== PWA INSTALL MODAL ===== */
@@ -1330,7 +1407,11 @@
       <h2 class="section-title">🐾 Tabela de Serviços</h2>
       <p class="section-desc" style="margin:0 auto">Preços transparentes para cuidar do seu pet. <strong>Terças-feiras com 10% de desconto!</strong></p>
     </div>
-    <!-- Gerado dinamicamente via JS -->
+    <!-- Filtro de serviços -->
+    <div class="preco-servico-tabs reveal" id="precoServicoTabs" style="display:none">
+      <!-- Gerado dinamicamente via JS -->
+    </div>
+    <!-- Tabela gerada dinamicamente via JS -->
     <div id="frontTabelaPrecos">
       <div class="preco-grid">
         <div class="preco-card reveal reveal-delay-1">
@@ -1861,32 +1942,34 @@
 
         <!-- SERVIÇOS & PREÇOS SECTION -->
         <div id="admin-section-servicos" class="admin-section">
-          <!-- Cabeçalho com botão salvar -->
-          <div class="section-card" style="margin-bottom:24px">
+          <!-- Cabeçalho informativo -->
+          <div class="section-card" style="margin-bottom:20px">
             <div class="section-card-header">
               <div class="section-card-title"><i class="fa-solid fa-tags" style="color:var(--orange)"></i> Catálogo de Serviços & Preços</div>
-              <button class="btn-save-precos" id="btnSaveCatalogo" onclick="adminSaveCatalogo()">
-                <i class="fa-solid fa-floppy-disk"></i> Salvar Tudo
+              <button class="btn-save-precos" id="btnSaveCatalogo" onclick="adminSaveCatalogo()" style="display:none">
+                <i class="fa-solid fa-floppy-disk"></i> Publicar Alterações
               </button>
             </div>
-            <div class="section-card-body" style="padding-bottom:8px">
-              <p style="font-size:13px;color:var(--gray)">Gerencie os serviços e os valores por tipo e porte de animal. Os preços de terça (-10%) são calculados automaticamente. As alterações refletem imediatamente no site e no formulário de agendamento.</p>
+            <div class="section-card-body" style="padding-bottom:12px">
+              <p style="font-size:13px;color:var(--gray);line-height:1.6">Gerencie os serviços e os valores por tipo e porte de animal. <strong style="color:var(--dark)">Clique em Editar</strong> para abrir o editor completo de cada serviço. As alterações refletem imediatamente no site após salvar.</p>
             </div>
           </div>
 
-          <!-- Lista de serviços -->
+          <!-- Lista de serviços (novo layout de cards) -->
           <div id="catalogoServicosLista"></div>
 
           <!-- Botão adicionar novo serviço -->
-          <div class="section-card" id="addServicoBtnCard" style="margin-top:16px;cursor:pointer;border:2px dashed var(--beige-dark);box-shadow:none;background:var(--gray-pale)" onclick="adminAdicionarServico()">
-            <div style="padding:18px 24px;display:flex;align-items:center;gap:12px;color:var(--orange);font-weight:700;font-size:14px">
-              <div style="width:36px;height:36px;border-radius:10px;background:var(--orange-pale);display:flex;align-items:center;justify-content:center;font-size:18px">➕</div>
+          <div class="section-card" id="addServicoBtnCard" style="margin-top:12px;cursor:pointer;border:2px dashed var(--beige-dark);box-shadow:none;background:var(--gray-pale);transition:var(--transition)" onclick="adminAdicionarServico()" onmouseenter="this.style.borderColor='var(--orange)';this.style.background='var(--orange-pale)'" onmouseleave="this.style.borderColor='var(--beige-dark)';this.style.background='var(--gray-pale)'">
+            <div style="padding:16px 24px;display:flex;align-items:center;gap:12px;color:var(--orange);font-weight:700;font-size:14px">
+              <div style="width:36px;height:36px;border-radius:10px;background:var(--orange-pale);display:flex;align-items:center;justify-content:center;font-size:18px;border:1.5px solid rgba(242,101,34,0.3)">➕</div>
               Adicionar novo serviço
             </div>
           </div>
 
-          <!-- Emoji picker global -->
-          <div class="emoji-picker-popup" id="emojiPickerPopup" style="display:none;position:fixed;z-index:999999"></div>
+          <!-- Emoji picker global (admin inline) -->
+          <div class="emoji-picker-popup" id="emojiPickerPopup" style="display:none;position:fixed;z-index:9999999"></div>
+          <!-- Emoji picker para modal de serviço -->
+          <div class="emoji-picker-popup" id="srvModalEmojiPicker" style="display:none;position:fixed;z-index:99999999"></div>
         </div>
       </div>
     </main>
@@ -1903,6 +1986,59 @@
         <button class="confirm-btn confirm-btn-cancel" onclick="closeConfirm()">Não</button>
         <button class="confirm-btn confirm-btn-ok" id="confirmOkBtn" onclick="confirmAction()">Sim</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL EDITAR SERVIÇO (ADMIN) ===== -->
+<div class="srv-modal-overlay" id="srvEditModal">
+  <div class="srv-modal-box">
+    <div class="srv-modal-header">
+      <div class="srv-modal-header-icon" id="srvModalEmoji" onclick="openSrvModalEmojiPicker()">🐾</div>
+      <div class="srv-modal-title">
+        <h3 id="srvModalTitleText">Editar Serviço</h3>
+        <p>Clique no emoji para trocar o ícone do serviço</p>
+      </div>
+      <button class="srv-modal-close" onclick="closeSrvModal()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="srv-modal-body">
+      <!-- Nome -->
+      <div class="srv-modal-field">
+        <label>Nome do Serviço</label>
+        <input type="text" class="srv-modal-input" id="srvModalNome" placeholder="Ex: Banho Premium" maxlength="50">
+      </div>
+      <!-- Descrição -->
+      <div class="srv-modal-field">
+        <label>Descrição (exibida no site)</label>
+        <textarea class="srv-modal-input" id="srvModalDesc" rows="2" maxlength="140" placeholder="Ex: Banho completo com produtos especiais, secagem e escovação." style="resize:vertical;line-height:1.5"></textarea>
+      </div>
+      <!-- Status -->
+      <div class="srv-modal-field">
+        <div class="srv-modal-status-row">
+          <label for="srvModalAtivo" style="display:flex;align-items:center;gap:10px;cursor:pointer;margin:0">
+            <label class="toggle-switch">
+              <input type="checkbox" id="srvModalAtivo" checked>
+              <span class="toggle-slider"></span>
+            </label>
+            <span id="srvModalAtivoLabel">Serviço ativo (visível no site)</span>
+          </label>
+        </div>
+      </div>
+      <!-- Preços por animal/porte -->
+      <div class="srv-modal-prices-title">
+        <i class="fa-solid fa-tag" style="color:var(--orange)"></i>
+        Preços por tipo e porte
+        <span style="font-size:11px;color:var(--gray);font-weight:400;margin-left:4px">— Terça-feira tem 10% OFF automático</span>
+      </div>
+      <div id="srvModalPrecos">
+        <!-- gerado pelo JS -->
+      </div>
+    </div>
+    <div class="srv-modal-footer">
+      <button class="srv-modal-btn-cancel" onclick="closeSrvModal()">Cancelar</button>
+      <button class="srv-modal-btn-save" id="srvModalSaveBtn" onclick="saveSrvModal()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Serviço
+      </button>
     </div>
   </div>
 </div>
@@ -2789,7 +2925,7 @@
 
   window.confirmAction = async function() {
     if (!pendingAction) return;
-    const { type, id } = pendingAction;
+    const { type, id, index } = pendingAction;
     closeConfirm();
     try {
       if (type === 'concluir') {
@@ -2801,6 +2937,23 @@
       } else if (type === 'excluir') {
         await deleteDoc(doc(db, 'bookings', id));
         showToast('🗑 Agendamento excluído.', 'info');
+      } else if (type === 'remover-servico') {
+        const nome = catalogoData[index]?.nome || 'serviço';
+        catalogoData.splice(index, 1);
+        // Salva automaticamente
+        if (catalogoDocId) {
+          await updateDoc(doc(db, 'settings', catalogoDocId), { catalogo: catalogoData });
+        } else if (catalogoData.length) {
+          const newRef = doc(collection(db, 'settings'));
+          await setDoc(newRef, { type: 'catalogo', catalogo: catalogoData });
+          catalogoDocId = newRef.id;
+        }
+        window._catalogoAtivo = catalogoData;
+        renderFrontServicos(catalogoData);
+        renderFrontTabelaPrecos(catalogoData);
+        atualizarSelectServicos(catalogoData);
+        renderAdminCatalogo();
+        showToast(`🗑 "${nome}" removido e publicado.`, 'info');
       }
     } catch(e) { showToast('Erro ao executar ação.', 'error'); }
   };
@@ -2908,9 +3061,7 @@
   window.adminSaveCatalogo = async function() {
     const btn = document.getElementById('btnSaveCatalogo');
     btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> Salvando...';
-    // Coleta valores dos inputs antes de salvar
-    _coletarValoresDoDOM();
+    btn.innerHTML = '<span class="spinner"></span> Publicando...';
     try {
       if (catalogoDocId) {
         await updateDoc(doc(db, 'settings', catalogoDocId), { catalogo: catalogoData });
@@ -2928,29 +3079,8 @@
       showToast('Erro ao salvar. Verifique permissões do Firestore.', 'error');
     }
     btn.disabled = false;
-    btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Salvar Tudo';
+    btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Publicar Alterações';
   };
-
-  function _coletarValoresDoDOM() {
-    catalogoData.forEach((srv, i) => {
-      const nomeEl = document.getElementById(`cat-nome-${i}`);
-      if (nomeEl) srv.nome = nomeEl.value.trim() || srv.nome;
-      const descEl = document.getElementById(`cat-desc-${i}`);
-      if (descEl) srv.descricao = descEl.value.trim();
-      const toggleEl = document.getElementById(`cat-toggle-${i}`);
-      if (toggleEl) srv.ativo = toggleEl.checked;
-      ANIMAIS_CONFIG.forEach(a => {
-        a.portes.forEach(p => {
-          const inp = document.getElementById(`cat-preco-${i}-${a.key}-${p}`);
-          if (inp) {
-            if (!srv.precos) srv.precos = {};
-            if (!srv.precos[a.key]) srv.precos[a.key] = {};
-            srv.precos[a.key][p] = parseFloat(inp.value) || 0;
-          }
-        });
-      });
-    });
-  }
 
   // ── Carrega e renderiza aba admin ────────────────────────────────────────
   async function loadAdminServicosPrecos() {
@@ -2962,95 +3092,196 @@
 
   function renderAdminCatalogo() {
     const lista = document.getElementById('catalogoServicosLista');
+    const saveBtn = document.getElementById('btnSaveCatalogo');
     if (!lista) return;
     if (!catalogoData.length) {
       lista.innerHTML = '<div style="padding:32px;text-align:center;color:var(--gray);font-size:14px">Nenhum serviço cadastrado. Clique em "Adicionar novo serviço".</div>';
+      if (saveBtn) saveBtn.style.display = 'none';
       return;
     }
     lista.innerHTML = catalogoData.map((srv, i) => _renderCardServico(srv, i)).join('');
+    if (saveBtn) saveBtn.style.display = 'flex';
   }
 
   function _renderCardServico(srv, i) {
-    const precosHTML = ANIMAIS_CONFIG.map(a => `
-      <div class="catalogo-animal-block">
-        <div class="catalogo-animal-title">${a.label}</div>
-        ${a.portes.map(p => {
-          const val = srv.precos?.[a.key]?.[p] ?? 0;
-          const terca = (val * 0.9).toFixed(2).replace('.',',');
-          return `
-          <div class="catalogo-preco-row">
-            <span class="catalogo-preco-label">${p}</span>
-            <span class="catalogo-preco-prefix">R$</span>
-            <input class="catalogo-preco-input" type="number" min="0" step="0.50" id="cat-preco-${i}-${a.key}-${p}"
-              value="${val}" placeholder="0"
-              oninput="updateTercaPreview(this, ${i}, '${a.key}', '${p}')">
-          </div>
-          <div class="catalogo-terca-preview" id="preview-${i}-${a.key}-${p}">🎉 Terça: R$ ${terca}</div>`;
-        }).join('')}
-      </div>`).join('');
+    // Resumo de preços para exibir no card
+    const animSummary = ANIMAIS_CONFIG.map(a => {
+      const vals = a.portes.map(p => srv.precos?.[a.key]?.[p] || 0).filter(v => v > 0);
+      if (!vals.length) return null;
+      const min = Math.min(...vals);
+      return `<span class="cat-price-chip">${a.label.split(' ')[0]} <span>a partir R$${min}</span></span>`;
+    }).filter(Boolean).join('');
+
+    const statusBadge = srv.ativo
+      ? `<span class="cat-active-badge">✓ Ativo</span>`
+      : `<span class="cat-inactive-badge">✕ Inativo</span>`;
 
     return `
-    <div class="catalogo-servico-card" id="cat-card-${i}">
-      <div class="catalogo-servico-header ${srv.ativo ? 'ativo' : ''}" onclick="toggleCatalogoBody(${i})">
-        <button class="catalogo-emoji-btn" id="cat-emoji-btn-${i}"
-          onclick="event.stopPropagation(); openEmojiPicker(${i})"
-          title="Trocar emoji">${srv.emoji}</button>
-        <div class="catalogo-nome-wrap">
-          <input class="catalogo-nome-input" id="cat-nome-${i}" type="text"
-            value="${srv.nome.replace(/"/g,'&quot;')}"
-            placeholder="Nome do serviço" maxlength="50"
-            onclick="event.stopPropagation()"
-            oninput="catalogoData[${i}].nome = this.value">
-          <div style="font-size:11px;color:var(--gray);margin-top:2px">${ANIMAIS_CONFIG.map(a => a.label.split(' ')[0]).join(' · ')}</div>
+    <div class="catalogo-servico-card ${srv.ativo ? '' : 'inactive'}" id="cat-card-${i}">
+      <div style="display:flex;align-items:center;gap:14px;padding:14px 18px">
+        <div style="width:48px;height:48px;font-size:26px;border-radius:12px;background:var(--orange-pale);border:1.5px solid rgba(242,101,34,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">${srv.emoji}</div>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            <span style="font-size:15px;font-weight:800;color:var(--dark)">${srv.nome}</span>
+            ${statusBadge}
+          </div>
+          <div class="cat-price-summary">${animSummary || '<span style="font-size:11px;color:var(--gray)">Sem preços cadastrados</span>'}</div>
         </div>
-        <div class="catalogo-status-toggle" onclick="event.stopPropagation()">
-          <label class="toggle-switch" title="${srv.ativo ? 'Ativo':'Inativo'}">
-            <input type="checkbox" id="cat-toggle-${i}" ${srv.ativo ? 'checked' : ''}
-              onchange="catalogoData[${i}].ativo = this.checked; document.getElementById('cat-card-${i}').querySelector('.catalogo-servico-header').classList.toggle('ativo', this.checked)">
-            <span class="toggle-slider"></span>
-          </label>
-          <span style="color:${srv.ativo ? 'var(--green)' : 'var(--gray-light)'};font-size:11px">${srv.ativo ? 'Ativo' : 'Inativo'}</span>
+        <div style="display:flex;gap:8px;flex-shrink:0">
+          <button onclick="openSrvEdit(${i})" style="display:flex;align-items:center;gap:6px;padding:8px 14px;background:var(--orange-pale);border:1.5px solid rgba(242,101,34,0.3);color:var(--orange);border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif;transition:var(--transition)" title="Editar serviço" onmouseenter="this.style.background='var(--orange)';this.style.color='white'" onmouseleave="this.style.background='var(--orange-pale)';this.style.color='var(--orange)'">
+            <i class="fa-solid fa-pen"></i> Editar
+          </button>
+          <button onclick="adminToggleServico(${i})" style="display:flex;align-items:center;gap:6px;padding:8px 14px;background:${srv.ativo ? 'var(--yellow-pale)' : 'var(--green-pale)'};border:1.5px solid ${srv.ativo ? '#f5d76e' : 'rgba(34,197,94,0.3)'};color:${srv.ativo ? '#92400e' : '#15803d'};border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif;transition:var(--transition)" title="${srv.ativo ? 'Desativar' : 'Ativar'} serviço" id="cat-toggle-btn-${i}">
+            <i class="fa-solid fa-${srv.ativo ? 'eye-slash' : 'eye'}"></i> ${srv.ativo ? 'Desativar' : 'Ativar'}
+          </button>
+          <button onclick="adminRemoverServico(${i})" style="width:36px;height:36px;background:var(--red-pale);border:1.5px solid rgba(239,68,68,0.2);color:var(--red);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:var(--transition)" title="Remover serviço" onmouseenter="this.style.background='var(--red)';this.style.color='white'" onmouseleave="this.style.background='var(--red-pale)';this.style.color='var(--red)'">
+            <i class="fa-solid fa-trash"></i>
+          </button>
         </div>
-        <button class="catalogo-expand-btn" id="cat-expand-${i}" title="Editar preços">
-          <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <button class="catalogo-del-btn" onclick="event.stopPropagation(); adminRemoverServico(${i})" title="Remover serviço">
-          <i class="fa-solid fa-trash"></i>
-        </button>
-      </div>
-      <div class="catalogo-precos-body" id="cat-body-${i}">
-        <div style="margin-bottom:14px">
-          <label style="font-size:12px;font-weight:600;color:var(--gray);display:block;margin-bottom:6px">Descrição (exibida no site)</label>
-          <input type="text" id="cat-desc-${i}" class="catalogo-preco-input" style="width:100%;border-radius:8px;padding:9px 12px"
-            value="${(srv.descricao||'').replace(/"/g,'&quot;')}"
-            placeholder="Ex: Banho completo com produtos especiais, secagem e escovação"
-            maxlength="120"
-            oninput="catalogoData[${i}].descricao = this.value">
-        </div>
-        <p style="font-size:12px;color:var(--gray);margin-bottom:14px">💡 Preços por porte — os valores de Terça (-10%) são calculados automaticamente.</p>
-        <div class="catalogo-precos-grid">${precosHTML}</div>
       </div>
     </div>`;
   }
 
-  window.toggleCatalogoBody = function(i) {
-    const body = document.getElementById(`cat-body-${i}`);
-    const btn = document.getElementById(`cat-expand-${i}`);
-    if (!body) return;
-    body.classList.toggle('open');
-    if (btn) btn.innerHTML = body.classList.contains('open')
-      ? '<i class="fa-solid fa-chevron-up"></i>'
-      : '<i class="fa-solid fa-chevron-down"></i>';
+  // ── Toggle ativo/inativo sem modal ──────────────────────────────────────
+  window.adminToggleServico = async function(i) {
+    if (!catalogoData[i]) return;
+    catalogoData[i].ativo = !catalogoData[i].ativo;
+    const nome = catalogoData[i].nome;
+    const ativo = catalogoData[i].ativo;
+    // Salva imediatamente
+    try {
+      if (catalogoDocId) {
+        await updateDoc(doc(db, 'settings', catalogoDocId), { catalogo: catalogoData });
+      } else {
+        const newRef = doc(collection(db, 'settings'));
+        await setDoc(newRef, { type: 'catalogo', catalogo: catalogoData });
+        catalogoDocId = newRef.id;
+      }
+      window._catalogoAtivo = catalogoData;
+      renderFrontServicos(catalogoData);
+      renderFrontTabelaPrecos(catalogoData);
+      atualizarSelectServicos(catalogoData);
+      showToast(`${ativo ? '✅ Ativado' : '🚫 Desativado'}: "${nome}"`, ativo ? 'success' : 'info');
+    } catch(e) {
+      catalogoData[i].ativo = !catalogoData[i].ativo; // rollback
+      showToast('Erro ao salvar.', 'error');
+    }
+    renderAdminCatalogo();
   };
 
-  window.updateTercaPreview = function(input, i, animal, porte) {
-    const val = parseFloat(input.value) || 0;
-    if (!catalogoData[i]) return;
-    if (!catalogoData[i].precos) catalogoData[i].precos = {};
-    if (!catalogoData[i].precos[animal]) catalogoData[i].precos[animal] = {};
-    catalogoData[i].precos[animal][porte] = val;
-    const preview = document.getElementById(`preview-${i}-${animal}-${porte}`);
-    if (preview) preview.textContent = `🎉 Terça: R$ ${(val * 0.9).toFixed(2).replace('.',',')}`;
+  // ── Modal de edição de serviço ──────────────────────────────────────────
+  let srvEditIndex = null;
+  const ANIMAIS_CONFIG_REF = ANIMAIS_CONFIG; // referência para uso no modal
+
+  window.openSrvEdit = function(i) {
+    srvEditIndex = i;
+    const srv = catalogoData[i];
+    document.getElementById('srvModalEmoji').textContent = srv.emoji;
+    document.getElementById('srvModalTitleText').textContent = i === -1 ? 'Novo Serviço' : `Editar: ${srv.nome}`;
+    document.getElementById('srvModalNome').value = srv.nome;
+    document.getElementById('srvModalDesc').value = srv.descricao || '';
+    document.getElementById('srvModalAtivo').checked = srv.ativo;
+    document.getElementById('srvModalAtivoLabel').textContent = srv.ativo ? 'Serviço ativo (visível no site)' : 'Serviço inativo (oculto no site)';
+    document.getElementById('srvModalAtivo').onchange = function() {
+      document.getElementById('srvModalAtivoLabel').textContent = this.checked ? 'Serviço ativo (visível no site)' : 'Serviço inativo (oculto no site)';
+    };
+
+    // Renderiza blocos de preços
+    const precosEl = document.getElementById('srvModalPrecos');
+    precosEl.innerHTML = ANIMAIS_CONFIG.map(a => `
+      <div class="srv-modal-animal-block">
+        <div class="srv-modal-animal-title">${a.label}</div>
+        <div class="srv-modal-portes-grid">
+          ${a.portes.map(p => {
+            const val = srv.precos?.[a.key]?.[p] ?? 0;
+            const terca = (val * 0.9).toFixed(2).replace('.', ',');
+            return `
+            <div class="srv-modal-porte">
+              <span class="srv-modal-porte-label">${p}</span>
+              <div class="srv-modal-porte-wrap">
+                <span class="srv-modal-porte-prefix">R$</span>
+                <input class="srv-modal-porte-input" type="number" min="0" step="0.50"
+                  id="srv-preco-${a.key}-${p}" value="${val}" placeholder="0"
+                  oninput="document.getElementById('srv-terca-${a.key}-${p}').textContent='🎉 R$ '+(parseFloat(this.value||0)*0.9).toFixed(2).replace('.',',')">
+              </div>
+              <div class="srv-modal-terca-hint" id="srv-terca-${a.key}-${p}">🎉 R$ ${terca}</div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>`).join('');
+
+    document.getElementById('srvEditModal').classList.add('open');
+  };
+
+  window.closeSrvModal = function() {
+    document.getElementById('srvEditModal').classList.remove('open');
+    srvEditIndex = null;
+  };
+
+  window.saveSrvModal = async function() {
+    if (srvEditIndex === null) return;
+    const btn = document.getElementById('srvModalSaveBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Salvando...';
+
+    const srv = catalogoData[srvEditIndex];
+    srv.emoji = document.getElementById('srvModalEmoji').textContent.trim();
+    srv.nome = document.getElementById('srvModalNome').value.trim() || srv.nome;
+    srv.descricao = document.getElementById('srvModalDesc').value.trim();
+    srv.ativo = document.getElementById('srvModalAtivo').checked;
+    if (!srv.precos) srv.precos = {};
+    ANIMAIS_CONFIG.forEach(a => {
+      if (!srv.precos[a.key]) srv.precos[a.key] = {};
+      a.portes.forEach(p => {
+        const inp = document.getElementById(`srv-preco-${a.key}-${p}`);
+        if (inp) srv.precos[a.key][p] = parseFloat(inp.value) || 0;
+      });
+    });
+
+    try {
+      if (catalogoDocId) {
+        await updateDoc(doc(db, 'settings', catalogoDocId), { catalogo: catalogoData });
+      } else {
+        const newRef = doc(collection(db, 'settings'));
+        await setDoc(newRef, { type: 'catalogo', catalogo: catalogoData });
+        catalogoDocId = newRef.id;
+      }
+      window._catalogoAtivo = catalogoData;
+      renderFrontServicos(catalogoData);
+      renderFrontTabelaPrecos(catalogoData);
+      atualizarSelectServicos(catalogoData);
+      renderAdminCatalogo();
+      closeSrvModal();
+      showToast(`✅ Serviço "${srv.nome}" salvo e publicado!`, 'success');
+    } catch(e) {
+      showToast('Erro ao salvar. Verifique permissões do Firestore.', 'error');
+    }
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Salvar Serviço';
+  };
+
+  // Emoji picker para o modal de serviço
+  window.openSrvModalEmojiPicker = function() {
+    const popup = document.getElementById('srvModalEmojiPicker');
+    popup.innerHTML = SERVICOS_EMOJIS.map(e =>
+      `<span onclick="selectSrvModalEmoji('${e}')" title="${e}">${e}</span>`
+    ).join('');
+    const btn = document.getElementById('srvModalEmoji');
+    if (btn) {
+      const rect = btn.getBoundingClientRect();
+      popup.style.top = (rect.bottom + window.scrollY + 6) + 'px';
+      popup.style.left = Math.min(rect.left + window.scrollX, window.innerWidth - 280) + 'px';
+    }
+    popup.style.display = 'flex';
+    setTimeout(() => document.addEventListener('click', _closeSrvEmojiOutside, { once: true }), 50);
+  };
+  function _closeSrvEmojiOutside(e) {
+    const popup = document.getElementById('srvModalEmojiPicker');
+    if (popup && !popup.contains(e.target)) popup.style.display = 'none';
+  }
+  window.selectSrvModalEmoji = function(emoji) {
+    document.getElementById('srvModalEmojiPicker').style.display = 'none';
+    document.getElementById('srvModalEmoji').textContent = emoji;
   };
 
   window.adminAdicionarServico = function() {
@@ -3064,24 +3295,23 @@
       }
     });
     renderAdminCatalogo();
-    // Abre o último card e faz scroll
     const newIndex = catalogoData.length - 1;
-    setTimeout(() => {
-      toggleCatalogoBody(newIndex);
-      const card = document.getElementById(`cat-card-${newIndex}`);
-      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      const nomeInput = document.getElementById(`cat-nome-${newIndex}`);
-      if (nomeInput) { nomeInput.focus(); nomeInput.select(); }
-    }, 50);
+    setTimeout(() => openSrvEdit(newIndex), 60);
   };
 
   window.adminRemoverServico = function(i) {
     if (catalogoData.length <= 1) { showToast('Deve haver pelo menos 1 serviço.', 'error'); return; }
     const nome = catalogoData[i]?.nome || 'serviço';
-    if (!confirm(`Remover "${nome}"?`)) return;
-    catalogoData.splice(i, 1);
-    renderAdminCatalogo();
-    showToast(`"${nome}" removido. Clique em Salvar Tudo para confirmar.`, 'info');
+    // Usa o confirm dialog customizado do sistema
+    document.getElementById('confirmIcon').textContent = '🗑️';
+    document.getElementById('confirmTitle').textContent = 'Remover Serviço';
+    document.getElementById('confirmMsg').innerHTML = `Deseja remover o serviço <strong>"${nome}"</strong>?<br><small style="color:var(--gray);font-weight:400">Esta ação será salva automaticamente.</small>`;
+    document.getElementById('confirmBookingInfo').style.display = 'none';
+    const okBtn = document.getElementById('confirmOkBtn');
+    okBtn.textContent = 'Remover';
+    okBtn.className = 'confirm-btn confirm-btn-ok';
+    pendingAction = { type: 'remover-servico', index: i };
+    document.getElementById('confirmOverlay').classList.add('open');
   };
 
   // ── Emoji Picker ────────────────────────────────────────────────────────
@@ -3119,40 +3349,74 @@
     const ativos = catalogo.filter(s => s.ativo);
     if (!ativos.length) return;
     const delays = ['reveal-delay-1','reveal-delay-2','reveal-delay-3'];
-    grid.innerHTML = ativos.map((s, i) => {
-      // Calcula faixa de preços para exibir no card
-      let minVal = Infinity, maxVal = 0;
-      Object.values(s.precos || {}).forEach(portes => {
-        Object.values(portes).forEach(v => { if (v > 0) { minVal = Math.min(minVal, v); maxVal = Math.max(maxVal, v); } });
+    grid.innerHTML = ativos.map((s, idx) => {
+      // Monta mini-tabela de preços por animal
+      let precosHTML = '';
+      ANIMAIS_CONFIG.forEach(a => {
+        const portes = a.portes.filter(p => (s.precos?.[a.key]?.[p] ?? 0) > 0);
+        if (!portes.length) return;
+        precosHTML += `<div class="service-animal-group">
+          <div class="service-animal-name">${a.label}</div>
+          <div class="service-portes-mini">
+            ${portes.map(p => {
+              const v = s.precos[a.key][p];
+              return `<div class="service-porte-pill"><span class="sp-label">${p}</span><span class="sp-val">R$${v}</span></div>`;
+            }).join('')}
+          </div>
+        </div>`;
       });
-      const faixaLabel = minVal === Infinity
-        ? 'Consulte o preço'
-        : minVal === maxVal
-          ? `R$ ${minVal.toFixed(0).replace('.',',')}`
-          : `A partir de R$ ${minVal.toFixed(0)}`;
+      const temPrecos = precosHTML.length > 0;
       return `
-      <div class="service-card reveal ${delays[i % 3]}">
+      <div class="service-card reveal ${delays[idx % 3]}">
         <span class="service-icon">${s.emoji}</span>
         <div class="service-name">${s.nome}</div>
         <p class="service-desc">${s.descricao || 'Serviço profissional com carinho e cuidado para o seu pet.'}</p>
-        <span class="service-price">${faixaLabel}</span>
+        <div class="service-price-area">
+          ${temPrecos ? precosHTML : '<span class="service-price">Consultar preço</span>'}
+        </div>
       </div>`;
     }).join('');
-    // Reativa o IntersectionObserver nos novos elementos
     grid.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
   }
 
-  // ── FRONT: Renderiza Tabela de Preços ──────────────────────────────────
+  // ── FRONT: Renderiza Tabela de Preços com filtro por serviço ──────────
+  let _precoTabAtiva = null; // serviço selecionado nos tabs
+
   function renderFrontTabelaPrecos(catalogo) {
-    const normalEl = document.getElementById('frontTabelaNormal');
-    const tercaEl = document.getElementById('frontTabelaTerca');
+    const normalEl  = document.getElementById('frontTabelaNormal');
+    const tercaEl   = document.getElementById('frontTabelaTerca');
+    const tabsEl    = document.getElementById('precoServicoTabs');
     if (!normalEl || !tercaEl) return;
+
     const ativos = catalogo.filter(s => s.ativo);
     if (!ativos.length) {
-      normalEl.innerHTML = '<p style="color:var(--gray);font-size:14px">Nenhum serviço ativo.</p>';
-      tercaEl.innerHTML = '<p style="color:var(--gray);font-size:14px">Nenhum serviço ativo.</p>';
+      normalEl.innerHTML = '<p class="preco-empty">Nenhum serviço ativo.</p>';
+      tercaEl.innerHTML  = '<p class="preco-empty">Nenhum serviço ativo.</p>';
+      if (tabsEl) tabsEl.style.display = 'none';
       return;
     }
+
+    // Garante que o filtro ativo ainda existe
+    if (_precoTabAtiva && !ativos.find(s => s.id === _precoTabAtiva)) _precoTabAtiva = null;
+    if (!_precoTabAtiva) _precoTabAtiva = null; // "Todos" por padrão
+
+    // ── Tabs de filtro por serviço ──
+    if (tabsEl) {
+      tabsEl.style.display = 'flex';
+      tabsEl.innerHTML = `
+        <button class="preco-tab-btn ${!_precoTabAtiva ? 'active' : ''}" onclick="filtrarTabelaPreco(null)">
+          Todos os serviços
+        </button>
+        ${ativos.map(s => `
+          <button class="preco-tab-btn ${_precoTabAtiva === s.id ? 'active' : ''}" onclick="filtrarTabelaPreco('${s.id}')">
+            ${s.emoji} ${s.nome}
+          </button>`).join('')}`;
+      tabsEl.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+    }
+
+    // ── Conteúdo filtrado ──
+    const visiveis = _precoTabAtiva ? ativos.filter(s => s.id === _precoTabAtiva) : ativos;
+
     const buildAnimalGroups = (srv, desconto) => ANIMAIS_CONFIG.map(a => {
       const portes = a.portes.filter(p => (srv.precos?.[a.key]?.[p] ?? 0) > 0);
       if (!portes.length) return '';
@@ -3162,15 +3426,15 @@
         <div class="preco-list">
           ${portes.map(p => {
             const base = srv.precos[a.key][p];
-            const val = desconto ? (base * 0.9) : base;
-            const fmt = val % 1 === 0 ? val.toFixed(0) : val.toFixed(2).replace('.',',');
-            return `<div class="preco-item"><span class="size">${p}</span><span class="value">R$ ${fmt}</span></div>`;
+            const val  = desconto ? (base * 0.9) : base;
+            const fmt  = val % 1 === 0 ? val.toFixed(0) : val.toFixed(2).replace('.',',');
+            return `<div class="preco-item"><span class="size">${p}</span><span class="value">R$&nbsp;${fmt}</span></div>`;
           }).join('')}
         </div>
       </div>`;
     }).join('');
 
-    const makeSection = (desconto) => ativos.map(srv => {
+    const makeSection = (desconto) => visiveis.map(srv => {
       const grupos = buildAnimalGroups(srv, desconto);
       if (!grupos.trim()) return '';
       return `
@@ -3180,9 +3444,18 @@
       </div>`;
     }).join('');
 
-    normalEl.innerHTML = makeSection(false) || '<p style="font-size:13px;color:var(--gray)">Sem preços cadastrados.</p>';
-    tercaEl.innerHTML = `<div class="preco-discount-badge"><i class="fa-solid fa-tag"></i> 10% OFF todo dia de terça!</div>` + (makeSection(true) || '');
+    const htmlNormal = makeSection(false);
+    const htmlTerca  = makeSection(true);
+
+    normalEl.innerHTML = htmlNormal || '<p class="preco-empty">Sem preços cadastrados.</p>';
+    tercaEl.innerHTML  = `<div class="preco-discount-badge"><i class="fa-solid fa-tag"></i> 10% OFF todo dia de terça!</div>` +
+                         (htmlTerca || '<p class="preco-empty">Sem preços cadastrados.</p>');
   }
+
+  window.filtrarTabelaPreco = function(servicoId) {
+    _precoTabAtiva = servicoId;
+    renderFrontTabelaPrecos(window._catalogoAtivo || catalogoData);
+  };
 
   // ── Atualiza o select do form de agendamento ───────────────────────────
   function atualizarSelectServicos(catalogo) {
