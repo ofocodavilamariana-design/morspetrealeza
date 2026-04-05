@@ -1887,6 +1887,9 @@
               <div class="section-card-title"><i class="fa-regular fa-calendar-check" style="color:var(--orange)"></i> Agendamentos</div>
               <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
                 <input type="text" class="search-input" id="searchInput" placeholder="Buscar pet ou cliente..." oninput="filterAdminBookings()">
+                <button onclick="openAdminNewBooking()" style="display:flex;align-items:center;gap:8px;padding:10px 18px;background:var(--orange);color:white;border:none;border-radius:50px;cursor:pointer;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif;box-shadow:0 4px 14px rgba(242,101,34,0.3);transition:var(--transition);white-space:nowrap" onmouseover="this.style.background='var(--orange-dark)'" onmouseout="this.style.background='var(--orange)'">
+                  <i class="fa-solid fa-plus"></i> Novo Agendamento
+                </button>
               </div>
             </div>
             <div class="section-card-body">
@@ -1960,8 +1963,7 @@
 
           <!-- Emoji picker global (admin inline) -->
           <div class="emoji-picker-popup" id="emojiPickerPopup" style="display:none;position:fixed;z-index:9999999"></div>
-          <!-- Emoji picker para modal de serviço -->
-          <div class="emoji-picker-popup" id="srvModalEmojiPicker" style="display:none;position:fixed;z-index:99999999"></div>
+          <!-- Emoji picker para modal de serviço removido: agora usa input direto -->
         </div>
       </div>
     </main>
@@ -1986,14 +1988,27 @@
 <div class="srv-modal-overlay" id="srvEditModal">
   <div class="srv-modal-box">
     <div class="srv-modal-header">
-      <div class="srv-modal-header-icon" id="srvModalEmoji" onclick="openSrvModalEmojiPicker()">🐾</div>
+      <div class="srv-modal-header-icon" id="srvModalEmojiPreview" style="cursor:default;user-select:none">🐾</div>
       <div class="srv-modal-title">
         <h3 id="srvModalTitleText">Editar Serviço</h3>
-        <p>Clique no emoji para trocar o ícone do serviço</p>
+        <p>Digite ou escolha o emoji do serviço abaixo</p>
       </div>
       <button class="srv-modal-close" onclick="closeSrvModal()"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="srv-modal-body">
+      <!-- Emoji -->
+      <div class="srv-modal-field">
+        <label>Emoji do Serviço</label>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div id="srvModalEmojiInputPreview" style="width:48px;height:48px;font-size:28px;border-radius:12px;background:var(--orange-pale);border:1.5px solid rgba(242,101,34,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:var(--transition)">🐾</div>
+          <input type="text" class="srv-modal-input" id="srvModalEmoji" placeholder="Cole ou digite um emoji: 🛁 ✂️ 🌟" maxlength="4" style="font-size:22px;text-align:center;max-width:110px;letter-spacing:2px" oninput="srvModalEmojiTyped(this.value)">
+          <span style="font-size:12px;color:var(--gray);line-height:1.5">Cole qualquer emoji<br>ou escolha abaixo</span>
+        </div>
+        <div style="margin-top:10px">
+          <div style="font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Sugestões</div>
+          <div id="srvEmojiGallery" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+        </div>
+      </div>
       <!-- Nome -->
       <div class="srv-modal-field">
         <label>Nome do Serviço</label>
@@ -2030,6 +2045,58 @@
       <button class="srv-modal-btn-cancel" onclick="closeSrvModal()">Cancelar</button>
       <button class="srv-modal-btn-save" id="srvModalSaveBtn" onclick="saveSrvModal()">
         <i class="fa-solid fa-floppy-disk"></i> Salvar Serviço
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== MODAL ADMIN: NOVO AGENDAMENTO ===== -->
+<div class="modal-overlay" id="adminNewBookingModal" style="z-index:99999">
+  <div class="modal-box" style="max-width:560px;max-height:90vh;overflow-y:auto">
+    <button class="modal-close" onclick="closeAdminNewBooking()">✕</button>
+    <h2 class="modal-title" style="text-align:left;font-size:22px;margin-bottom:4px">📅 Novo Agendamento</h2>
+    <p class="modal-sub" style="text-align:left;margin-bottom:20px;font-size:13px">Cadastre um agendamento manualmente para um cliente.</p>
+    <div class="modal-form" id="adminNewBookingForm">
+      <div class="form-row">
+        <div class="form-group"><label>Nome do Cliente *</label><input type="text" id="anb_clientName" placeholder="Nome completo" style="width:100%"></div>
+        <div class="form-group"><label>Telefone *</label><input type="tel" id="anb_clientPhone" placeholder="(11) 99999-9999" style="width:100%"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Nome do Pet *</label><input type="text" id="anb_petName" placeholder="Nome do pet" style="width:100%"></div>
+        <div class="form-group"><label>Tipo do Animal *</label>
+          <select id="anb_petType" onchange="anb_updateSizes()" style="width:100%">
+            <option value="">Selecione...</option>
+            <option value="Cachorro">🐶 Cachorro</option>
+            <option value="Gato">🐱 Gato</option>
+            <option value="Coelho">🐰 Coelho</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group" id="anb_petSizeGroup" style="display:none">
+        <label>Porte do Animal *</label>
+        <select id="anb_petSize" onchange="anb_updatePrice()" style="width:100%">
+          <option value="">Selecione o porte...</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Serviço *</label>
+        <select id="anb_service" onchange="anb_updatePrice()" style="width:100%">
+          <option value="">Selecione o serviço...</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Data *</label><input type="date" id="anb_date" onchange="anb_loadHours()" style="width:100%"></div>
+        <div class="form-group"><label>Horário *</label>
+          <select id="anb_time" style="width:100%"><option value="">Selecione a data primeiro</option></select>
+        </div>
+      </div>
+      <div class="price-display" id="anb_priceDisplay" style="display:none;margin-bottom:16px;background:var(--orange-pale);border-radius:12px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center">
+        <div><div style="font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">Valor estimado</div><div id="anb_priceValue" style="font-size:20px;font-weight:800;color:var(--dark)">—</div></div>
+        <div id="anb_promoTag"></div>
+      </div>
+      <div id="anb_errorMsg" class="error-msg" style="margin-bottom:10px"></div>
+      <button onclick="adminSubmitNewBooking()" id="anb_submitBtn" class="form-submit" style="margin-top:0">
+        <i class="fa-solid fa-calendar-plus"></i> Confirmar Agendamento
       </button>
     </div>
   </div>
@@ -2176,6 +2243,172 @@
   let _userBookingsCache = {};
 
   // ===== MEUS AGENDAMENTOS =====
+
+  // ===== ADMIN: NOVO AGENDAMENTO MANUAL =====
+  window.openAdminNewBooking = function() {
+    const modal = document.getElementById('adminNewBookingModal');
+    modal.classList.add('open');
+    // Preencher select de serviços com catálogo atual
+    const svcSelect = document.getElementById('anb_service');
+    svcSelect.innerHTML = '<option value="">Selecione o serviço...</option>';
+    if (window._catalogoAtivo && window._catalogoAtivo.length) {
+      window._catalogoAtivo.forEach(s => {
+        svcSelect.innerHTML += `<option value="${s.nome}">${s.emoji || ''} ${s.nome}</option>`;
+      });
+    } else {
+      ['Banho','Tosa','Banho + Tosa','Hidratação','Corte de Unhas','Limpeza de Ouvidos'].forEach(s => {
+        svcSelect.innerHTML += `<option value="${s}">${s}</option>`;
+      });
+    }
+    // Data mínima = hoje
+    const today = new Date();
+    const min = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+    document.getElementById('anb_date').min = min;
+    document.getElementById('anb_date').value = '';
+    document.getElementById('anb_time').innerHTML = '<option value="">Selecione a data primeiro</option>';
+    document.getElementById('anb_petType').value = '';
+    document.getElementById('anb_petName').value = '';
+    document.getElementById('anb_clientName').value = '';
+    document.getElementById('anb_clientPhone').value = '';
+    document.getElementById('anb_petSizeGroup').style.display = 'none';
+    document.getElementById('anb_priceDisplay').style.display = 'none';
+    document.getElementById('anb_errorMsg').classList.remove('show');
+  };
+
+  window.closeAdminNewBooking = function() {
+    document.getElementById('adminNewBookingModal').classList.remove('open');
+  };
+
+  document.getElementById('adminNewBookingModal').addEventListener('click', function(e) {
+    if (e.target === this) closeAdminNewBooking();
+  });
+
+  window.anb_updateSizes = function() {
+    const type = document.getElementById('anb_petType').value;
+    const sizeGroup = document.getElementById('anb_petSizeGroup');
+    const sizeSelect = document.getElementById('anb_petSize');
+    const opts = { Cachorro: ['PP','P','M','G','GG'], Gato: ['P','M','G'], Coelho: ['Único'] };
+    const sizes = opts[type] || [];
+    sizeSelect.innerHTML = '<option value="">Selecione o porte...</option>' + sizes.map(s => `<option value="${s}">${s}</option>`).join('');
+    sizeGroup.style.display = (type && sizes.length) ? 'flex' : 'none';
+    anb_updatePrice();
+  };
+
+  window.anb_updatePrice = function() {
+    const type = document.getElementById('anb_petType').value;
+    const size = document.getElementById('anb_petSize')?.value;
+    const date = document.getElementById('anb_date').value;
+    const service = document.getElementById('anb_service').value;
+    const display = document.getElementById('anb_priceDisplay');
+    const priceVal = document.getElementById('anb_priceValue');
+    const promoTag = document.getElementById('anb_promoTag');
+    const price = calcPrice(type, size, date, service);
+    if (price === null) { display.style.display = 'none'; return; }
+    display.style.display = 'flex';
+    priceVal.textContent = 'R$ ' + price.toFixed(2).replace('.',',');
+    const isTue = date ? new Date(date+'T12:00:00').getDay() === 2 : false;
+    promoTag.innerHTML = isTue ? '<span class="price-promo">🎉 Terça -10%</span>' : '';
+  };
+
+  window.anb_loadHours = async function() {
+    const date = document.getElementById('anb_date').value;
+    const sel = document.getElementById('anb_time');
+    if (!date) return;
+    const d2 = new Date(date + 'T12:00:00');
+    if (d2.getDay() === 0) {
+      showToast('Não abrimos aos domingos. Escolha outro dia.', 'error');
+      document.getElementById('anb_date').value = '';
+      sel.innerHTML = '<option value="">Selecione a data primeiro</option>';
+      return;
+    }
+    sel.innerHTML = '<option value="">Carregando horários...</option>';
+    try {
+      let dHours = [];
+      const snapSettings = await getDocs(query(collection(db, 'settings'), where('type', '==', 'disabled_hours')));
+      snapSettings.forEach(doc => { dHours = doc.data().hours || []; });
+      const snapBooked = await getDocs(query(collection(db, 'bookings'), where('date', '==', date)));
+      const booked = [];
+      snapBooked.forEach(doc => { const d = doc.data(); if (d.status !== 'cancelado') booked.push(d.time); });
+      sel.innerHTML = '<option value="">Selecione o horário...</option>';
+      let count = 0;
+      ALL_HOURS.forEach(h => {
+        if (!dHours.includes(h) && !booked.includes(h)) {
+          sel.innerHTML += `<option value="${h}">${h}</option>`;
+          count++;
+        }
+      });
+      if (count === 0) sel.innerHTML = '<option value="">Sem horários disponíveis</option>';
+    } catch(e) {
+      sel.innerHTML = '<option value="">Erro ao carregar</option>';
+    }
+    anb_updatePrice();
+  };
+
+  window.adminSubmitNewBooking = async function() {
+    const clientName = document.getElementById('anb_clientName').value.trim();
+    const clientPhone = document.getElementById('anb_clientPhone').value.trim();
+    const petName = document.getElementById('anb_petName').value.trim();
+    const petType = document.getElementById('anb_petType').value;
+    const petSize = document.getElementById('anb_petSize')?.value || '';
+    const service = document.getElementById('anb_service').value;
+    const date = document.getElementById('anb_date').value;
+    const time = document.getElementById('anb_time').value;
+    const errEl = document.getElementById('anb_errorMsg');
+
+    errEl.classList.remove('show');
+
+    if (!clientName || !clientPhone || !petName || !petType || !service || !date || !time) {
+      errEl.textContent = 'Preencha todos os campos obrigatórios.';
+      errEl.classList.add('show');
+      return;
+    }
+
+    const btn = document.getElementById('anb_submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Salvando...';
+
+    try {
+      // Verificar conflito de horário
+      const snap = await getDocs(query(collection(db, 'bookings'), where('date', '==', date), where('time', '==', time)));
+      let conflict = false;
+      snap.forEach(doc => { if (doc.data().status !== 'cancelado') conflict = true; });
+      if (conflict) {
+        errEl.textContent = 'Este horário já está ocupado. Escolha outro.';
+        errEl.classList.add('show');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-calendar-plus"></i> Confirmar Agendamento';
+        return;
+      }
+
+      const price = calcPrice(petType, petSize, date, service);
+      await addDoc(collection(db, 'bookings'), {
+        userId: 'admin',
+        userEmail: 'admin@morspet',
+        clientName,
+        clientPhone,
+        petName,
+        petType,
+        petSize,
+        service,
+        date,
+        time,
+        status: 'confirmado',
+        price: price || null,
+        createdAt: serverTimestamp(),
+        createdByAdmin: true
+      });
+
+      closeAdminNewBooking();
+      showToast('✅ Agendamento criado com sucesso!', 'success');
+    } catch(e) {
+      errEl.textContent = 'Erro ao salvar. Tente novamente.';
+      errEl.classList.add('show');
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-calendar-plus"></i> Confirmar Agendamento';
+  };
+
   window.openMyBookings = async function() {
     if (!currentUser) { openLoginModal('login'); return; }
     const modal = document.getElementById('myBookingsModal');
@@ -3157,7 +3390,18 @@
   window.openSrvEdit = function(i) {
     srvEditIndex = i;
     const srv = catalogoData[i];
-    document.getElementById('srvModalEmoji').textContent = srv.emoji;
+    // Preenche input e previews do emoji
+    const emojiVal = srv.emoji || '🐾';
+    document.getElementById('srvModalEmoji').value = emojiVal;
+    document.getElementById('srvModalEmojiPreview').textContent = emojiVal;
+    document.getElementById('srvModalEmojiInputPreview').textContent = emojiVal;
+    // Galeria de sugestões
+    const gallery = document.getElementById('srvEmojiGallery');
+    if (gallery) {
+      gallery.innerHTML = SERVICOS_EMOJIS.map(e =>
+        `<span onclick="srvSelectGalleryEmoji('${e}')" title="${e}" style="font-size:22px;cursor:pointer;padding:5px 6px;border-radius:8px;transition:background 0.15s;line-height:1" onmouseover="this.style.background='var(--orange-pale)'" onmouseout="this.style.background=''">${e}</span>`
+      ).join('');
+    }
     document.getElementById('srvModalTitleText').textContent = i === -1 ? 'Novo Serviço' : `Editar: ${srv.nome}`;
     document.getElementById('srvModalNome').value = srv.nome;
     document.getElementById('srvModalDesc').value = srv.descricao || '';
@@ -3206,7 +3450,7 @@
     btn.innerHTML = '<span class="spinner"></span> Salvando...';
 
     const srv = catalogoData[srvEditIndex];
-    srv.emoji = document.getElementById('srvModalEmoji').textContent.trim();
+    srv.emoji = document.getElementById('srvModalEmoji').value.trim() || '🐾';
     srv.nome = document.getElementById('srvModalNome').value.trim() || srv.nome;
     srv.descricao = document.getElementById('srvModalDesc').value.trim();
     srv.ativo = document.getElementById('srvModalAtivo').checked;
@@ -3241,28 +3485,17 @@
     btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Salvar Serviço';
   };
 
-  // Emoji picker para o modal de serviço
-  window.openSrvModalEmojiPicker = function() {
-    const popup = document.getElementById('srvModalEmojiPicker');
-    popup.innerHTML = SERVICOS_EMOJIS.map(e =>
-      `<span onclick="selectSrvModalEmoji('${e}')" title="${e}">${e}</span>`
-    ).join('');
-    const btn = document.getElementById('srvModalEmoji');
-    if (btn) {
-      const rect = btn.getBoundingClientRect();
-      popup.style.top = (rect.bottom + window.scrollY + 6) + 'px';
-      popup.style.left = Math.min(rect.left + window.scrollX, window.innerWidth - 280) + 'px';
-    }
-    popup.style.display = 'flex';
-    setTimeout(() => document.addEventListener('click', _closeSrvEmojiOutside, { once: true }), 50);
+  // Input direto de emoji para o modal de serviço
+  window.srvModalEmojiTyped = function(val) {
+    // Pega o último caractere válido (emoji pode ter múltiplos code points)
+    const emoji = [...val].slice(-2).join('') || [...val].slice(-1).join('') || val;
+    document.getElementById('srvModalEmojiPreview').textContent = emoji || '🐾';
+    document.getElementById('srvModalEmojiInputPreview').textContent = emoji || '🐾';
   };
-  function _closeSrvEmojiOutside(e) {
-    const popup = document.getElementById('srvModalEmojiPicker');
-    if (popup && !popup.contains(e.target)) popup.style.display = 'none';
-  }
-  window.selectSrvModalEmoji = function(emoji) {
-    document.getElementById('srvModalEmojiPicker').style.display = 'none';
-    document.getElementById('srvModalEmoji').textContent = emoji;
+  window.srvSelectGalleryEmoji = function(emoji) {
+    document.getElementById('srvModalEmoji').value = emoji;
+    document.getElementById('srvModalEmojiPreview').textContent = emoji;
+    document.getElementById('srvModalEmojiInputPreview').textContent = emoji;
   };
 
   window.adminAdicionarServico = function() {
