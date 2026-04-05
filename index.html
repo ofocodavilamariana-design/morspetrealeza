@@ -142,8 +142,16 @@
   #hero { min-height: 100vh; position: relative; overflow: hidden; display: flex; align-items: center; padding-top: 72px; }
   .hero-video-bg { position: absolute; inset: 0; z-index: 0; }
   .hero-video-bg video { width: 100%; height: 100%; object-fit: cover; }
-  .hero-video-overlay { position: absolute; inset: 0; background: linear-gradient(160deg, rgba(249,244,239,0.94) 0%, rgba(255,244,238,0.90) 50%, rgba(253,232,216,0.88) 100%); }
-  .hero-bg-shape { position: absolute; right: -10%; top: 10%; width: 55vw; height: 80vh; background: radial-gradient(ellipse at 60% 40%, rgba(242,101,34,0.10) 0%, transparent 70%); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; animation: morphBlob 8s ease-in-out infinite; z-index: 1; }
+  .hero-video-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    160deg,
+    rgba(249,244,239,0.75) 0%,
+    rgba(255,244,238,0.70) 50%,
+    rgba(253,232,216,0.65) 100%
+  );
+}.hero-bg-shape { position: absolute; right: -10%; top: 10%; width: 55vw; height: 80vh; background: radial-gradient(ellipse at 60% 40%, rgba(242,101,34,0.10) 0%, transparent 70%); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; animation: morphBlob 8s ease-in-out infinite; z-index: 1; }
   .hero-dots { position: absolute; width: 100%; height: 100%; background-image: radial-gradient(circle, rgba(242,101,34,0.12) 1px, transparent 1px); background-size: 32px 32px; opacity: 0.4; z-index: 1; }
   @keyframes morphBlob { 0%,100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transform: rotate(0deg) scale(1); } 33% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; transform: rotate(6deg) scale(1.05); } 66% { border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%; transform: rotate(-4deg) scale(0.97); } }
   .hero-content { max-width: 1200px; margin: 0 auto; padding: 60px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; position: relative; z-index: 2; width: 100%; }
@@ -1136,6 +1144,43 @@
     padding-bottom: 4px;
   }
 
+  /* ===== ADMIN SERVIÇOS & PREÇOS ===== */
+  .admin-servicos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 960px) { .admin-servicos-grid { grid-template-columns: 1fr; } }
+
+  .preco-animal-admin { margin-bottom: 28px; }
+  .preco-animal-admin:last-child { margin-bottom: 0; }
+  .preco-animal-admin-title { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--beige-dark); padding-bottom: 8px; }
+  .preco-edit-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; background: var(--gray-pale); border-radius: 8px; padding: 8px 12px; }
+  .preco-edit-label { font-size: 12px; font-weight: 700; color: var(--orange); min-width: 36px; text-transform: uppercase; }
+  .preco-edit-input { flex: 1; padding: 8px 12px; border: 1.5px solid var(--beige-dark); border-radius: 8px; font-size: 14px; font-weight: 600; font-family: 'DM Sans', sans-serif; color: var(--dark); background: var(--white); outline: none; transition: var(--transition); }
+  .preco-edit-input:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(242,101,34,0.1); }
+  .preco-edit-prefix { font-size: 13px; font-weight: 600; color: var(--gray); }
+  .btn-save-precos { display: flex; align-items: center; gap: 8px; padding: 11px 22px; background: var(--orange); color: white; border: none; border-radius: 50px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: var(--transition); box-shadow: 0 4px 16px rgba(242,101,34,0.3); }
+  .btn-save-precos:hover { background: var(--orange-dark); transform: translateY(-1px); }
+  .btn-save-precos:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+
+  .servicos-lista { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .servico-item-admin { display: flex; align-items: center; gap: 10px; background: var(--gray-pale); border-radius: 10px; padding: 10px 14px; border: 1px solid var(--beige-dark); transition: var(--transition); }
+  .servico-item-admin:hover { background: var(--white); border-color: rgba(242,101,34,0.2); }
+  .servico-emoji-edit { width: 34px; height: 34px; font-size: 18px; display: flex; align-items: center; justify-content: center; background: var(--white); border: 1.5px solid var(--beige-dark); border-radius: 8px; cursor: pointer; flex-shrink: 0; transition: var(--transition); }
+  .servico-emoji-edit:hover { border-color: var(--orange); }
+  .servico-nome-edit { flex: 1; padding: 8px 12px; border: 1.5px solid var(--beige-dark); border-radius: 8px; font-size: 14px; font-weight: 600; font-family: 'DM Sans', sans-serif; color: var(--dark); background: var(--white); outline: none; transition: var(--transition); }
+  .servico-nome-edit:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(242,101,34,0.1); }
+  .btn-del-servico { width: 30px; height: 30px; border-radius: 8px; border: none; background: var(--red-pale); color: var(--red); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; transition: var(--transition); flex-shrink: 0; }
+  .btn-del-servico:hover { background: var(--red); color: white; }
+  .add-servico-row { display: flex; gap: 10px; align-items: center; margin-top: 4px; }
+  .add-servico-emoji { width: 44px; height: 44px; font-size: 20px; display: flex; align-items: center; justify-content: center; background: var(--white); border: 1.5px dashed var(--beige-dark); border-radius: 8px; cursor: pointer; flex-shrink: 0; transition: var(--transition); outline: none; font-family: 'DM Sans', sans-serif; }
+  .add-servico-emoji:hover { border-color: var(--orange); }
+  .add-servico-input { flex: 1; padding: 11px 14px; border: 1.5px dashed var(--beige-dark); border-radius: 8px; font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--dark); background: var(--white); outline: none; transition: var(--transition); }
+  .add-servico-input:focus { border-color: var(--orange); border-style: solid; box-shadow: 0 0 0 3px rgba(242,101,34,0.1); }
+  .btn-add-servico { display: flex; align-items: center; gap: 6px; padding: 11px 18px; background: var(--orange-pale); color: var(--orange); border: 1.5px solid rgba(242,101,34,0.25); border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: var(--transition); white-space: nowrap; }
+  .btn-add-servico:hover { background: var(--orange); color: white; }
+
+  .emoji-picker-popup { position: absolute; background: var(--white); border: 1px solid var(--beige-dark); border-radius: 12px; padding: 10px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); z-index: 1000; display: flex; flex-wrap: wrap; gap: 6px; max-width: 240px; }
+  .emoji-picker-popup span { font-size: 22px; cursor: pointer; padding: 4px; border-radius: 6px; transition: var(--transition); }
+  .emoji-picker-popup span:hover { background: var(--orange-pale); }
+
 </style>
 </head>
 <body>
@@ -1762,6 +1807,9 @@
           <button class="sidebar-item" onclick="showAdminSection('receita', this)">
             <i class="fa-solid fa-chart-line"></i><span>Receita</span>
           </button>
+          <button class="sidebar-item" onclick="showAdminSection('servicos', this)">
+            <i class="fa-solid fa-tags"></i><span>Serviços & Preços</span>
+          </button>
         </div>
       </div>
       <div class="sidebar-footer">
@@ -1849,6 +1897,45 @@
               <div id="receitaList"><div class="loading-spinner"></div></div>
             </div>
           </div>
+        </div>
+
+        <!-- SERVIÇOS & PREÇOS SECTION -->
+        <div id="admin-section-servicos" class="admin-section">
+          <div class="admin-servicos-grid">
+            <!-- PREÇOS POR PORTE -->
+            <div class="section-card">
+              <div class="section-card-header">
+                <div class="section-card-title"><i class="fa-solid fa-tag" style="color:var(--orange)"></i> Preços por Porte</div>
+                <button class="btn-save-precos" id="btnSavePrecos" onclick="adminSavePrecos()">
+                  <i class="fa-solid fa-floppy-disk"></i> Salvar Preços
+                </button>
+              </div>
+              <div class="section-card-body">
+                <p style="font-size:13px;color:var(--gray);margin-bottom:20px">Edite os valores base (dias normais). A promoção de terça (10% OFF) é calculada automaticamente.</p>
+                <div id="precosEditorContainer"><div class="loading-spinner"></div></div>
+              </div>
+            </div>
+            <!-- LISTA DE SERVIÇOS -->
+            <div class="section-card">
+              <div class="section-card-header">
+                <div class="section-card-title"><i class="fa-solid fa-scissors" style="color:var(--orange)"></i> Serviços Disponíveis</div>
+                <button class="btn-save-precos" id="btnSaveServicos" onclick="adminSaveServicos()">
+                  <i class="fa-solid fa-floppy-disk"></i> Salvar Serviços
+                </button>
+              </div>
+              <div class="section-card-body">
+                <p style="font-size:13px;color:var(--gray);margin-bottom:16px">Gerencie os serviços exibidos no formulário de agendamento. Clique no emoji para trocar.</p>
+                <div class="servicos-lista" id="servicosListaAdmin"></div>
+                <div class="add-servico-row">
+                  <button class="add-servico-emoji" id="newServicoEmoji" onclick="openEmojiPicker('new')" title="Escolher emoji">➕</button>
+                  <input class="add-servico-input" id="newServicoNome" placeholder="Nome do novo serviço..." maxlength="40">
+                  <button class="btn-add-servico" onclick="adminAddServico()"><i class="fa-solid fa-plus"></i> Adicionar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- EMOJI PICKER (global, posicionado via JS) -->
+          <div class="emoji-picker-popup" id="emojiPickerPopup" style="display:none"></div>
         </div>
       </div>
     </main>
@@ -1957,7 +2044,9 @@
 
   function calcPrice(petType, petSize, dateStr) {
     if (!petType || !petSize || !dateStr) return null;
-    const prices = PRECOS[petType];
+    // Usa preços dinâmicos do admin se disponíveis, senão usa os padrões
+    const precosAtivos = window._precosAdmin || PRECOS;
+    const prices = precosAtivos[petType];
     if (!prices || prices[petSize] === undefined) return null;
     const base = prices[petSize];
     const d = new Date(dateStr + 'T12:00:00');
@@ -2112,7 +2201,7 @@
     }
   }
 
-  function renderBookingForm(user) {
+  async function renderBookingForm(user) {
     const section = document.getElementById('bookingSection');
     section.innerHTML = `
       <div class="booking-form-container">
@@ -2186,6 +2275,30 @@
       await populateHours(this.value);
       updatePriceDisplay();
     });
+
+    // Carrega serviços e preços dinâmicos do Firestore
+    try {
+      const snapServicos = await getDocs(query(collection(db, 'settings'), where('type', '==', 'servicos')));
+      if (!snapServicos.empty) {
+        snapServicos.forEach(d2 => {
+          const srvs = d2.data().servicos;
+          if (srvs) {
+            const serviceSelect = document.getElementById('service');
+            if (serviceSelect) {
+              serviceSelect.innerHTML = '<option value="">Selecione o serviço...</option>' +
+                srvs.map(s => `<option value="${s.nome}">${s.emoji} ${s.nome}</option>`).join('');
+            }
+          }
+        });
+      }
+      const snapPrecos = await getDocs(query(collection(db, 'settings'), where('type', '==', 'precos')));
+      if (!snapPrecos.empty) {
+        snapPrecos.forEach(d2 => {
+          const p = d2.data().precos;
+          if (p) { window._precosAdmin = p; Object.assign(PRECOS, p); }
+        });
+      }
+    } catch(e) {}
   }
 
   // ===== SIZE OPTIONS =====
@@ -2566,6 +2679,39 @@
       renderReceitaSection();
     }, () => { showToast('Erro ao conectar com Firestore.', 'error'); });
     loadAdminHours();
+    // Carrega preços e serviços do Firestore para uso no calcPrice e no form
+    loadSettingsForFrontend();
+  }
+
+  // Carrega preços e serviços do Firestore para o frontend (form de agendamento)
+  async function loadSettingsForFrontend() {
+    try {
+      const snapPrecos = await getDocs(query(collection(db, 'settings'), where('type', '==', 'precos')));
+      if (!snapPrecos.empty) {
+        snapPrecos.forEach(d => {
+          const p = d.data().precos;
+          if (p) {
+            window._precosAdmin = p;
+            Object.assign(PRECOS, p);
+          }
+        });
+      }
+      const snapServicos = await getDocs(query(collection(db, 'settings'), where('type', '==', 'servicos')));
+      if (!snapServicos.empty) {
+        snapServicos.forEach(d => {
+          const srvs = d.data().servicos;
+          if (srvs) updateBookingFormServicos(srvs);
+        });
+      }
+    } catch(e) {}
+  }
+
+  function updateBookingFormServicos(servicos) {
+    const serviceSelect = document.getElementById('service');
+    if (!serviceSelect) return;
+    const current = serviceSelect.value;
+    serviceSelect.innerHTML = '<option value="">Selecione o serviço...</option>' +
+      servicos.map(s => `<option value="${s.nome}"${s.nome===current?' selected':''}>${s.emoji} ${s.nome}</option>`).join('');
   }
 
   function updateAdminStats() {
@@ -2800,10 +2946,243 @@
     document.getElementById(`admin-section-${name}`).classList.add('active');
     document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
-    const titles = { agendamentos: 'Agendamentos', horarios: 'Horários', receita: 'Receita Estimada' };
+    const titles = { agendamentos: 'Agendamentos', horarios: 'Horários', receita: 'Receita Estimada', servicos: 'Serviços & Preços' };
     const ptEl = document.getElementById('adminPageTitle');
     if (ptEl) ptEl.textContent = titles[name] || name;
     if (name === 'receita') renderReceitaSection();
+    if (name === 'servicos') loadAdminServicosPrecos();
+  };
+
+  // ===== SERVIÇOS & PREÇOS ADMIN =====
+
+  // Preços padrão (fallback caso não haja doc no Firestore)
+  const PRECOS_DEFAULT = {
+    Cachorro: { PP: 45, P: 65, M: 80, G: 140, GG: 170 },
+    Gato: { P: 95, M: 110, G: 115 },
+    Coelho: { Único: 80 }
+  };
+
+  // Serviços padrão
+  const SERVICOS_DEFAULT = [
+    { emoji: '🛁', nome: 'Banho' },
+    { emoji: '✂️', nome: 'Tosa' },
+    { emoji: '🌟', nome: 'Banho + Tosa' },
+    { emoji: '💆', nome: 'Hidratação' },
+    { emoji: '💅', nome: 'Corte de Unhas' },
+    { emoji: '👂', nome: 'Limpeza de Ouvidos' }
+  ];
+
+  let adminPrecosData = JSON.parse(JSON.stringify(PRECOS_DEFAULT));
+  let adminServicosData = [...SERVICOS_DEFAULT];
+  let precosDocId = null;
+  let servicosDocId = null;
+  let emojiPickerTarget = null; // 'new' ou índice numérico
+
+  const PET_EMOJIS = ['🐶','🐱','🐰','🐾','🦮','🐩','🐈','🐇','🦜','🐠','🐢','🦎','🐹','🦊','🐺','🐗','🐴','🦄'];
+  const SERVICOS_EMOJIS = ['🛁','✂️','🌟','💆','💅','👂','🐾','🧴','🪮','💊','🩺','🦷','🧽','🏥','🎀','🧸','🪴','🌿','💉','🔬'];
+
+  async function loadAdminServicosPrecos() {
+    renderPrecosEditor(adminPrecosData);
+    renderServicosListaAdmin();
+
+    try {
+      // Carrega preços do Firestore
+      const snapPrecos = await getDocs(query(collection(db, 'settings'), where('type', '==', 'precos')));
+      if (!snapPrecos.empty) {
+        snapPrecos.forEach(d => {
+          adminPrecosData = d.data().precos || PRECOS_DEFAULT;
+          precosDocId = d.id;
+        });
+      } else {
+        adminPrecosData = JSON.parse(JSON.stringify(PRECOS_DEFAULT));
+      }
+      renderPrecosEditor(adminPrecosData);
+
+      // Carrega serviços do Firestore
+      const snapServicos = await getDocs(query(collection(db, 'settings'), where('type', '==', 'servicos')));
+      if (!snapServicos.empty) {
+        snapServicos.forEach(d => {
+          adminServicosData = d.data().servicos || SERVICOS_DEFAULT;
+          servicosDocId = d.id;
+        });
+      } else {
+        adminServicosData = JSON.parse(JSON.stringify(SERVICOS_DEFAULT));
+      }
+      renderServicosListaAdmin();
+      // Atualiza a PRECOS global usada no calcPrice
+      window._precosAdmin = adminPrecosData;
+    } catch(e) {
+      showToast('Erro ao carregar dados de serviços.', 'error');
+    }
+  }
+
+  function renderPrecosEditor(precos) {
+    const container = document.getElementById('precosEditorContainer');
+    if (!container) return;
+    const animals = [
+      { key: 'Cachorro', label: '🐶 Cachorros', sizes: ['PP','P','M','G','GG'] },
+      { key: 'Gato', label: '🐱 Gatos', sizes: ['P','M','G'] },
+      { key: 'Coelho', label: '🐰 Coelhos', sizes: ['Único'] }
+    ];
+    container.innerHTML = animals.map(a => `
+      <div class="preco-animal-admin">
+        <div class="preco-animal-admin-title">${a.label}</div>
+        ${a.sizes.map(s => `
+          <div class="preco-edit-row">
+            <span class="preco-edit-label">${s}</span>
+            <span class="preco-edit-prefix">R$</span>
+            <input class="preco-edit-input" type="number" min="0" step="0.01"
+              data-animal="${a.key}" data-size="${s}"
+              value="${(precos[a.key]?.[s] ?? 0)}"
+              oninput="adminUpdatePreco(this)">
+          </div>
+        `).join('')}
+      </div>
+    `).join('');
+  }
+
+  window.adminUpdatePreco = function(input) {
+    const animal = input.dataset.animal;
+    const size = input.dataset.size;
+    const val = parseFloat(input.value) || 0;
+    if (!adminPrecosData[animal]) adminPrecosData[animal] = {};
+    adminPrecosData[animal][size] = val;
+  };
+
+  window.adminSavePrecos = async function() {
+    const btn = document.getElementById('btnSavePrecos');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Salvando...';
+    try {
+      if (precosDocId) {
+        await updateDoc(doc(db, 'settings', precosDocId), { precos: adminPrecosData });
+      } else {
+        const newRef = doc(collection(db, 'settings'));
+        await setDoc(newRef, { type: 'precos', precos: adminPrecosData });
+        precosDocId = newRef.id;
+      }
+      // Atualiza a tabela PRECOS usada pelo calcPrice em tempo real
+      Object.assign(PRECOS, adminPrecosData);
+      showToast('✅ Preços salvos com sucesso!', 'success');
+    } catch(e) {
+      showToast('Erro ao salvar preços. Verifique permissões.', 'error');
+    }
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Salvar Preços';
+  };
+
+  function renderServicosListaAdmin() {
+    const lista = document.getElementById('servicosListaAdmin');
+    if (!lista) return;
+    lista.innerHTML = adminServicosData.map((s, i) => `
+      <div class="servico-item-admin" id="servico-row-${i}">
+        <button class="servico-emoji-edit" onclick="openEmojiPicker(${i})" title="Trocar emoji">${s.emoji}</button>
+        <input class="servico-nome-edit" type="text" value="${s.nome.replace(/"/g,'&quot;')}"
+          oninput="adminServicosData[${i}].nome = this.value"
+          placeholder="Nome do serviço" maxlength="40">
+        <button class="btn-del-servico" onclick="adminRemoveServico(${i})" title="Remover serviço">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    `).join('');
+  }
+
+  window.adminRemoveServico = function(i) {
+    if (adminServicosData.length <= 1) { showToast('Deve haver pelo menos 1 serviço.', 'error'); return; }
+    adminServicosData.splice(i, 1);
+    renderServicosListaAdmin();
+  };
+
+  window.adminAddServico = function() {
+    const nomeInput = document.getElementById('newServicoNome');
+    const emojiBtn = document.getElementById('newServicoEmoji');
+    const nome = nomeInput.value.trim();
+    const emoji = emojiBtn.textContent === '➕' ? '🐾' : emojiBtn.textContent;
+    if (!nome) { showToast('Digite o nome do serviço.', 'error'); nomeInput.focus(); return; }
+    adminServicosData.push({ emoji, nome });
+    renderServicosListaAdmin();
+    nomeInput.value = '';
+    emojiBtn.textContent = '➕';
+    showToast(`Serviço "${nome}" adicionado! Clique em Salvar Serviços.`, 'info');
+  };
+
+  window.adminSaveServicos = async function() {
+    const btn = document.getElementById('btnSaveServicos');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Salvando...';
+    // Coleta valores atuais dos inputs antes de salvar
+    document.querySelectorAll('.servico-nome-edit').forEach((inp, i) => {
+      if (adminServicosData[i]) adminServicosData[i].nome = inp.value.trim() || adminServicosData[i].nome;
+    });
+    try {
+      if (servicosDocId) {
+        await updateDoc(doc(db, 'settings', servicosDocId), { servicos: adminServicosData });
+      } else {
+        const newRef = doc(collection(db, 'settings'));
+        await setDoc(newRef, { type: 'servicos', servicos: adminServicosData });
+        servicosDocId = newRef.id;
+      }
+      // Atualiza o select de serviços no formulário de agendamento em tempo real
+      const serviceSelect = document.getElementById('service');
+      if (serviceSelect) {
+        const current = serviceSelect.value;
+        serviceSelect.innerHTML = '<option value="">Selecione o serviço...</option>' +
+          adminServicosData.map(s => `<option value="${s.nome}"${s.nome===current?' selected':''}>${s.emoji} ${s.nome}</option>`).join('');
+      }
+      showToast('✅ Serviços salvos com sucesso!', 'success');
+    } catch(e) {
+      showToast('Erro ao salvar serviços. Verifique permissões.', 'error');
+    }
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Salvar Serviços';
+  };
+
+  // ===== EMOJI PICKER =====
+  window.openEmojiPicker = function(target) {
+    emojiPickerTarget = target;
+    const popup = document.getElementById('emojiPickerPopup');
+    popup.innerHTML = SERVICOS_EMOJIS.map(e =>
+      `<span onclick="selectEmoji('${e}')" title="${e}">${e}</span>`
+    ).join('');
+    // Posiciona próximo ao botão clicado
+    let refEl;
+    if (target === 'new') {
+      refEl = document.getElementById('newServicoEmoji');
+    } else {
+      refEl = document.querySelector(`#servico-row-${target} .servico-emoji-edit`);
+    }
+    if (refEl) {
+      const rect = refEl.getBoundingClientRect();
+      const adminPanel = document.getElementById('adminPanel');
+      const panelRect = adminPanel.getBoundingClientRect();
+      popup.style.top = (rect.bottom - panelRect.top + adminPanel.scrollTop + 4) + 'px';
+      popup.style.left = (rect.left - panelRect.left) + 'px';
+      popup.style.position = 'absolute';
+    }
+    popup.style.display = 'flex';
+    // Fecha ao clicar fora
+    setTimeout(() => {
+      document.addEventListener('click', closeEmojiPickerOutside, { once: true });
+    }, 50);
+  };
+
+  function closeEmojiPickerOutside(e) {
+    const popup = document.getElementById('emojiPickerPopup');
+    if (popup && !popup.contains(e.target)) {
+      popup.style.display = 'none';
+    }
+  }
+
+  window.selectEmoji = function(emoji) {
+    const popup = document.getElementById('emojiPickerPopup');
+    popup.style.display = 'none';
+    if (emojiPickerTarget === 'new') {
+      document.getElementById('newServicoEmoji').textContent = emoji;
+    } else {
+      const btn = document.querySelector(`#servico-row-${emojiPickerTarget} .servico-emoji-edit`);
+      if (btn) btn.textContent = emoji;
+      if (adminServicosData[emojiPickerTarget]) adminServicosData[emojiPickerTarget].emoji = emoji;
+    }
   };
 
   // ===== TOAST =====
