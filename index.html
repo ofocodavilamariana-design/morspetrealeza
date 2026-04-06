@@ -4089,7 +4089,7 @@
   })();
 
   // ===== ADMIN MOBILE MENU =====
-  function toggleAdminMobileMenu() {
+  window.toggleAdminMobileMenu = function() {
     const drawer = document.getElementById('adminMobileDrawer');
     const btn = document.getElementById('sidebarMobileToggle');
     const isOpen = drawer.classList.contains('open');
@@ -4106,7 +4106,7 @@
     }
   }
 
-  function closeMobileDrawer() {
+  window.closeMobileDrawer = function() {
     const drawer = document.getElementById('adminMobileDrawer');
     const btn = document.getElementById('sidebarMobileToggle');
     drawer.classList.remove('open');
