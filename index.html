@@ -721,7 +721,7 @@
   .sidebar-mobile-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
   .sidebar-mobile-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-  .admin-mobile-drawer { display: none; position: fixed; top: 64px; left: 0; right: 0; background: var(--dark); z-index: 200000; padding: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); border-bottom: 1px solid rgba(255,255,255,0.07); animation: slideDownDrawer 0.25s ease; }
+  .admin-mobile-drawer { display: none; position: absolute; top: 64px; left: 0; right: 0; background: var(--dark); z-index: 9999; padding: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); border-bottom: 1px solid rgba(255,255,255,0.07); animation: slideDownDrawer 0.25s ease; }
   @keyframes slideDownDrawer { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
   .admin-mobile-drawer.open { display: block; }
   .admin-mobile-drawer .sidebar-nav { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
@@ -2054,30 +2054,30 @@
     </div>
   </div>
 
-</div>
+  <!-- ===== ADMIN MOBILE DRAWER (dentro do adminPanel) ===== -->
+  <div class="admin-mobile-drawer" id="adminMobileDrawer">
+    <div class="sidebar-nav">
+      <button class="sidebar-item active" id="mobileNavAgendamentos" onclick="showAdminSection('agendamentos', this); closeMobileDrawer()">
+        <i class="fa-regular fa-calendar-check"></i><span>Agendamentos</span>
+        <span class="sidebar-badge" id="totalBadgeMobile">0</span>
+      </button>
+      <button class="sidebar-item" id="mobileNavHorarios" onclick="showAdminSection('horarios', this); closeMobileDrawer()">
+        <i class="fa-regular fa-clock"></i><span>Horários</span>
+      </button>
+      <button class="sidebar-item" id="mobileNavReceita" onclick="showAdminSection('receita', this); closeMobileDrawer()">
+        <i class="fa-solid fa-chart-line"></i><span>Receita</span>
+      </button>
+      <button class="sidebar-item" id="mobileNavServicos" onclick="showAdminSection('servicos', this); closeMobileDrawer()">
+        <i class="fa-solid fa-tags"></i><span>Serviços & Preços</span>
+      </button>
+    </div>
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="adminLogout(); closeMobileDrawer();">
+        <i class="fa-solid fa-right-from-bracket"></i> Sair do painel
+      </button>
+    </div>
+  </div>
 
-<!-- ===== ADMIN MOBILE DRAWER (fora do adminPanel para position:fixed funcionar corretamente) ===== -->
-<div class="admin-mobile-drawer" id="adminMobileDrawer">
-  <div class="sidebar-nav">
-    <button class="sidebar-item active" id="mobileNavAgendamentos" onclick="showAdminSection('agendamentos', this); closeMobileDrawer()">
-      <i class="fa-regular fa-calendar-check"></i><span>Agendamentos</span>
-      <span class="sidebar-badge" id="totalBadgeMobile">0</span>
-    </button>
-    <button class="sidebar-item" id="mobileNavHorarios" onclick="showAdminSection('horarios', this); closeMobileDrawer()">
-      <i class="fa-regular fa-clock"></i><span>Horários</span>
-    </button>
-    <button class="sidebar-item" id="mobileNavReceita" onclick="showAdminSection('receita', this); closeMobileDrawer()">
-      <i class="fa-solid fa-chart-line"></i><span>Receita</span>
-    </button>
-    <button class="sidebar-item" id="mobileNavServicos" onclick="showAdminSection('servicos', this); closeMobileDrawer()">
-      <i class="fa-solid fa-tags"></i><span>Serviços & Preços</span>
-    </button>
-  </div>
-  <div class="sidebar-footer">
-    <button class="btn-logout" onclick="adminLogout(); closeMobileDrawer();">
-      <i class="fa-solid fa-right-from-bracket"></i> Sair do painel
-    </button>
-  </div>
 </div>
 
 <!-- ===== MODAL EDITAR SERVIÇO (ADMIN) ===== -->
