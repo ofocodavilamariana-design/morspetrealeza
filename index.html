@@ -1308,6 +1308,135 @@
   .front-tabela-servico-title { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--beige-dark); padding-bottom: 8px; }
   .front-servico-grid-cards { display: flex; flex-wrap: wrap; gap: 8px; }
 
+
+  /* ===== WHATSAPP FALLBACK SYSTEM ===== */
+
+  /* --- Floating Button --- */
+  #waf-float {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 9000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.4s cubic-bezier(0.4,0,0.2,1), transform 0.4s cubic-bezier(0.4,0,0.2,1);
+  }
+  #waf-float.waf-visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  #waf-float.waf-hiding {
+    opacity: 0;
+    transform: translateY(16px);
+    pointer-events: none;
+  }
+
+  /* Balloon tooltip */
+  .waf-balloon {
+    background: #fff;
+    color: var(--dark);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+    padding: 10px 16px;
+    border-radius: 14px 14px 4px 14px;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.14);
+    border: 1px solid rgba(37,211,102,0.18);
+    max-width: 220px;
+    text-align: right;
+    position: relative;
+    animation: wafBalloonPop 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  .waf-balloon strong { color: #075e54; display: block; font-size: 12px; margin-bottom: 2px; font-weight: 700; letter-spacing: 0.2px; }
+  .waf-balloon-close {
+    position: absolute;
+    top: 6px; right: 8px;
+    background: none; border: none;
+    cursor: pointer; color: var(--gray-light);
+    font-size: 14px; line-height: 1;
+    padding: 0; transition: color 0.2s;
+  }
+  .waf-balloon-close:hover { color: var(--gray); }
+
+  /* Main fab button */
+  .waf-fab {
+    width: 58px; height: 58px;
+    background: #25D366;
+    border: none; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 6px 24px rgba(37,211,102,0.45);
+    transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease;
+    position: relative;
+  }
+  .waf-fab:hover { transform: scale(1.10); box-shadow: 0 10px 32px rgba(37,211,102,0.55); }
+  .waf-fab svg { width: 28px; height: 28px; fill: #fff; }
+  /* Pulse ring */
+  .waf-fab::after {
+    content: '';
+    position: absolute; inset: -4px;
+    border-radius: 50%;
+    border: 2px solid rgba(37,211,102,0.45);
+    animation: wafPulseRing 2.2s ease-out infinite;
+  }
+  @keyframes wafPulseRing {
+    0%   { transform: scale(1); opacity: 0.7; }
+    70%  { transform: scale(1.35); opacity: 0; }
+    100% { transform: scale(1.35); opacity: 0; }
+  }
+  @keyframes wafBalloonPop {
+    from { opacity: 0; transform: scale(0.85) translateY(6px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  /* --- Inline Banner (no-slots / no-service) --- */
+  #waf-inline-banner {
+    display: none;
+    align-items: flex-start;
+    gap: 14px;
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border: 1.5px solid rgba(37,211,102,0.3);
+    border-radius: var(--radius-sm);
+    padding: 16px 18px;
+    margin-top: 14px;
+    animation: fadeInUp 0.35s ease both;
+  }
+  #waf-inline-banner.waf-banner-show { display: flex; }
+  .waf-banner-icon { font-size: 26px; flex-shrink: 0; margin-top: 1px; }
+  .waf-banner-body { flex: 1; }
+  .waf-banner-title { font-size: 14px; font-weight: 700; color: #14532d; margin-bottom: 3px; }
+  .waf-banner-sub   { font-size: 12px; color: #166534; margin-bottom: 10px; line-height: 1.5; }
+  .waf-banner-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: #25D366; color: #fff;
+    font-size: 13px; font-weight: 700;
+    padding: 8px 16px; border-radius: 30px;
+    border: none; cursor: pointer;
+    box-shadow: 0 3px 12px rgba(37,211,102,0.35);
+    transition: background 0.2s, transform 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    text-decoration: none;
+  }
+  .waf-banner-btn:hover { background: #1ebe5b; transform: translateY(-1px); }
+  .waf-banner-btn svg { width: 15px; height: 15px; fill: #fff; }
+
+  /* Desktop: float mais discreto */
+  @media (min-width: 769px) {
+    #waf-float { bottom: 32px; right: 32px; }
+    .waf-fab { width: 52px; height: 52px; }
+    .waf-fab svg { width: 24px; height: 24px; }
+  }
+  /* Mobile */
+  @media (max-width: 768px) {
+    #waf-float { bottom: 20px; right: 16px; }
+    .waf-balloon { max-width: 190px; font-size: 12px; }
+  }
 </style>
 </head>
 <body>
@@ -2379,23 +2508,12 @@
       const booked = [];
       snapBooked.forEach(doc => { const d = doc.data(); if (d.status !== 'cancelado') booked.push(d.time); });
       sel.innerHTML = '<option value="">Selecione o horário...</option>';
-
-      // Filtro de horários passados: se a data escolhida for hoje, oculta horários já passados
-      const now = new Date();
-      const todayStr = now.toLocaleDateString('en-CA'); // YYYY-MM-DD no fuso local
-      const isToday = (date === todayStr);
-      const currentMinutes = isToday ? (now.getHours() * 60 + now.getMinutes()) : -1;
-
       let count = 0;
       ALL_HOURS.forEach(h => {
-        if (dHours.includes(h) || booked.includes(h)) return;
-        if (isToday) {
-          const [hh, mm] = h.split(':').map(Number);
-          const slotMinutes = hh * 60 + mm;
-          if (slotMinutes <= currentMinutes) return; // horário já passou ou é agora
+        if (!dHours.includes(h) && !booked.includes(h)) {
+          sel.innerHTML += `<option value="${h}">${h}</option>`;
+          count++;
         }
-        sel.innerHTML += `<option value="${h}">${h}</option>`;
-        count++;
       });
       if (count === 0) sel.innerHTML = '<option value="">Sem horários disponíveis</option>';
     } catch(e) {
@@ -2689,25 +2807,14 @@
       snap.forEach(doc => { const d = doc.data(); if (d.status !== 'cancelado') booked.push(d.time); });
       bookedSlotsCache[date] = booked;
       sel.innerHTML = '<option value="">Selecione o horário...</option>';
-
-      // Filtro de horários passados: se a data escolhida for hoje, oculta horários já passados
-      const now = new Date();
-      const todayStr = now.toLocaleDateString('en-CA'); // YYYY-MM-DD no fuso local
-      const isToday = (date === todayStr);
-      const currentMinutes = isToday ? (now.getHours() * 60 + now.getMinutes()) : -1;
-
       let count = 0;
       ALL_HOURS.forEach(h => {
-        if (dHours.includes(h) || booked.includes(h)) return;
-        if (isToday) {
-          const [hh, mm] = h.split(':').map(Number);
-          const slotMinutes = hh * 60 + mm;
-          if (slotMinutes <= currentMinutes) return; // horário já passou ou é agora
+        if (!dHours.includes(h) && !booked.includes(h)) {
+          const opt = document.createElement('option');
+          opt.value = h; opt.textContent = h;
+          sel.appendChild(opt);
+          count++;
         }
-        const opt = document.createElement('option');
-        opt.value = h; opt.textContent = h;
-        sel.appendChild(opt);
-        count++;
       });
       if (count === 0) sel.innerHTML = '<option value="">Sem horários disponíveis</option>';
     } catch(e) {
@@ -4153,7 +4260,294 @@
     }
   });
 
-  // ===== MASCOTE FLUTUANTE =====
+
+  // ============================================================
+  // ===== WHATSAPP FALLBACK SYSTEM — Mors Pet Realeza =====
+  // Módulo isolado em IIFE para evitar poluição de escopo global
+  // ============================================================
+  (function WafSystem() {
+
+    // ── Configuração central ────────────────────────────────────
+    const WAF_CONFIG = {
+      phone:           '5511978600783',  // número WhatsApp sem formatação
+      inactivityDelay:  25000,           // ms até o FAB aparecer por inatividade
+      sessionKey:       'waf_shown',     // chave sessionStorage (uma vez por sessão)
+      triggers: {
+        inactivity:   true,  // aparecer após inatividade no form
+        noSlots:      true,  // aparecer quando não há horários
+        noService:    true,  // aparecer quando serviço não selecionado após interação
+      }
+    };
+
+    // ── Estado interno ──────────────────────────────────────────
+    const _state = {
+      floatVisible:     false,
+      balloonVisible:   false,
+      userBooked:       false,   // marcado true após agendamento confirmado
+      inactivityTimer:  null,
+      formInteracted:   false,   // usuário tocou no formulário ao menos uma vez
+      serviceChosen:    false,   // usuário selecionou um serviço
+      noServiceTimer:   null,    // timer para "sem serviço após interação"
+      shownThisSession: sessionStorage.getItem('waf_shown') === '1',
+    };
+
+    // ── Utilitário: gerar link WA dinamicamente ─────────────────
+    function buildWhatsAppLink(reason) {
+      const pet     = (document.getElementById('petName')?.value.trim())     || null;
+      const service = (document.getElementById('service')?.value)             || null;
+      const date    = (document.getElementById('bookingDate')?.value)         || null;
+      const time    = (document.getElementById('bookingTime')?.value)         || null;
+
+      // Formata data para pt-BR se presente
+      let dateFormatted = '';
+      if (date) {
+        const [y,m,d] = date.split('-');
+        dateFormatted = `${d}/${m}/${y}`;
+      }
+
+      let msg = 'Olá! Preciso de ajuda com agendamento no site.\n';
+      if (reason)    msg += `Situação: ${reason}\n`;
+      if (pet)       msg += `🐾 Pet: ${pet}\n`;
+      if (service)   msg += `✂️ Serviço: ${service}\n`;
+      else           msg += `✂️ Serviço: não selecionado\n`;
+      if (dateFormatted) {
+        msg += `📅 Data: ${dateFormatted}`;
+        if (time) msg += ` às ${time}`;
+        msg += '\n';
+      }
+      msg += '\nPode me ajudar?';
+
+      return `https://wa.me/${WAF_CONFIG.phone}?text=${encodeURIComponent(msg)}`;
+    }
+
+    // ── Mostrar / esconder FAB flutuante ────────────────────────
+    function showFloat(reason) {
+      // Não mostrar se usuário já agendou ou já foi exibido nesta sessão
+      if (_state.userBooked || _state.shownThisSession) return;
+
+      const el = document.getElementById('waf-float');
+      if (!el || _state.floatVisible) return;
+
+      // Atualiza link do FAB com contexto atual
+      document.getElementById('waf-fab-btn').dataset.reason = reason || 'geral';
+
+      _state.floatVisible = true;
+      _state.shownThisSession = true;
+      sessionStorage.setItem(WAF_CONFIG.sessionKey, '1');
+
+      el.classList.remove('waf-hiding');
+      el.classList.add('waf-visible');
+
+      // Balão aparece junto, some depois de 8s automaticamente
+      showBalloon();
+      setTimeout(hideBalloon, 8000);
+    }
+
+    function hideFloat() {
+      const el = document.getElementById('waf-float');
+      if (!el || !_state.floatVisible) return;
+      _state.floatVisible = false;
+      el.classList.remove('waf-visible');
+      el.classList.add('waf-hiding');
+      setTimeout(() => el.classList.remove('waf-hiding'), 400);
+    }
+
+    function showBalloon() {
+      const b = document.getElementById('waf-balloon');
+      if (b) { b.style.display = ''; _state.balloonVisible = true; }
+    }
+
+    function hideBalloon() {
+      const b = document.getElementById('waf-balloon');
+      if (b) { b.style.display = 'none'; _state.balloonVisible = false; }
+    }
+
+    // ── Banner inline (dentro do formulário) ───────────────────
+    function showInlineBanner(titleText, subText, reason) {
+      if (_state.userBooked) return;
+
+      // Clona template se banner ainda não está no DOM
+      let banner = document.getElementById('waf-inline-banner');
+      if (!banner) {
+        const tpl = document.getElementById('waf-inline-template');
+        if (!tpl) return;
+        const clone = tpl.content.cloneNode(true);
+        const form  = document.getElementById('bookingForm');
+        if (form) {
+          form.parentNode.insertBefore(clone, form.nextSibling);
+          banner = document.getElementById('waf-inline-banner');
+        }
+      }
+      if (!banner) return;
+
+      // Atualiza textos e link
+      const titleEl = document.getElementById('waf-banner-title');
+      const subEl   = document.getElementById('waf-banner-sub');
+      const linkEl  = document.getElementById('waf-banner-link');
+
+      if (titleEl) titleEl.textContent = titleText;
+      if (subEl)   subEl.textContent   = subText;
+      if (linkEl)  linkEl.href = buildWhatsAppLink(reason);
+
+      banner.classList.add('waf-banner-show');
+    }
+
+    function hideInlineBanner() {
+      const banner = document.getElementById('waf-inline-banner');
+      if (banner) banner.classList.remove('waf-banner-show');
+    }
+
+    // ── Gatilho 1: Inatividade no formulário ───────────────────
+    function resetInactivityTimer() {
+      if (!WAF_CONFIG.triggers.inactivity) return;
+      clearTimeout(_state.inactivityTimer);
+      if (_state.userBooked || _state.floatVisible) return;
+
+      _state.inactivityTimer = setTimeout(() => {
+        // Só dispara se o usuário interagiu com o form mas não completou
+        if (_state.formInteracted && !_state.userBooked) {
+          showFloat('Usuário parou de interagir com o formulário');
+        }
+      }, WAF_CONFIG.inactivityDelay);
+    }
+
+    // ── Gatilho 2: Sem horários disponíveis ────────────────────
+    // Chamado pelo populateHours existente via observer
+    function onNoSlotsDetected() {
+      if (!WAF_CONFIG.triggers.noSlots || _state.userBooked) return;
+      showInlineBanner(
+        '😔 Sem horários disponíveis nessa data',
+        'Mas não se preocupe! Fale com a gente pelo WhatsApp e encontramos o melhor horário pra o seu pet.',
+        'Sem horários disponíveis na data escolhida'
+      );
+      showFloat('Sem horários disponíveis');
+    }
+
+    // ── Gatilho 3: Serviço não selecionado após interação ──────
+    function onServiceInteraction() {
+      if (!WAF_CONFIG.triggers.noService) return;
+      _state.formInteracted = true;
+      clearTimeout(_state.noServiceTimer);
+
+      const serviceEl = document.getElementById('service');
+      if (!serviceEl || serviceEl.value) {
+        _state.serviceChosen = true;
+        hideInlineBanner(); // hide se havia banner de "sem serviço"
+        return;
+      }
+
+      // Aguarda 30s sem selecionar serviço
+      _state.noServiceTimer = setTimeout(() => {
+        const sel = document.getElementById('service');
+        if (!sel || sel.value || _state.userBooked) return;
+        showInlineBanner(
+          '🤔 Não encontrou o serviço ideal?',
+          'Nosso WhatsApp está disponível para te ajudar a encontrar o serviço perfeito para o seu pet!',
+          'Não encontrou o serviço desejado no site'
+        );
+      }, 30000);
+    }
+
+    // ── Observar mudanças no select de horário (MutationObserver) ─
+    // Detecta quando o texto "Sem horários disponíveis" aparece
+    function watchBookingTimeSelect() {
+      const observer = new MutationObserver(() => {
+        const sel = document.getElementById('bookingTime');
+        if (!sel) return;
+        const firstOpt = sel.options[0];
+        if (firstOpt && firstOpt.value === '' &&
+            firstOpt.textContent.includes('Sem horários')) {
+          onNoSlotsDetected();
+        } else {
+          hideInlineBanner();
+        }
+      });
+
+      // Inicia observação assim que o select existir
+      function tryObserve() {
+        const sel = document.getElementById('bookingTime');
+        if (sel) {
+          observer.observe(sel, { childList: true, subtree: true, characterData: true });
+        } else {
+          setTimeout(tryObserve, 500);
+        }
+      }
+      tryObserve();
+    }
+
+    // ── Event Listeners ─────────────────────────────────────────
+    function attachListeners() {
+      // Clique no FAB → abre WhatsApp
+      document.addEventListener('click', function(e) {
+        const fab = e.target.closest('#waf-fab-btn');
+        if (fab) {
+          const reason = fab.dataset.reason || 'Botão flutuante WhatsApp';
+          window.open(buildWhatsAppLink(reason), '_blank', 'noopener');
+        }
+      });
+
+      // Fechar balão
+      document.addEventListener('click', function(e) {
+        if (e.target.closest('#waf-balloon-close')) hideBalloon();
+      });
+
+      // Interação com o form: resetar timer de inatividade
+      document.addEventListener('input',  function(e) {
+        if (e.target.closest('#bookingForm')) {
+          _state.formInteracted = true;
+          resetInactivityTimer();
+        }
+      });
+      document.addEventListener('change', function(e) {
+        if (e.target.closest('#bookingForm')) {
+          _state.formInteracted = true;
+          resetInactivityTimer();
+        }
+        // Gatilho serviço
+        if (e.target.id === 'service') onServiceInteraction();
+      });
+      document.addEventListener('focusin', function(e) {
+        if (e.target.closest('#bookingForm')) {
+          _state.formInteracted = true;
+          resetInactivityTimer();
+          // Primeiro foco no form inicia o timer de inatividade
+        }
+      });
+
+      // Agendamento confirmado → nunca mais mostrar
+      document.addEventListener('click', function(e) {
+        const btn = e.target.closest('#submitBtn');
+        if (btn) {
+          // Marca imediatamente; o submit pode falhar mas o intent já foi
+          setTimeout(() => {
+            const success = document.getElementById('successMsg');
+            if (success && success.classList.contains('show')) {
+              _state.userBooked = true;
+              hideFloat();
+              hideInlineBanner();
+              clearTimeout(_state.inactivityTimer);
+              clearTimeout(_state.noServiceTimer);
+            }
+          }, 2000);
+        }
+      });
+    }
+
+    // ── Init ────────────────────────────────────────────────────
+    function init() {
+      attachListeners();
+      watchBookingTimeSelect();
+    }
+
+    // Aguarda DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+  })(); // fim WafSystem
+
   (function() {
     var MASCOTES = ['cachorro.webm', 'gatinho.webm'];
     var currentIndex = 0;
@@ -4270,5 +4664,34 @@
 
   })();
 </script>
+<!-- ===== WHATSAPP FALLBACK SYSTEM — HTML ===== -->
+
+<!-- Floating FAB -->
+<div id="waf-float" role="complementary" aria-label="Atendimento via WhatsApp">
+  <div class="waf-balloon" id="waf-balloon">
+    <button class="waf-balloon-close" id="waf-balloon-close" aria-label="Fechar">✕</button>
+    <strong>Precisa de ajuda? 🐾</strong>
+    Não encontrou o que procura?<br>Fale direto com a gente!
+  </div>
+  <button class="waf-fab" id="waf-fab-btn" aria-label="Abrir WhatsApp">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </button>
+</div>
+
+<!-- Inline Banner (injected dynamically into booking form) -->
+<template id="waf-inline-template">
+  <div id="waf-inline-banner">
+    <div class="waf-banner-icon">💬</div>
+    <div class="waf-banner-body">
+      <div class="waf-banner-title" id="waf-banner-title">Sem horários disponíveis nessa data</div>
+      <div class="waf-banner-sub" id="waf-banner-sub">Que tal agendar diretamente pelo WhatsApp? A gente encontra o melhor horário pra você! 🐾</div>
+      <a class="waf-banner-btn" id="waf-banner-link" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Falar no WhatsApp
+      </a>
+    </div>
+  </div>
+</template>
+
 </body>
 </html>
