@@ -2379,12 +2379,23 @@
       const booked = [];
       snapBooked.forEach(doc => { const d = doc.data(); if (d.status !== 'cancelado') booked.push(d.time); });
       sel.innerHTML = '<option value="">Selecione o horário...</option>';
+
+      // Filtro de horários passados: se a data escolhida for hoje, oculta horários já passados
+      const now = new Date();
+      const todayStr = now.toLocaleDateString('en-CA'); // YYYY-MM-DD no fuso local
+      const isToday = (date === todayStr);
+      const currentMinutes = isToday ? (now.getHours() * 60 + now.getMinutes()) : -1;
+
       let count = 0;
       ALL_HOURS.forEach(h => {
-        if (!dHours.includes(h) && !booked.includes(h)) {
-          sel.innerHTML += `<option value="${h}">${h}</option>`;
-          count++;
+        if (dHours.includes(h) || booked.includes(h)) return;
+        if (isToday) {
+          const [hh, mm] = h.split(':').map(Number);
+          const slotMinutes = hh * 60 + mm;
+          if (slotMinutes <= currentMinutes) return; // horário já passou ou é agora
         }
+        sel.innerHTML += `<option value="${h}">${h}</option>`;
+        count++;
       });
       if (count === 0) sel.innerHTML = '<option value="">Sem horários disponíveis</option>';
     } catch(e) {
@@ -2678,14 +2689,25 @@
       snap.forEach(doc => { const d = doc.data(); if (d.status !== 'cancelado') booked.push(d.time); });
       bookedSlotsCache[date] = booked;
       sel.innerHTML = '<option value="">Selecione o horário...</option>';
+
+      // Filtro de horários passados: se a data escolhida for hoje, oculta horários já passados
+      const now = new Date();
+      const todayStr = now.toLocaleDateString('en-CA'); // YYYY-MM-DD no fuso local
+      const isToday = (date === todayStr);
+      const currentMinutes = isToday ? (now.getHours() * 60 + now.getMinutes()) : -1;
+
       let count = 0;
       ALL_HOURS.forEach(h => {
-        if (!dHours.includes(h) && !booked.includes(h)) {
-          const opt = document.createElement('option');
-          opt.value = h; opt.textContent = h;
-          sel.appendChild(opt);
-          count++;
+        if (dHours.includes(h) || booked.includes(h)) return;
+        if (isToday) {
+          const [hh, mm] = h.split(':').map(Number);
+          const slotMinutes = hh * 60 + mm;
+          if (slotMinutes <= currentMinutes) return; // horário já passou ou é agora
         }
+        const opt = document.createElement('option');
+        opt.value = h; opt.textContent = h;
+        sel.appendChild(opt);
+        count++;
       });
       if (count === 0) sel.innerHTML = '<option value="">Sem horários disponíveis</option>';
     } catch(e) {
