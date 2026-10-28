@@ -1,7 +1,8 @@
 {
+  "id": "/",
   "name": "Mors Pet Realeza",
   "short_name": "Mors Pet",
-  "description": "Petshop Banho e Tosa em Vila Mariana – Agendamento Online",
+  "description": "Petshop de banho e tosa na Vila Mariana, São Paulo – agendamento pelo WhatsApp",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -9,7 +10,11 @@
   "orientation": "portrait-primary",
   "lang": "pt-BR",
   "scope": "/",
-  "categories": ["lifestyle", "health", "shopping"],
+  "categories": [
+    "lifestyle",
+    "health",
+    "shopping"
+  ],
   "icons": [
     {
       "src": "/icons/icon-72.png",
@@ -47,7 +52,6 @@
       "type": "image/png",
       "purpose": "any maskable"
     },
-
     {
       "src": "/icons/icon-512.png",
       "sizes": "512x512",
@@ -61,14 +65,26 @@
       "short_name": "Agendar",
       "description": "Agendar banho e tosa",
       "url": "/#agendamento",
-      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
+      "icons": [
+        {
+          "src": "/icons/icon-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
     },
     {
       "name": "WhatsApp",
       "short_name": "WhatsApp",
       "description": "Falar com o petshop",
       "url": "https://wa.me/5511978600783",
-      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
+      "icons": [
+        {
+          "src": "/icons/icon-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
     }
   ],
   "screenshots": [
