@@ -1826,6 +1826,42 @@
 .btn-wa.pkg-cta { background: transparent; color: #1da851; border: 1.5px solid #25d366; }
 .btn-wa.pkg-cta:hover { background: #25d366; color: #fff; }
 @media (max-width: 600px) { .btn-wa-lg { width: 100%; justify-content: center; padding: 18px 20px; } .hero-actions .btn-primary, .hero-actions .btn-secondary { width: 100%; justify-content: center; } }
+
+/* Painel administrativo: componentes responsivos, independentes da home */
+#adminPanel .stats-row { display:none }
+#adminPanel .admin-main { min-width:0 }
+#adminPanel .admin-content { max-width:1500px;width:100%;margin:0 auto }
+#adminPanel h2 { font-size:22px;line-height:1.3;margin:0;color:#29241f }
+#adminPanel h3 { font-size:17px;margin:0;color:#29241f }
+#adminPanel p { color:#625d57;line-height:1.55;margin:5px 0 }
+#adminPanel .dash-stack { display:grid;gap:16px }
+#adminPanel .dash-head { display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap }
+#adminPanel .dash-primary, #adminPanel .dash-controls button, #adminPanel .dash-actions button, #adminPanel .dash-mini { border:1px solid #d8d0c8;background:white;border-radius:9px;padding:10px 14px;min-height:44px;color:#302a25;font:600 14px inherit;cursor:pointer }
+#adminPanel .dash-primary { background:#bd4b13;border-color:#bd4b13;color:white;font-weight:700 }
+#adminPanel button:disabled { opacity:.5;cursor:not-allowed }
+#adminPanel .dash-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px }
+#adminPanel .dash-tile, #adminPanel .dash-item { background:#fff;border:1px solid #e5ddd5;border-radius:12px;padding:17px;min-width:0;overflow-wrap:anywhere }
+#adminPanel .dash-tile small { color:#625d57;display:block;line-height:1.4 }
+#adminPanel .dash-tile strong { display:block;font-size:24px;color:#29241f;margin:5px 0 }
+#adminPanel .dash-notice { padding:14px 16px;border:1px solid #edc38d;background:#fff8ed;border-radius:10px;color:#654216;line-height:1.5 }
+#adminPanel .dash-controls, #adminPanel .dash-actions { display:flex;align-items:end;gap:10px;flex-wrap:wrap }
+#adminPanel label { font-size:13px;font-weight:700;color:#514a44;display:grid;gap:5px }
+#adminPanel .dash-form { border:1px solid #e4d8cb;border-radius:12px;padding:18px;display:grid;gap:12px;max-width:700px }
+#adminPanel .dash-form[hidden] { display:none }
+#adminPanel .dash-form input, #adminPanel .dash-form select, #adminPanel .dash-controls input, #analysisMonth { border:1px solid #bcb3aa;border-radius:8px;background:white;color:#29241f;padding:10px;font:inherit;min-height:44px;max-width:100% }
+#adminPanel .dash-form p, #adminPanel .dash-help { font-size:13px;color:#625d57 }
+#adminPanel .annual-chart { display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:6px;align-items:end;margin:20px 0 }
+#adminPanel .annual-bar { border:0;background:none;cursor:pointer;padding:0;display:flex;flex-direction:column;justify-content:end;align-items:center;gap:5px;min-width:0;color:#4e4944 }
+#adminPanel .annual-bar span { background:#d7a986;width:75%;min-height:4px;border-radius:5px 5px 0 0 }
+#adminPanel .annual-bar.current span { background:#bd4b13 }
+#adminPanel .annual-bar small { font-size:11px }
+#adminPanel .analysis-output { white-space:pre-wrap;line-height:1.7;overflow-wrap:anywhere }
+#adminPanel .sidebar-item { color:#e2dedb;min-height:44px }
+#adminPanel .sidebar-item.active { color:#ffd2ae }
+#adminPanel .sidebar-logo-icon { background:#bd4b13;box-shadow:none }
+#adminPanel .booking-card { overflow-wrap:anywhere }
+@media(max-width:850px){#adminPanel .annual-chart { grid-template-columns:repeat(4,minmax(0,1fr));align-items:end;row-gap:14px } #adminPanel .annual-bar span { max-width:50px } #adminPanel .section-card-header {flex-wrap:wrap;gap:12px} #adminPanel .booking-card {align-items:flex-start} #adminPanel .booking-info {min-width:0} #adminPanel .booking-meta,#adminPanel .booking-actions {width:100%} #adminPanel .sidebar-section {display:none} #adminPanel .dash-head .dash-primary{width:100%} #adminPanel .admin-mobile-drawer {max-height:calc(100vh - 64px);overflow:auto} }
+
 </style>
 </head>
 <body>
@@ -2387,20 +2423,14 @@
       <div class="sidebar-section">
         <div class="sidebar-section-label">Menu</div>
         <div class="sidebar-nav">
-          <button class="sidebar-item active" onclick="showAdminSection('agendamentos', this)">
-            <i class="fa-regular fa-calendar-check"></i><span>Agendamentos</span>
-            <span class="sidebar-badge" id="totalBadge">0</span>
-          </button>
-          <button class="sidebar-item" onclick="showAdminSection('horarios', this)">
-            <i class="fa-regular fa-clock"></i><span>Horários</span>
-          </button>
-          <button class="sidebar-item" onclick="showAdminSection('receita', this)">
-            <i class="fa-solid fa-chart-line"></i><span>Receita</span>
-          </button>
-          <button class="sidebar-item" onclick="showAdminSection('servicos', this)">
-            <i class="fa-solid fa-tags"></i><span>Serviços & Preços</span>
-          </button>
-        </div>
+<button class="sidebar-item active" data-section="visao" onclick="showAdminSection('visao', this);"><i class="fa-solid fa-gauge"></i><span>Visão geral</span></button>
+<button class="sidebar-item " data-section="agendamentos" onclick="showAdminSection('agendamentos', this);"><i class="fa-regular fa-calendar-check"></i><span>Agenda</span><span class="sidebar-badge" id="totalBadge">0</span></button>
+<button class="sidebar-item " data-section="financeiro" onclick="showAdminSection('financeiro', this);"><i class="fa-solid fa-chart-line"></i><span>Financeiro</span></button>
+<button class="sidebar-item " data-section="produtos" onclick="showAdminSection('produtos', this);"><i class="fa-solid fa-boxes-stacked"></i><span>Produtos e estoque</span></button>
+<button class="sidebar-item " data-section="servicos" onclick="showAdminSection('servicos', this);"><i class="fa-solid fa-tags"></i><span>Serviços e preços</span></button>
+<button class="sidebar-item " data-section="analise" onclick="showAdminSection('analise', this);"><i class="fa-solid fa-chart-simple"></i><span>Análise do mês</span></button>
+<button class="sidebar-item " data-section="configuracoes" onclick="showAdminSection('configuracoes', this);"><i class="fa-solid fa-gear"></i><span>Configurações</span></button>
+</div>
       </div>
       <div class="sidebar-footer">
         <button class="btn-logout" onclick="adminLogout()">
@@ -2413,13 +2443,13 @@
     <main class="admin-main">
       <div class="topbar">
         <div class="topbar-left">
-          <div><div class="page-title" id="adminPageTitle">Agendamentos</div><div class="page-sub">Gestão em tempo real</div></div>
+          <div><div class="page-title" id="adminPageTitle">Visão geral</div><div class="page-sub">Gestão em tempo real</div></div>
         </div>
         <div class="topbar-right">
-          <div class="live-badge"><div class="live-dot"></div> Ao vivo</div>
+          <div class="live-badge">Painel administrativo</div>
           <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--gray)">
             <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--orange-dark));color:white;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700"><i class="fa-solid fa-user-shield" style="font-size:14px"></i></div>
-            <span>petbemcuidado</span>
+            <span>Mors Pet Realeza</span>
           </div>
           <button onclick="adminLogout()" style="display:flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(239,68,68,0.1);color:#fca5a5;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif">
             <i class="fa-solid fa-x"></i> Fechar painel
@@ -2437,8 +2467,33 @@
           <div class="stat-card"><div class="stat-icon purple"><i class="fa-solid fa-dollar-sign" style="color:#9333ea"></i></div><div class="stat-info"><div class="value" id="statReceita">—</div><div class="label">Receita Est.</div></div></div>
         </div>
 
+<div id="admin-section-visao" class="admin-section active">
+  <div class="dash-head"><div><h2>Bem-vindo ao painel</h2><p>Acompanhe o dia e cuide do que precisa de atenção.</p></div><button class="dash-primary" onclick="openAdminNewBooking()"><i class="fa-solid fa-plus"></i> Novo agendamento</button></div>
+  <div id="overviewContent" aria-live="polite" class="dash-stack"><div class="dash-notice">Carregando agendamentos…</div></div>
+</div>
+<div id="admin-section-financeiro" class="admin-section">
+  <div class="section-card"><div class="section-card-body dash-stack">
+    <div class="dash-head"><div><h2>Financeiro</h2><p>Valores em reais. Isto não é lucro: despesas não são registradas aqui.</p></div><button class="dash-primary" onclick="openPaymentForm()">Registrar pagamento</button></div>
+    <div class="dash-controls"><button onclick="movePeriod(-1)" aria-label="Período anterior">‹</button><label>Mês <input type="month" id="financeMonth" onchange="periodChanged()"></label><label>Ano <input type="number" id="financeYear" min="2000" max="2100" onchange="yearChanged()"></label><button onclick="movePeriod(1)" aria-label="Próximo período">›</button><button id="annualToggle" onclick="toggleAnnual()">Ver ano</button></div>
+    <div id="financeStatus" role="status"></div><div id="financeContent" aria-live="polite"></div>
+    <p class="dash-help">Recebido usa a data do pagamento registrado. Previsto soma preços dos agendamentos confirmados pela data de atendimento. A receber soma apenas pendências explicitamente registradas pela data do atendimento. Registros antigos sem informação não são considerados pagos nem pendentes.</p>
+    <form id="paymentForm" class="dash-form" hidden onsubmit="savePayment(event)"><h3>Registrar pagamento ou pendência</h3><p>Este registro atualiza a situação do atendimento; o histórico deve ser preservado pelo servidor. Pagamentos parciais não são suportados.</p><label>Atendimento <select id="payBooking" required></select></label><label>Situação <select id="payStatus" required><option value="pago">Pago integralmente</option><option value="pendente">Pendente</option></select></label><label>Valor (R$) <input id="payAmount" type="number" min="0" max="1000000" step="0.01" required></label><label>Data do pagamento (obrigatória se pago) <input id="payDate" type="date"></label><div class="dash-actions"><button class="dash-primary" type="submit">Salvar registro</button><button type="button" onclick="document.getElementById('paymentForm').hidden=true">Cancelar</button></div><div id="paymentMessage" role="status"></div></form>
+  </div></div>
+</div>
+<div id="admin-section-produtos" class="admin-section"><div class="section-card"><div class="section-card-body dash-stack">
+  <div class="dash-head"><div><h2>Produtos e estoque</h2><p>Cadastre produtos separadamente dos serviços e acompanhe movimentações.</p></div><button class="dash-primary" onclick="newProduct()">Novo produto</button></div>
+  <div id="inventoryStatus" role="status">Carregando estoque…</div><div id="inventoryList" class="dash-stack"></div>
+  <form id="productForm" class="dash-form" hidden onsubmit="saveProduct(event)"><h3 id="productTitle">Novo produto</h3><input id="productId" type="hidden"><label>Nome <input id="productName" maxlength="100" required></label><label>Unidade (ex.: frasco, kg) <input id="productUnit" maxlength="30" required></label><label>Quantidade inicial (somente no cadastro) <input id="productQty" type="number" min="0" max="1000000" step="0.001" required></label><label>Estoque mínimo <input id="productMin" type="number" min="0" max="1000000" step="0.001" required></label><label>Custo unitário em R$ (opcional) <input id="productCost" type="number" min="0" max="1000000" step="0.01"></label><label>Fornecedor (opcional) <input id="productSupplier" maxlength="100"></label><p>Depois do cadastro, quantidades são alteradas somente por movimentações registradas.</p><div class="dash-actions"><button class="dash-primary" type="submit">Salvar produto</button><button type="button" onclick="document.getElementById('productForm').hidden=true">Cancelar</button></div><div id="productMessage" role="status"></div></form>
+  <form id="movementForm" class="dash-form" hidden onsubmit="saveMovement(event)"><h3>Movimentar estoque</h3><input id="movementId" type="hidden"><p id="movementProduct"></p><label>Tipo <select id="movementType"><option value="entrada">Entrada</option><option value="consumo">Consumo interno</option><option value="venda">Venda de produto</option><option value="ajuste">Ajuste de saldo</option></select></label><label>Quantidade <input id="movementQty" type="number" min="0" max="1000000" step="0.001" required></label><label>Motivo / observação <input id="movementNote" maxlength="200" required></label><p>Em ajuste, informe o novo saldo; nos demais tipos, informe a quantidade movimentada.</p><div class="dash-actions"><button class="dash-primary" type="submit">Registrar movimento</button><button type="button" onclick="document.getElementById('movementForm').hidden=true">Cancelar</button></div><div id="movementMessage" role="status"></div></form>
+  <div id="movementHistory" class="dash-stack" aria-live="polite"></div>
+</div></div></div>
+<div id="admin-section-analise" class="admin-section"><div class="section-card"><div class="section-card-body dash-stack">
+  <div><h2>Análise do mês</h2><p>A análise é opcional e usa Puter AI; pode exigir autenticação e uso de uma conta Puter. Nenhum nome, contato, pet ou agendamento individual é enviado.</p></div><label>Período <input type="month" id="analysisMonth"></label><button class="dash-primary" id="analysisButton" onclick="runAnalysis()">Analisar este mês</button><div id="analysisStatus" role="status"></div><div id="analysisOutput" class="analysis-output"></div><p class="dash-help">Sugestões não alteram dados, preços, estoque ou mensagens. Confira os resultados antes de tomar decisões.</p>
+</div></div></div>
+<div id="admin-section-configuracoes" class="admin-section"><div class="section-card"><div class="section-card-body dash-stack"><h2>Configurações</h2><p>Os horários e serviços existentes continuam disponíveis abaixo.</p><div class="dash-actions"><button onclick="showAdminSection('horarios')">Gerenciar horários</button><button onclick="showAdminSection('servicos')">Serviços e preços</button></div><div class="dash-notice"><strong>Integração necessária:</strong> produtos, movimentações e pagamentos dependem de um backend autenticado e das regras de acesso do Firestore. Enquanto o serviço não estiver configurado, estes dados ficam indisponíveis; nenhum registro é inventado ou armazenado localmente.</div></div></div></div>
+
         <!-- AGENDAMENTOS SECTION -->
-        <div id="admin-section-agendamentos" class="admin-section active">
+        <div id="admin-section-agendamentos" class="admin-section">
           <div class="section-card">
             <div class="section-card-header">
               <div class="section-card-title"><i class="fa-regular fa-calendar-check" style="color:var(--orange)"></i> Agendamentos</div>
@@ -2473,21 +2528,6 @@
                 <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gray)"><div style="width:16px;height:16px;border-radius:4px;background:var(--orange)"></div> Ativo</div>
                 <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gray)"><div style="width:16px;height:16px;border-radius:4px;background:var(--red-pale);border:1.5px solid #fca5a5"></div> Desativado</div>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- RECEITA SECTION -->
-        <div id="admin-section-receita" class="admin-section">
-          <div class="receita-card" id="receitaCard">
-            <div class="receita-label">💰 RECEITA ESTIMADA TOTAL</div>
-            <div class="receita-value" id="receitaTotal">Calculando...</div>
-            <div class="receita-sub" id="receitaSub">Baseado nos agendamentos com preço definido</div>
-          </div>
-          <div class="section-card">
-            <div class="section-card-header"><div class="section-card-title"><i class="fa-solid fa-chart-bar" style="color:var(--orange)"></i> Detalhamento por Agendamento</div></div>
-            <div class="section-card-body">
-              <div id="receitaList"><div class="loading-spinner"></div></div>
             </div>
           </div>
         </div>
@@ -2594,20 +2634,14 @@
   <!-- ===== ADMIN MOBILE DRAWER (dentro do adminPanel) ===== -->
   <div class="admin-mobile-drawer" id="adminMobileDrawer">
     <div class="sidebar-nav">
-      <button class="sidebar-item active" id="mobileNavAgendamentos" onclick="showAdminSection('agendamentos', this); closeMobileDrawer()">
-        <i class="fa-regular fa-calendar-check"></i><span>Agendamentos</span>
-        <span class="sidebar-badge" id="totalBadgeMobile">0</span>
-      </button>
-      <button class="sidebar-item" id="mobileNavHorarios" onclick="showAdminSection('horarios', this); closeMobileDrawer()">
-        <i class="fa-regular fa-clock"></i><span>Horários</span>
-      </button>
-      <button class="sidebar-item" id="mobileNavReceita" onclick="showAdminSection('receita', this); closeMobileDrawer()">
-        <i class="fa-solid fa-chart-line"></i><span>Receita</span>
-      </button>
-      <button class="sidebar-item" id="mobileNavServicos" onclick="showAdminSection('servicos', this); closeMobileDrawer()">
-        <i class="fa-solid fa-tags"></i><span>Serviços & Preços</span>
-      </button>
-    </div>
+<button class="sidebar-item active" data-section="visao" onclick="showAdminSection('visao', this); closeMobileDrawer();"><i class="fa-solid fa-gauge"></i><span>Visão geral</span></button>
+<button class="sidebar-item " data-section="agendamentos" onclick="showAdminSection('agendamentos', this); closeMobileDrawer();"><i class="fa-regular fa-calendar-check"></i><span>Agenda</span><span class="sidebar-badge" id="totalBadgeMobile">0</span></button>
+<button class="sidebar-item " data-section="financeiro" onclick="showAdminSection('financeiro', this); closeMobileDrawer();"><i class="fa-solid fa-chart-line"></i><span>Financeiro</span></button>
+<button class="sidebar-item " data-section="produtos" onclick="showAdminSection('produtos', this); closeMobileDrawer();"><i class="fa-solid fa-boxes-stacked"></i><span>Produtos e estoque</span></button>
+<button class="sidebar-item " data-section="servicos" onclick="showAdminSection('servicos', this); closeMobileDrawer();"><i class="fa-solid fa-tags"></i><span>Serviços e preços</span></button>
+<button class="sidebar-item " data-section="analise" onclick="showAdminSection('analise', this); closeMobileDrawer();"><i class="fa-solid fa-chart-simple"></i><span>Análise do mês</span></button>
+<button class="sidebar-item " data-section="configuracoes" onclick="showAdminSection('configuracoes', this); closeMobileDrawer();"><i class="fa-solid fa-gear"></i><span>Configurações</span></button>
+</div>
     <div class="sidebar-footer">
       <button class="btn-logout" onclick="adminLogout(); closeMobileDrawer();">
         <i class="fa-solid fa-right-from-bracket"></i> Sair do painel
@@ -2716,6 +2750,7 @@
 
   // ===== GLOBALS =====
   const ALL_HOURS = ['09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00'];
+  let adminPanelAuthorized = false; // apenas estado da interface; autorização real deve ocorrer no servidor/regras
   let currentUser = null;
   let bookedSlotsCache = {};
   let disabledHoursCache = [];
@@ -2726,6 +2761,110 @@
   let disabledHours = [];
   let settingsDocId = null;
   let adminFirestoreUnsubscribe = null;
+
+  // Novas funções não substituem autorização no servidor ou regras do Firestore.
+  const $ = id => document.getElementById(id);
+  const brl = v => new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(v);
+  const spToday = () => new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+  const spClock = () => new Intl.DateTimeFormat('en-GB',{timeZone:'America/Sao_Paulo',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date());
+  let bookingLoadState = 'loading', managementState = 'loading', managementData = {products:[],payments:[]}, annualMode = false, managementEpoch = 0, panelEpoch = 0;
+  const apiUrl = '/api/admin-management';
+  function isPanelOpen(){ return adminPanelAuthorized && $('adminPanel').classList.contains('open'); }
+  function validPeriod(v){return /^\d{4}-(0[1-9]|1[0-2])$/.test(v) && +v.slice(0,4)>=2000 && +v.slice(0,4)<=2100;}
+  function monthShift(value, change){const [y,m]=value.split('-').map(Number);const d=new Date(Date.UTC(y,m-1+change,1));return d.getUTCFullYear()+'-'+String(d.getUTCMonth()+1).padStart(2,'0');}
+  function formatMonth(value){const [y,m]=value.split('-').map(Number);return new Intl.DateTimeFormat('pt-BR',{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(Date.UTC(y,m-1,1)));}
+  function numeric(v){return typeof v==='number' && Number.isFinite(v) && v>=0;}
+  function startNewDashboard(){
+    panelEpoch++; bookingLoadState='loading'; managementState='loading'; managementData={products:[],payments:[]}; annualMode=false;
+    ['paymentForm','productForm','movementForm'].forEach(id=>$(id).hidden=true); $('analysisButton').disabled=false; $('analysisStatus').textContent=''; $('analysisOutput').textContent=''; $('movementHistory').textContent='';
+    const month=spToday().slice(0,7); $('financeMonth').value=month; $('financeYear').value=month.slice(0,4); $('analysisMonth').value=month;
+    showAdminSection('visao'); renderNewDashboard(); loadManagement();
+  }
+  async function managementRequest(resource, body, productId){
+    if(!isPanelOpen()) throw Error('Abra o painel administrativo.');
+    const opt={credentials:'same-origin',cache:'no-store',headers:{'Accept':'application/json'}};
+    if(body){opt.method='POST';opt.headers['Content-Type']='application/json'; opt.body=JSON.stringify(body);}
+    const r=await fetch(apiUrl+'?resource='+encodeURIComponent(resource)+(productId?'&productId='+encodeURIComponent(productId):''),opt);
+    if(!r.ok) throw Error('Serviço de gestão indisponível ou acesso não autorizado ('+r.status+').');
+    const type=r.headers.get('content-type')||''; if(!type.includes('application/json')) throw Error('Resposta inválida do serviço de gestão.');
+    return r.json();
+  }
+  async function loadManagement(){
+    const epoch=++managementEpoch; managementState='loading';renderNewDashboard();
+    try{const data=await managementRequest('snapshot');
+      if(epoch!==managementEpoch||!isPanelOpen())return;
+      if(!Array.isArray(data.products)||!Array.isArray(data.payments)) throw Error('Resposta incompleta.');
+      if(data.products.some(p=>!p || typeof p.id!=='string'||typeof p.name!=='string'||typeof p.unit!=='string'||!numeric(p.quantity)||!numeric(p.minimum)) || data.payments.some(p=>!p||typeof p.bookingId!=='string'||!['pago','pendente'].includes(p.status)||!numeric(p.amount)||(p.status==='pago'&&!/^\d{4}-\d{2}-\d{2}$/.test(p.paymentDate||''))) || new Set(data.payments.map(p=>p.bookingId)).size!==data.payments.length) throw Error('Dados de gestão inválidos.');
+      managementData=data;managementState='ready';
+    }catch(e){if(epoch!==managementEpoch||!isPanelOpen())return;managementState='unavailable';managementData={products:[],payments:[]};}
+    if(isPanelOpen())renderNewDashboard();
+  }
+  function summary(period){
+    const list=allAdminBookings.filter(b=>typeof b.date==='string'&&b.date.slice(0,7)===period);
+    const paymentMap = new Map(managementData.payments.map(p=>[p.bookingId,p]));
+    const price=b=>numeric(b.price)?b.price:null;
+    const unknown=list.filter(b=>b.status!=='cancelado'&&!paymentMap.has(b.id)).length;
+    return {period, atendimentos:list.length, concluidos:list.filter(b=>b.status==='concluido').length,cancelados:list.filter(b=>b.status==='cancelado').length,
+      sem_preco:list.filter(b=>b.status!=='cancelado'&&price(b)===null).length, ticket_medio_concluido:(()=>{const priced=list.filter(b=>b.status==='concluido'&&price(b)!==null);return priced.length?priced.reduce((sum,b)=>sum+price(b),0)/priced.length:null;})(),sem_informacao_pagamento:managementState==='ready'?unknown:null,
+      previsto:list.filter(b=>b.status==='confirmado').reduce((s,b)=>s+(price(b)??0),0),
+      recebido:managementState==='ready'?managementData.payments.filter(p=>p.status==='pago'&&p.paymentDate.slice(0,7)===period).reduce((s,p)=>s+p.amount,0):null,
+      a_receber:managementState==='ready'?list.filter(b=>b.status!=='cancelado').reduce((s,b)=>{const p=paymentMap.get(b.id);return s+(p&&p.status==='pendente'?p.amount:0);},0):null};
+  }
+  function tile(label,value,help){return `<div class="dash-tile"><small>${escHtml(label)}</small><strong>${escHtml(String(value))}</strong><small>${escHtml(help)}</small></div>`;}
+  function renderNewDashboard(){if(!isPanelOpen())return;renderOverview();renderFinance();renderProducts();}
+  function renderOverview(){
+    if(bookingLoadState!=='ready'){$('overviewContent').innerHTML='<div class="dash-notice">'+(bookingLoadState==='error'?'Não foi possível carregar os agendamentos. Confira o acesso ao Firestore.':'Carregando agendamentos…')+'</div>';return;}
+    const today=spToday(), now=spClock(); const todayList=allAdminBookings.filter(b=>b.date===today&&b.status!=='cancelado');
+    const next=allAdminBookings.filter(b=>b.status==='confirmado'&&typeof b.date==='string'&&typeof b.time==='string'&&(b.date>today||(b.date===today&&b.time>=now))).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).slice(0,4);
+    const low=managementState==='ready'?managementData.products.filter(p=>p.quantity<=p.minimum).length:null;
+    $('overviewContent').innerHTML='<div class="dash-grid">'+tile('Atendimentos hoje',todayList.length,'Exceto cancelados')+tile('Próximos horários',next.length,'Até 4 horários confirmados')+tile('Estoque baixo',low===null?'Indisponível':low,'Produtos no mínimo ou abaixo')+'</div><div class="dash-item"><h3>Próximos horários</h3>'+(next.length?next.map(b=>`<p><strong>${escHtml((b.date||'').split('-').reverse().join('/'))} · ${escHtml(b.time)}</strong> — ${escHtml(b.petName||'Pet')} · ${escHtml(b.service||'Serviço')}</p>`).join(''):'<p>Nenhum próximo horário confirmado.</p>')+'</div>'+(low===null?'<div class="dash-notice">Os alertas de estoque dependem da configuração do serviço de gestão.</div>':low?'<div class="dash-notice">Há produtos no mínimo ou abaixo. Acesse Produtos e estoque para conferir.</div>':'');
+  }
+  function renderFinance(){
+    if(!$('financeMonth').value || !validPeriod($('financeMonth').value))return;
+    if(bookingLoadState!=='ready'){$('financeStatus').textContent=bookingLoadState==='error'?'Não foi possível carregar os agendamentos.':'Carregando dados…';$('financeContent').innerHTML='';return;}
+    const month=$('financeMonth').value, s=summary(month), fmt=x=>x===null?'Indisponível':brl(x);
+    $('financeStatus').textContent=managementState==='ready'?'':managementState==='loading'?'Carregando informações de pagamentos…':'Pagamentos indisponíveis: configure o serviço seguro de gestão. Valores não foram presumidos.';
+    let chart='';if(annualMode){const y=month.slice(0,4),vals=Array.from({length:12},(_,i)=>summary(y+'-'+String(i+1).padStart(2,'0'))), max=Math.max(1,...vals.map(x=>x.previsto));chart='<h3>Previsto por mês — '+escHtml(y)+'</h3><p>Agendamentos confirmados com preço. Selecione um mês para detalhar.</p><div class="annual-chart">'+vals.map((v,i)=>`<button class="annual-bar ${v.period===spToday().slice(0,7)?'current':''}" onclick="selectFinanceMonth('${v.period}')" aria-label="${escHtml(formatMonth(v.period))}: ${escHtml(brl(v.previsto))}"><span style="height:${Math.max(4,Math.round(v.previsto/max*120))}px"></span><small>${['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'][i]}</small></button>`).join('')+'</div>';}
+    $('annualToggle').textContent=annualMode?'Ocultar ano':'Ver ano';
+    $('financeContent').innerHTML=chart+`<h3>Detalhamento: ${escHtml(formatMonth(month))}</h3><div class="dash-grid">`+tile('Recebido',fmt(s.recebido),'Pagamentos registrados no período')+tile('A receber',fmt(s.a_receber),'Pendências explícitas de atendimentos do mês')+tile('Previsto',brl(s.previsto),'Confirmados no mês com preço')+tile('Concluídos',s.concluidos,'Pela data do atendimento')+tile('Cancelados',s.cancelados,'Pela data do atendimento')+tile('Sem preço',s.sem_preco,'Atendimentos não cancelados')+tile('Pagamento sem informação',s.sem_informacao_pagamento===null?'Indisponível':s.sem_informacao_pagamento,'Não incluídos como pagos ou pendentes')+'</div>';
+  }
+  window.periodChanged=function(){let v=$('financeMonth').value;if(!validPeriod(v)){ $('financeStatus').textContent='Escolha um mês entre 2000 e 2100.';return;} $('financeYear').value=v.slice(0,4);renderFinance();};
+  window.yearChanged=function(){const y=Number($('financeYear').value);if(!Number.isInteger(y)||y<2000||y>2100){$('financeStatus').textContent='Escolha um ano entre 2000 e 2100.';return;} $('financeMonth').value=y+'-'+$('financeMonth').value.slice(5);renderFinance();};
+  window.movePeriod=function(n){const v=annualMode?monthShift($('financeMonth').value,n*12):monthShift($('financeMonth').value,n);if(validPeriod(v)){$('financeMonth').value=v;periodChanged();}};
+  window.toggleAnnual=function(){annualMode=!annualMode;renderFinance();};
+  window.selectFinanceMonth=function(m){$('financeMonth').value=m;annualMode=false;periodChanged();};
+  window.openPaymentForm=function(){if(managementState!=='ready'){ $('financeStatus').textContent='Não é possível registrar: o serviço seguro de pagamentos não está disponível.';return;}
+    const existing=new Map(managementData.payments.map(p=>[p.bookingId,p]));
+    const candidates=allAdminBookings.filter(b=>b.status!=='cancelado' && existing.get(b.id)?.status!=='pago');
+    $('payBooking').innerHTML=candidates.map(b=>`<option value="${escHtml(b.id)}">${escHtml(b.date||'Sem data')} · ${escHtml(b.petName||'Pet')} · ${escHtml(b.service||'Serviço')}</option>`).join('');
+    if(!candidates.length){$('financeStatus').textContent='Nenhum atendimento disponível para registro.';return;}
+    $('payDate').value=spToday();$('paymentMessage').textContent='';$('paymentForm').hidden=false;};
+  window.savePayment=async function(e){e.preventDefault();const status=$('payStatus').value, amount=Number($('payAmount').value),date=$('payDate').value, bookingId=$('payBooking').value;
+    if(managementState!=='ready'||!allAdminBookings.some(b=>b.id===bookingId&&b.status!=='cancelado')||!numeric(amount)||$('payAmount').value===''||(status==='pago'&&!/^\d{4}-\d{2}-\d{2}$/.test(date))){$('paymentMessage').textContent='Confira os campos e a data do pagamento.';return;}
+    const btn=e.submitter;btn.disabled=true;$('paymentMessage').textContent='Salvando…';try{await managementRequest('payment',{bookingId,status,amount,paymentDate:status==='pago'?date:null});$('paymentForm').hidden=true;await loadManagement();$('financeStatus').textContent=managementState==='ready'?'Registro salvo.':'Registro enviado, mas não foi possível atualizar os dados.';}catch(err){$('paymentMessage').textContent='Não foi possível salvar. Confira sua autorização e tente novamente.';}finally{btn.disabled=false;}};
+  function renderProducts(){
+    if(managementState!=='ready'){$('inventoryStatus').textContent=managementState==='loading'?'Carregando estoque…':'Estoque indisponível. É necessário configurar o serviço seguro de gestão.';$('inventoryList').innerHTML='';return;}
+    $('inventoryStatus').textContent=managementData.products.length?'':'Nenhum produto cadastrado ainda.';
+    $('inventoryList').innerHTML=managementData.products.map((p,i)=>`<div class="dash-item"><div class="dash-head"><div><h3>${escHtml(p.name)}</h3><p>Saldo: ${escHtml(p.quantity)} ${escHtml(p.unit)} · Mínimo: ${escHtml(p.minimum)} ${escHtml(p.unit)}</p><p>${p.quantity<=p.minimum?'Estoque baixo. ':''}${p.quantity<=p.minimum&&numeric(p.targetStock)&&p.targetStock>p.quantity?'Reposição sugerida para atingir o estoque-alvo: '+escHtml((p.targetStock-p.quantity).toFixed(3).replace(/\.?0+$/,''))+' '+escHtml(p.unit)+'. ':''}${p.supplier?'Fornecedor: '+escHtml(p.supplier):''}${numeric(p.cost)?' · Custo: '+escHtml(brl(p.cost)):''}</p></div><div class="dash-actions"><button class="dash-mini" onclick="editProduct(${i})">Editar</button><button class="dash-mini" onclick="moveProduct(${i})">Movimentar</button><button class="dash-mini" onclick="productHistory(${i})">Histórico</button></div></div></div>`).join('');
+  }
+  window.newProduct=function(){if(managementState!=='ready'){$('inventoryStatus').textContent='Não é possível cadastrar: serviço seguro de gestão indisponível.';return;}$('productForm').reset();$('productId').value='';$('productQty').disabled=false;$('productTitle').textContent='Novo produto';$('productMessage').textContent='';$('productForm').hidden=false;};
+  window.editProduct=function(i){const p=managementData.products[i];if(!p)return;newProduct();$('productId').value=p.id;$('productName').value=p.name;$('productUnit').value=p.unit;$('productQty').value=p.quantity;$('productQty').disabled=true;$('productMin').value=p.minimum;$('productCost').value=numeric(p.cost)?p.cost:'';$('productSupplier').value=p.supplier||'';$('productTitle').textContent='Editar produto';};
+  window.saveProduct=async function(e){e.preventDefault();let id=$('productId').value, name=$('productName').value.trim(),unit=$('productUnit').value.trim(),minimum=Number($('productMin').value),quantity=Number($('productQty').value),cost=$('productCost').value===''?null:Number($('productCost').value),supplier=$('productSupplier').value.trim();
+    if(managementState!=='ready'||!name||!unit||!numeric(minimum)||!numeric(quantity)||(cost!==null&&!numeric(cost))||id&&!managementData.products.some(p=>p.id===id)){$('productMessage').textContent='Confira nome, unidade e valores não negativos.';return;}
+    const btn=e.submitter;btn.disabled=true;$('productMessage').textContent='Salvando…';try{await managementRequest('product',{id:id||null,name,unit,minimum,cost,supplier,...(!id?{quantity}: {})});$('productForm').hidden=true;await loadManagement();$('inventoryStatus').textContent=managementState==='ready'?'Produto salvo.':'Produto enviado, mas a atualização falhou.';}catch(err){$('productMessage').textContent='Não foi possível salvar. Confira sua autorização e tente novamente.';}finally{btn.disabled=false;}};
+  window.moveProduct=function(i){const p=managementData.products[i];if(!p)return;$('movementForm').reset();$('movementId').value=p.id;$('movementProduct').textContent=p.name+' — saldo atual: '+p.quantity+' '+p.unit;$('movementMessage').textContent='';$('movementForm').hidden=false;};
+  window.saveMovement=async function(e){e.preventDefault();const id=$('movementId').value,p=managementData.products.find(x=>x.id===id),type=$('movementType').value,quantity=Number($('movementQty').value),note=$('movementNote').value.trim();if(managementState!=='ready'||!p||!['entrada','consumo','venda','ajuste'].includes(type)||!numeric(quantity)||$('movementQty').value===''||!note||(type!=='ajuste'&&quantity<=0)||(['venda','consumo'].includes(type)&&quantity>p.quantity)){$('movementMessage').textContent='Confira quantidade, saldo disponível e motivo.';return;}const btn=e.submitter;btn.disabled=true;$('movementMessage').textContent='Registrando…';try{await managementRequest('movement',{productId:id,type,quantity,note});$('movementForm').hidden=true;await loadManagement();$('inventoryStatus').textContent=managementState==='ready'?'Movimentação registrada.':'Movimento enviado, mas a atualização falhou.';}catch(err){$('movementMessage').textContent='Não foi possível registrar. Atualize o saldo e tente novamente.';}finally{btn.disabled=false;}};
+  window.productHistory=async function(i){const p=managementData.products[i];if(!p)return;const el=$('movementHistory');el.textContent='Carregando histórico…';try{const data=await managementRequest('history',null,p.id);if(!Array.isArray(data.movements))throw Error();el.innerHTML='<h3>Histórico: '+escHtml(p.name)+'</h3>'+(data.movements.length?data.movements.map(m=>`<div class="dash-item"><strong>${escHtml(m.type)}</strong> · ${escHtml(m.quantity)} ${escHtml(p.unit)}<p>${escHtml(m.createdAt||'Data indisponível')} · ${escHtml(m.note||'Sem observação')}</p></div>`).join(''):'<p>Nenhuma movimentação registrada.</p>');}catch(err){el.textContent='Não foi possível carregar o histórico.';}};
+  async function loadPuter(){if(window.puter?.ai)return;await new Promise((resolve,reject)=>{let s=document.querySelector('script[data-puter-sdk]');if(s){s.addEventListener('load',resolve,{once:true});s.addEventListener('error',reject,{once:true});return;}s=document.createElement('script');s.src='https://js.puter.com/v2/';s.dataset.puterSdk='true';s.onload=resolve;s.onerror=()=>{s.remove();reject(Error('Não foi possível carregar o Puter.js.'));};document.head.appendChild(s);});if(!window.puter?.ai)throw Error('Puter AI indisponível.');}
+  window.runAnalysis=async function(){const month=$('analysisMonth').value;if(!validPeriod(month)){$('analysisStatus').textContent='Escolha um mês válido entre 2000 e 2100.';return;}if(bookingLoadState!=='ready'){$('analysisStatus').textContent='Os agendamentos precisam estar carregados antes da análise.';return;}
+    const current=summary(month),previous=summary(monthShift(month,-1));if(!current.atendimentos&&!previous.atendimentos){$('analysisStatus').textContent='Dados insuficientes: não há atendimentos neste mês nem no anterior.';$('analysisOutput').textContent='';return;}
+    const indicators=s=>({periodo:s.period,recebido:s.recebido,previsto:s.previsto,a_receber:s.a_receber,concluidos:s.concluidos,cancelados:s.cancelados,sem_preco:s.sem_preco,sem_informacao_pagamento:s.sem_informacao_pagamento,ticket_medio_valor_concluidos_com_preco:s.ticket_medio_concluido});
+    const payload={atual:indicators(current),anterior:indicators(previous),produtos_estoque_baixo:managementState==='ready'?managementData.products.filter(p=>p.quantity<=p.minimum).length:null};
+    const epoch=panelEpoch, btn=$('analysisButton');btn.disabled=true;$('analysisOutput').textContent='';$('analysisStatus').textContent='Conectando ao Puter e verificando o modelo…';
+    try{await loadPuter();if(epoch!==panelEpoch)return;const models=await puter.ai.listModels();if(epoch!==panelEpoch)return;const target='anthropic/claude-sonnet-5-5';if(!Array.isArray(models)||!models.some(m=>m.id===target||(Array.isArray(m.aliases)&&m.aliases.includes(target))))throw Error('O modelo Claude Sonnet 5.5 não está disponível no catálogo Puter desta conta. Tente novamente mais tarde.');
+      $('analysisStatus').textContent='Analisando indicadores agregados…';const prompt='Você é consultor de uma pet shop. Analise apenas os indicadores agregados abaixo, em português brasileiro. Estruture: Resumo do período; Comparação com o mês anterior; Pontos positivos; Oportunidades; até três ações práticas. Cada recomendação deve citar os números que a motivaram. Não invente causas, valores, previsões ou informação ausente. Valores null significam indisponível, nunca zero. O ticket médio é a média dos preços definidos dos atendimentos concluídos, não dinheiro recebido e não inclui atendimentos sem preço. Se faltar informação, diga isso. Não execute ações. Dados: '+JSON.stringify(payload);
+      const response=await puter.ai.chat(prompt,{model:target});if(epoch!==panelEpoch)return;let content=response?.message?.content;let text=typeof content==='string'?content:Array.isArray(content)?content.filter(x=>x.type==='text').map(x=>x.text).join('\n'):'';if(!text)throw Error('O Puter não retornou texto de análise.');$('analysisOutput').textContent=text;$('analysisStatus').textContent='Análise gerada. Confira os dados antes de agir. O relatório não foi salvo.';
+    }catch(err){if(epoch===panelEpoch)$('analysisStatus').textContent='Não foi possível gerar a análise. '+(err?.message||'Confira sua conexão ou conta Puter e tente novamente.');}finally{if(epoch===panelEpoch)btn.disabled=false;}};
 
   // ===== CORREÇÃO 7: safeConfirm (substitui confirm() nativo) =====
   function safeConfirm(msg) {
@@ -2746,6 +2885,7 @@
 
   // ===== ADMIN: NOVO AGENDAMENTO MANUAL =====
   window.openAdminNewBooking = function() {
+    if (!isPanelOpen()) return;
     const modal = document.getElementById('adminNewBookingModal');
     modal.style.display = 'flex';
     // Preencher select de serviços com catálogo atual
@@ -2753,7 +2893,7 @@
     svcSelect.innerHTML = '<option value="">Selecione o serviço...</option>';
     if (window._catalogoAtivo && window._catalogoAtivo.length) {
       window._catalogoAtivo.forEach(s => {
-        svcSelect.innerHTML += `<option value="${s.nome}">${s.emoji || ''} ${s.nome}</option>`;
+        svcSelect.innerHTML += `<option value="${escHtml(s.nome)}">${escHtml(s.emoji || '')} ${escHtml(s.nome)}</option>`;
       });
     } else {
       ['Banho','Tosa','Banho + Tosa','Hidratação','Corte de Unhas','Limpeza de Ouvidos'].forEach(s => {
@@ -2761,8 +2901,7 @@
       });
     }
     // Data mínima = hoje
-    const today = new Date();
-    const min = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+    const min = spToday();
     document.getElementById('anb_date').min = min;
     document.getElementById('anb_date').value = '';
     document.getElementById('anb_time').innerHTML = '<option value="">Selecione a data primeiro</option>';
@@ -2860,6 +2999,7 @@
   };
 
   window.adminSubmitNewBooking = async function() {
+    if (!isPanelOpen()) return;
     const clientName = document.getElementById('anb_clientName').value.trim();
     const clientPhone = document.getElementById('anb_clientPhone').value.trim();
     const petName = document.getElementById('anb_petName').value.trim();
@@ -2872,8 +3012,8 @@
 
     errEl.classList.remove('show');
 
-    if (!clientName || !clientPhone || !petName || !petType || !service || !date || !time) {
-      errEl.textContent = 'Preencha todos os campos obrigatórios.';
+    if (!clientName || clientPhone.replace(/\D/g,'').length < 10 || !petName || !petType || !petSize || !service || !date || date < spToday() || !ALL_HOURS.includes(time)) {
+      errEl.textContent = 'Preencha os campos obrigatórios, incluindo porte, telefone válido e data e horário disponíveis.';
       errEl.classList.add('show');
       return;
     }
@@ -2938,12 +3078,8 @@
     if (logoClickCount >= 5) {
       logoClickCount = 0;
       indicator.classList.remove('show');
-      // Se já logado como admin, abrir painel direto
-      if (sessionStorage.getItem('mors_admin_logged') === 'true') {
-        openAdminPanel();
-      } else {
-        document.getElementById('adminLoginModal').classList.add('open');
-      }
+      // Não confie em uma flag gravada no navegador para reabrir o painel.
+      document.getElementById('adminLoginModal').classList.add('open');
       return;
     }
 
@@ -2980,8 +3116,9 @@
         body: JSON.stringify({ user, pass })
       });
       const data = await res.json();
-      if (data.success) {
-        sessionStorage.setItem('mors_admin_logged', 'true');
+      if (res.ok && data.success === true) {
+        adminPanelAuthorized = true;
+        document.getElementById('adminPass').value = '';
         document.getElementById('adminLoginModal').classList.remove('open');
         openAdminPanel();
       } else {
@@ -3002,6 +3139,7 @@
   function openAdminPanel() {
     document.getElementById('adminPanel').classList.add('open');
     document.body.style.overflow = 'hidden';
+    startNewDashboard();
     initAdminFirestore();
     // Re-renderiza a cada 60s para detectar novos "atrasados" sem precisar de novo dado
     if (!window._adminRefreshTimer) {
@@ -3014,12 +3152,13 @@
   }
 
   window.adminLogout = function() {
+    adminPanelAuthorized = false; panelEpoch++; managementEpoch++;
     sessionStorage.removeItem('mors_admin_logged');
     document.getElementById('adminPanel').classList.remove('open');
     document.body.style.overflow = '';
     if (adminFirestoreUnsubscribe) { adminFirestoreUnsubscribe(); adminFirestoreUnsubscribe = null; }
     if (window._adminRefreshTimer) { clearInterval(window._adminRefreshTimer); window._adminRefreshTimer = null; }
-    allAdminBookings = [];
+    allAdminBookings = []; managementData={products:[],payments:[]}; managementState='unavailable'; bookingLoadState='loading';
   };
 
   // ===== ADMIN FIRESTORE =====
@@ -3029,10 +3168,12 @@
     adminFirestoreUnsubscribe = onSnapshot(q, (snapshot) => {
       allAdminBookings = [];
       snapshot.forEach(d => { allAdminBookings.push({ id: d.id, ...d.data() }); });
+      bookingLoadState='ready';
       updateAdminStats();
       renderAdminBookings();
+      renderNewDashboard();
       renderReceitaSection();
-    }, () => { showToast('Erro ao conectar com Firestore.', 'error'); });
+    }, () => { bookingLoadState='error'; document.getElementById('adminBookingsList').innerHTML='<div class="dash-notice">Não foi possível carregar os agendamentos. Confira sua conexão e permissão.</div>'; renderNewDashboard(); showToast('Erro ao conectar com Firestore.', 'error'); });
     loadAdminHours();
     // Carrega preços e serviços do Firestore para uso no calcPrice e no form
     loadSettingsForFrontend();
@@ -3050,7 +3191,7 @@
     const cancelados = allAdminBookings.filter(b => b.status === 'cancelado').length;
     // Receita estimada (agendamentos confirmados + concluídos com preço)
     let receita = 0;
-    allAdminBookings.filter(b => b.status !== 'cancelado' && b.price).forEach(b => { receita += b.price; });
+    allAdminBookings.filter(b => b.status !== 'cancelado' && numeric(b.price)).forEach(b => { receita += b.price; });
     document.getElementById('statTotal').textContent = total;
     document.getElementById('statConfirmados').textContent = confirmados;
     document.getElementById('statConcluidos').textContent = concluidos;
@@ -3098,33 +3239,36 @@
     const getPetEmoji = (t) => t==='Cachorro'?'🐶':t==='Gato'?'🐱':t==='Coelho'?'🐰':'🐾';
     const fmtDate = (d) => d ? new Date(d+'T12:00:00').toLocaleDateString('pt-BR') : '-';
     const statusLabel = { confirmado: 'Agendado', atrasado: '⚠️ Atrasado', concluido: 'Concluído', cancelado: 'Cancelado' };
-    list.innerHTML = filtered.map(b => {
-      const ds = b._displayStatus; // status visual (pode ser "atrasado")
+    window._visibleAdminBookings = filtered;
+    list.innerHTML = filtered.map((b, idx) => {
+      const ds = ['confirmado','concluido','cancelado','atrasado'].includes(b._displayStatus) ? b._displayStatus : 'confirmado'; // status visual (pode ser "atrasado")
       const isActive = b.status === 'confirmado'; // ações sempre baseadas no status real
-      return `<div class="booking-card status-${ds}" id="card-${b.id}">
+      return `<div class="booking-card status-${ds}">
         <div class="booking-pet-avatar">${getPetEmoji(b.petType)}</div>
         <div class="booking-info">
-          <div class="booking-pet">${b.petName||'—'} <span style="font-size:12px;color:var(--gray);font-weight:500">(${b.petType||'—'}${b.petSize?' · '+b.petSize:''})</span></div>
-          <div class="booking-client"><i class="fa-regular fa-user" style="font-size:11px;margin-right:4px"></i>${b.clientName||'—'} · <i class="fa-solid fa-phone" style="font-size:11px;margin-right:4px"></i>${b.clientPhone||'—'}</div>
-          <div class="booking-email"><i class="fa-regular fa-envelope" style="font-size:10px;margin-right:4px"></i>${b.userEmail||'Sem e-mail'}</div>
+          <div class="booking-pet">${escHtml(b.petName||'—')} <span style="font-size:12px;color:var(--gray);font-weight:500">(${escHtml(b.petType||'—')}${b.petSize?' · '+escHtml(b.petSize):''})</span></div>
+          <div class="booking-client"><i class="fa-regular fa-user" style="font-size:11px;margin-right:4px"></i>${escHtml(b.clientName||'—')} · <i class="fa-solid fa-phone" style="font-size:11px;margin-right:4px"></i>${escHtml(b.clientPhone||'—')}</div>
+          <div class="booking-email"><i class="fa-regular fa-envelope" style="font-size:10px;margin-right:4px"></i>${escHtml(b.userEmail||'Sem e-mail')}</div>
           <div style="margin-top:6px">
-            <span class="booking-service">${b.service||'—'}</span>
-            ${b.price ? `<span class="booking-price-tag">R$ ${b.price.toFixed(2).replace('.',',')}</span>` : ''}
+            <span class="booking-service">${escHtml(b.service||'—')}</span>
+            ${numeric(b.price) ? `<span class="booking-price-tag">${escHtml(brl(b.price))}</span>` : ''}
           </div>
         </div>
         <div class="booking-meta">
-          <div class="booking-datetime">${fmtDate(b.date)}<span>${b.time||'—'}</span></div>
-          <span class="status-badge ${ds}">${statusLabel[ds] || ds}</span>
+          <div class="booking-datetime">${escHtml(fmtDate(b.date))}<span>${escHtml(b.time||'—')}</span></div>
+          <span class="status-badge ${ds}">${escHtml(statusLabel[ds] || ds)}</span>
           ${b.userConfirmed ? '<div class="user-confirmed-badge"><i class="fa-solid fa-circle-check"></i> Cliente confirmou presença</div>' : ''}
         </div>
         <div class="booking-actions">
-          ${isActive ? `<button class="btn-action btn-done" onclick="adminActionBooking('concluir','${b.id}','${b.petName||'pet'}')"><i class="fa-solid fa-check"></i> Concluído</button>` : ''}
-          ${isActive ? `<button class="btn-action btn-cancel" onclick="adminActionBooking('cancelar','${b.id}','${b.petName||'pet'}')"><i class="fa-solid fa-xmark"></i> Cancelar</button>` : ''}
-          <button class="btn-action btn-delete" onclick="adminActionBooking('excluir','${b.id}','${b.petName||'pet'}')"><i class="fa-regular fa-trash-can"></i> Excluir</button>
+          ${isActive ? `<button class="btn-action btn-done" onclick="adminActionFromIndex('concluir',${idx})"><i class="fa-solid fa-check"></i> Concluído</button>` : ''}
+          ${isActive ? `<button class="btn-action btn-cancel" onclick="adminActionFromIndex('cancelar',${idx})"><i class="fa-solid fa-xmark"></i> Cancelar</button>` : ''}
+          <button class="btn-action btn-delete" onclick="adminActionFromIndex('excluir',${idx})"><i class="fa-regular fa-trash-can"></i> Excluir</button>
         </div>
       </div>`;
     }).join('');
   }
+
+  window.adminActionFromIndex = function(type, index) { const b=window._visibleAdminBookings?.[index]; if(b) adminActionBooking(type,b.id,b.petName||'pet'); };
 
   // ===== RECEITA SECTION =====
   function renderReceitaSection() {
@@ -3173,9 +3317,9 @@
     const getPetEmoji = (t) => t==='Cachorro'?'🐶':t==='Gato'?'🐱':t==='Coelho'?'🐰':'🐾';
     const fmtDate = (d) => d ? new Date(d+'T12:00:00').toLocaleDateString('pt-BR') : '-';
     const configs = {
-      concluir: { icon: '✅', title: 'Marcar como Concluído', msg: `Deseja realmente marcar o atendimento de <strong>${name}</strong> como concluído?`, okClass: 'orange' },
-      cancelar: { icon: '⚠️', title: 'Cancelar Agendamento', msg: `Deseja realmente cancelar o agendamento de <strong>${name}</strong>?`, okClass: '' },
-      excluir: { icon: '🗑️', title: 'Excluir Agendamento', msg: `Deseja realmente excluir permanentemente o agendamento de <strong>${name}</strong>? Esta ação não pode ser desfeita.`, okClass: '' }
+      concluir: { icon: '✅', title: 'Marcar como Concluído', msg: `Deseja realmente marcar o atendimento de <strong>${escHtml(name)}</strong> como concluído?`, okClass: 'orange' },
+      cancelar: { icon: '⚠️', title: 'Cancelar Agendamento', msg: `Deseja realmente cancelar o agendamento de <strong>${escHtml(name)}</strong>?`, okClass: '' },
+      excluir: { icon: '🗑️', title: 'Excluir Agendamento', msg: `Deseja realmente excluir permanentemente o agendamento de <strong>${escHtml(name)}</strong>? Esta ação não pode ser desfeita.`, okClass: '' }
     };
     const c = configs[type];
     document.getElementById('confirmIcon').textContent = c.icon;
@@ -3188,11 +3332,11 @@
       const petEmoji = getPetEmoji(b.petType);
       infoEl.style.display = 'block';
       infoEl.innerHTML = `
-        <div class="cbi-pet">${petEmoji} ${b.petName||'—'} <span style="font-size:12px;font-weight:400;color:var(--gray)">(${b.petType||'—'}${b.petSize?' · '+b.petSize:''})</span></div>
-        <div class="cbi-row"><i class="fa-regular fa-user" style="width:14px"></i> <span>Cliente: <strong>${b.clientName||'—'}</strong></span></div>
-        <div class="cbi-row"><i class="fa-solid fa-scissors" style="width:14px"></i> <span>Serviço: <strong>${b.service||'—'}</strong></span></div>
-        <div class="cbi-row"><i class="fa-regular fa-calendar" style="width:14px"></i> <span>Data: <strong>${fmtDate(b.date)} às ${b.time||'—'}</strong></span></div>
-        ${b.price ? `<div class="cbi-row"><i class="fa-solid fa-tag" style="width:14px;color:var(--orange)"></i> <span>Valor: <strong style="color:var(--orange)">R$ ${b.price.toFixed(2).replace('.',',')}</strong></span></div>` : ''}
+        <div class="cbi-pet">${petEmoji} ${escHtml(b.petName||'—')} <span style="font-size:12px;font-weight:400;color:var(--gray)">(${escHtml(b.petType||'—')}${b.petSize?' · '+escHtml(b.petSize):''})</span></div>
+        <div class="cbi-row"><i class="fa-regular fa-user" style="width:14px"></i> <span>Cliente: <strong>${escHtml(b.clientName||'—')}</strong></span></div>
+        <div class="cbi-row"><i class="fa-solid fa-scissors" style="width:14px"></i> <span>Serviço: <strong>${escHtml(b.service||'—')}</strong></span></div>
+        <div class="cbi-row"><i class="fa-regular fa-calendar" style="width:14px"></i> <span>Data: <strong>${fmtDate(b.date)} às ${escHtml(b.time||'—')}</strong></span></div>
+        ${numeric(b.price) ? `<div class="cbi-row"><i class="fa-solid fa-tag" style="width:14px;color:var(--orange)"></i> <span>Valor: <strong style="color:var(--orange)">R$ ${b.price.toFixed(2).replace('.',',')}</strong></span></div>` : ''}
       `;
     } else {
       infoEl.style.display = 'none';
@@ -3249,7 +3393,7 @@
     try {
       const snap = await getDocs(query(collection(db, 'settings'), where('type', '==', 'disabled_hours')));
       snap.forEach(d => { disabledHours = d.data().hours || []; settingsDocId = d.id; });
-    } catch(e) {}
+    } catch(e) { document.getElementById('hoursGrid').innerHTML='<div class="dash-notice">Não foi possível carregar os horários. Tente novamente ao reabrir o painel.</div>'; return; }
     renderAdminHours();
   }
 
@@ -3265,6 +3409,8 @@
   }
 
   window.toggleAdminHour = async function(hour, el) {
+    if (!isPanelOpen() || !ALL_HOURS.includes(hour)) return;
+    const previous = [...disabledHours];
     if (disabledHours.includes(hour)) {
       disabledHours = disabledHours.filter(h => h !== hour);
       el.className = 'hour-toggle active';
@@ -3283,31 +3429,20 @@
         settingsDocId = newRef.id;
       }
       showToast(disabledHours.includes(hour) ? `Horário ${hour} desativado.` : `Horário ${hour} ativado.`, 'info');
-    } catch(e) { showToast('Erro ao salvar. Verifique permissões do Firestore.', 'error'); }
+    } catch(e) { disabledHours = previous; renderAdminHours(); showToast('Erro ao salvar. Verifique permissões do Firestore.', 'error'); }
   };
 
   // ===== ADMIN SECTIONS =====
   window.showAdminSection = function(name, btn) {
+    const section = document.getElementById(`admin-section-${name}`);
+    if (!section || !isPanelOpen()) return;
     document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
-    document.getElementById(`admin-section-${name}`).classList.add('active');
-    // Remove active de todos os sidebar-item em TODOS os contextos
-    document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
-    // Ativa o botão clicado
-    if (btn) btn.classList.add('active');
-    // Sincroniza o item correspondente na sidebar desktop e no drawer mobile
-    const sectionMap = { agendamentos: 0, horarios: 1, receita: 2, servicos: 3 };
-    const idx = sectionMap[name];
-    if (idx !== undefined) {
-      const desktopItems = document.querySelectorAll('.sidebar .sidebar-nav .sidebar-item');
-      const mobileItems = document.querySelectorAll('#adminMobileDrawer .sidebar-item');
-      if (desktopItems[idx]) desktopItems[idx].classList.add('active');
-      if (mobileItems[idx]) mobileItems[idx].classList.add('active');
-    }
-    const titles = { agendamentos: 'Agendamentos', horarios: 'Horários', receita: 'Receita Estimada', servicos: 'Serviços & Preços' };
-    const ptEl = document.getElementById('adminPageTitle');
-    if (ptEl) ptEl.textContent = titles[name] || name;
-    if (name === 'receita') renderReceitaSection();
-    if (name === 'servicos') loadAdminServicosPrecos();
+    section.classList.add('active');
+    document.querySelectorAll('.sidebar-item').forEach(b => b.classList.toggle('active', b.dataset.section === name));
+    const titles={visao:'Visão geral',agendamentos:'Agenda',horarios:'Horários',financeiro:'Financeiro',produtos:'Produtos e estoque',servicos:'Serviços e preços',analise:'Análise do mês',configuracoes:'Configurações'};
+    document.getElementById('adminPageTitle').textContent=titles[name]||name;
+    if(name==='servicos') loadAdminServicosPrecos();
+    if(name==='visao'||name==='financeiro'||name==='produtos') renderNewDashboard();
   };
 
   // ===== CATÁLOGO DE SERVIÇOS & PREÇOS (ADMIN + FRONT) =====
@@ -3334,18 +3469,21 @@
 
   let catalogoData = [];
   let catalogoDocId = null;
+  let catalogoLoadFailed = false;
   let emojiPickerTarget = null; // índice do serviço
 
   // ── Carrega do Firestore ──────────────────────────────────────────────────
   async function loadCatalogo() {
     try {
       const snap = await getDocs(query(collection(db, 'settings'), where('type', '==', 'catalogo')));
+      catalogoLoadFailed = false;
       if (!snap.empty) {
         snap.forEach(d => { catalogoData = d.data().catalogo || []; catalogoDocId = d.id; });
       } else {
         catalogoData = JSON.parse(JSON.stringify(CATALOGO_DEFAULT));
       }
     } catch(e) {
+      catalogoLoadFailed = true;
       catalogoData = JSON.parse(JSON.stringify(CATALOGO_DEFAULT));
     }
     // Garante que cada serviço tem o campo descricao
@@ -3356,6 +3494,7 @@
 
   // ── Salva no Firestore e atualiza front ──────────────────────────────────
   window.adminSaveCatalogo = async function() {
+    if (catalogoLoadFailed || !isPanelOpen()) { showToast('Catálogo indisponível; nenhuma alteração foi salva.', 'error'); return; }
     const btn = document.getElementById('btnSaveCatalogo');
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span> Publicando...';
@@ -3384,6 +3523,8 @@
     const lista = document.getElementById('catalogoServicosLista');
     if (lista) lista.innerHTML = '<div style="padding:32px;text-align:center"><div class="loading-spinner"></div></div>';
     await loadCatalogo();
+    document.getElementById('addServicoBtnCard').style.display = catalogoLoadFailed ? 'none' : '';
+    if (catalogoLoadFailed) { lista.innerHTML = '<div class="dash-notice">Não foi possível carregar os serviços salvos. Reabra esta seção para tentar novamente.</div>'; document.getElementById('btnSaveCatalogo').style.display='none'; return; }
     renderAdminCatalogo();
   }
 
@@ -3418,10 +3559,10 @@
 
     return '<div class="catalogo-servico-card' + (srv.ativo ? '' : ' inactive') + '" id="cat-card-' + i + '">'
       + '<div class="cat-card-inner">'
-        + '<div class="cat-card-emoji">' + srv.emoji + '</div>'
+        + '<div class="cat-card-emoji">' + escHtml(srv.emoji) + '</div>'
         + '<div class="cat-card-info">'
           + '<div class="cat-card-name-row">'
-            + '<span class="cat-card-name">' + srv.nome + '</span>'
+            + '<span class="cat-card-name">' + escHtml(srv.nome) + '</span>'
             + statusBadge
           + '</div>'
           + '<div class="cat-price-summary">' + (animSummary || '<span class="cat-no-price">Sem pre&#231;os cadastrados</span>') + '</div>'
@@ -3503,7 +3644,8 @@
         <div class="srv-modal-animal-title">${a.label}</div>
         <div class="srv-modal-portes-grid">
           ${a.portes.map(p => {
-            const val = srv.precos?.[a.key]?.[p] ?? 0;
+            const rawVal = srv.precos?.[a.key]?.[p];
+            const val = numeric(rawVal) ? rawVal : 0;
             const terca = (val * 0.9).toFixed(2).replace('.', ',');
             return `
             <div class="srv-modal-porte">
@@ -3604,7 +3746,7 @@
     // Usa o confirm dialog customizado do sistema
     document.getElementById('confirmIcon').textContent = '🗑️';
     document.getElementById('confirmTitle').textContent = 'Remover Serviço';
-    document.getElementById('confirmMsg').innerHTML = `Deseja remover o serviço <strong>"${nome}"</strong>?<br><small style="color:var(--gray);font-weight:400">Esta ação será salva automaticamente.</small>`;
+    document.getElementById('confirmMsg').innerHTML = `Deseja remover o serviço <strong>"${escHtml(nome)}"</strong>?<br><small style="color:var(--gray);font-weight:400">Esta ação será salva automaticamente.</small>`;
     document.getElementById('confirmBookingInfo').style.display = 'none';
     const okBtn = document.getElementById('confirmOkBtn');
     okBtn.textContent = 'Remover';
@@ -3701,9 +3843,9 @@
         <button class="preco-tab-btn ${!_precoTabAtiva ? 'active' : ''}" onclick="filtrarTabelaPreco(null)">
           Todos os serviços
         </button>
-        ${ativos.map(s => `
-          <button class="preco-tab-btn ${_precoTabAtiva === s.id ? 'active' : ''}" onclick="filtrarTabelaPreco('${s.id}')">
-            ${s.emoji} ${s.nome}
+        ${ativos.map((s,idx) => `
+          <button class="preco-tab-btn ${_precoTabAtiva === s.id ? 'active' : ''}" onclick="filtrarTabelaPrecoPorIndice(${idx})">
+            ${escHtml(s.emoji)} ${escHtml(s.nome)}
           </button>`).join('')}`;
       tabsEl.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
     }
@@ -3733,7 +3875,7 @@
       if (!grupos.trim()) return '';
       return `
       <div class="front-tabela-servico-group">
-        <div class="front-tabela-servico-title">${srv.emoji} ${srv.nome}</div>
+        <div class="front-tabela-servico-title">${escHtml(srv.emoji)} ${escHtml(srv.nome)}</div>
         ${grupos}
       </div>`;
     }).join('');
@@ -3746,6 +3888,7 @@
                          (htmlTerca || '<p class="preco-empty">Sem preços cadastrados.</p>');
   }
 
+  window.filtrarTabelaPrecoPorIndice = function(i) { const item=(window._catalogoAtivo || catalogoData).filter(s=>s.ativo)[i]; if(item) filtrarTabelaPreco(item.id); };
   window.filtrarTabelaPreco = function(servicoId) {
     _precoTabAtiva = servicoId;
     renderFrontTabelaPrecos(window._catalogoAtivo || catalogoData);
@@ -3758,12 +3901,12 @@
     const current = sel.value;
     const ativos = catalogo.filter(s => s.ativo);
     sel.innerHTML = '<option value="">Selecione o serviço...</option>' +
-      ativos.map(s => `<option value="${s.nome}"${s.nome === current ? ' selected' : ''}>${s.emoji} ${s.nome}</option>`).join('');
+      ativos.map(s => `<option value="${escHtml(s.nome)}"${s.nome === current ? ' selected' : ''}>${escHtml(s.emoji)} ${escHtml(s.nome)}</option>`).join('');
   }
 
   // ── calcPrice via catálogo ──────────────────────────────────────────────
   function calcPrice(petType, petSize, dateStr, servicoNome) {
-    if (!petType || !petSize || !dateStr) return null;
+    if (!petType || !petSize || !dateStr || catalogoLoadFailed) return null;
     const cat = window._catalogoAtivo || [];
     let preco = null;
     if (servicoNome && cat.length) {
@@ -3795,7 +3938,7 @@
     const c = document.getElementById('toastContainer');
     const t = document.createElement('div');
     t.className = `toast ${type}`;
-    t.innerHTML = msg;
+    t.textContent = msg;
     c.appendChild(t);
     setTimeout(() => t.remove(), 4000);
   };
@@ -4192,5 +4335,5 @@
   </div>
 </div>
 
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a51a39635ddb8bfa',t:'MTc5MzE5MzQ4Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
