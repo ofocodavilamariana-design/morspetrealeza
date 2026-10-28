@@ -2473,15 +2473,15 @@
 </div>
 <div id="admin-section-financeiro" class="admin-section">
   <div class="section-card"><div class="section-card-body dash-stack">
-    <div class="dash-head"><div><h2>Financeiro</h2><p>Valores em reais. Isto não é lucro: despesas não são registradas aqui.</p></div><button class="dash-primary" onclick="openPaymentForm()">Registrar pagamento</button></div>
+    <div class="dash-head"><div><h2>Financeiro</h2><p>Valores em reais. Isto não é lucro: despesas não são registradas aqui.</p></div><div class="dash-actions"><button type="button" onclick="refreshManagement()">Atualizar dados</button><button class="dash-primary" onclick="openPaymentForm()">Registrar pagamento</button></div></div>
     <div class="dash-controls"><button onclick="movePeriod(-1)" aria-label="Período anterior">‹</button><label>Mês <input type="month" id="financeMonth" onchange="periodChanged()"></label><label>Ano <input type="number" id="financeYear" min="2000" max="2100" onchange="yearChanged()"></label><button onclick="movePeriod(1)" aria-label="Próximo período">›</button><button id="annualToggle" onclick="toggleAnnual()">Ver ano</button></div>
     <div id="financeStatus" role="status"></div><div id="financeContent" aria-live="polite"></div>
     <p class="dash-help">Recebido usa a data do pagamento registrado. Previsto soma preços dos agendamentos confirmados pela data de atendimento. A receber soma apenas pendências explicitamente registradas pela data do atendimento. Registros antigos sem informação não são considerados pagos nem pendentes.</p>
-    <form id="paymentForm" class="dash-form" hidden onsubmit="savePayment(event)"><h3>Registrar pagamento ou pendência</h3><p>Este registro atualiza a situação do atendimento; o histórico deve ser preservado pelo servidor. Pagamentos parciais não são suportados.</p><label>Atendimento <select id="payBooking" required></select></label><label>Situação <select id="payStatus" required><option value="pago">Pago integralmente</option><option value="pendente">Pendente</option></select></label><label>Valor (R$) <input id="payAmount" type="number" min="0" max="1000000" step="0.01" required></label><label>Data do pagamento (obrigatória se pago) <input id="payDate" type="date"></label><div class="dash-actions"><button class="dash-primary" type="submit">Salvar registro</button><button type="button" onclick="document.getElementById('paymentForm').hidden=true">Cancelar</button></div><div id="paymentMessage" role="status"></div></form>
+    <form id="paymentForm" class="dash-form" hidden onsubmit="savePayment(event)"><h3>Registrar pagamento ou pendência</h3><p>Use para registrar pendência ou pagamento integral. Ao concluir um atendimento, o pagamento é registrado automaticamente. Pagamentos parciais não são suportados.</p><label>Atendimento <select id="payBooking" required></select></label><label>Situação <select id="payStatus" required><option value="pago">Pago integralmente</option><option value="pendente">Pendente</option></select></label><label>Valor (R$) <input id="payAmount" type="number" min="0" max="1000000" step="0.01" required></label><label>Data do pagamento (obrigatória se pago) <input id="payDate" type="date"></label><div class="dash-actions"><button class="dash-primary" type="submit">Salvar registro</button><button type="button" onclick="document.getElementById('paymentForm').hidden=true">Cancelar</button></div><div id="paymentMessage" role="status"></div></form>
   </div></div>
 </div>
 <div id="admin-section-produtos" class="admin-section"><div class="section-card"><div class="section-card-body dash-stack">
-  <div class="dash-head"><div><h2>Produtos e estoque</h2><p>Cadastre produtos separadamente dos serviços e acompanhe movimentações.</p></div><button class="dash-primary" onclick="newProduct()">Novo produto</button></div>
+  <div class="dash-head"><div><h2>Produtos e estoque</h2><p>Cadastre produtos separadamente dos serviços e acompanhe movimentações.</p></div><div class="dash-actions"><button type="button" onclick="refreshManagement()">Atualizar dados</button><button class="dash-primary" onclick="newProduct()">Novo produto</button></div></div>
   <div id="inventoryStatus" role="status">Carregando estoque…</div><div id="inventoryList" class="dash-stack"></div>
   <form id="productForm" class="dash-form" hidden onsubmit="saveProduct(event)"><h3 id="productTitle">Novo produto</h3><input id="productId" type="hidden"><label>Nome <input id="productName" maxlength="100" required></label><label>Unidade (ex.: frasco, kg) <input id="productUnit" maxlength="30" required></label><label>Quantidade inicial (somente no cadastro) <input id="productQty" type="number" min="0" max="1000000" step="0.001" required></label><label>Estoque mínimo <input id="productMin" type="number" min="0" max="1000000" step="0.001" required></label><label>Custo unitário em R$ (opcional) <input id="productCost" type="number" min="0" max="1000000" step="0.01"></label><label>Fornecedor (opcional) <input id="productSupplier" maxlength="100"></label><p>Depois do cadastro, quantidades são alteradas somente por movimentações registradas.</p><div class="dash-actions"><button class="dash-primary" type="submit">Salvar produto</button><button type="button" onclick="document.getElementById('productForm').hidden=true">Cancelar</button></div><div id="productMessage" role="status"></div></form>
   <form id="movementForm" class="dash-form" hidden onsubmit="saveMovement(event)"><h3>Movimentar estoque</h3><input id="movementId" type="hidden"><p id="movementProduct"></p><label>Tipo <select id="movementType"><option value="entrada">Entrada</option><option value="consumo">Consumo interno</option><option value="venda">Venda de produto</option><option value="ajuste">Ajuste de saldo</option></select></label><label>Quantidade <input id="movementQty" type="number" min="0" max="1000000" step="0.001" required></label><label>Motivo / observação <input id="movementNote" maxlength="200" required></label><p>Em ajuste, informe o novo saldo; nos demais tipos, informe a quantidade movimentada.</p><div class="dash-actions"><button class="dash-primary" type="submit">Registrar movimento</button><button type="button" onclick="document.getElementById('movementForm').hidden=true">Cancelar</button></div><div id="movementMessage" role="status"></div></form>
@@ -2490,7 +2490,7 @@
 <div id="admin-section-analise" class="admin-section"><div class="section-card"><div class="section-card-body dash-stack">
   <div><h2>Análise do mês</h2><p>A análise é opcional e usa Puter AI; pode exigir autenticação e uso de uma conta Puter. Nenhum nome, contato, pet ou agendamento individual é enviado.</p></div><label>Período <input type="month" id="analysisMonth"></label><button class="dash-primary" id="analysisButton" onclick="runAnalysis()">Analisar este mês</button><div id="analysisStatus" role="status"></div><div id="analysisOutput" class="analysis-output"></div><p class="dash-help">Sugestões não alteram dados, preços, estoque ou mensagens. Confira os resultados antes de tomar decisões.</p>
 </div></div></div>
-<div id="admin-section-configuracoes" class="admin-section"><div class="section-card"><div class="section-card-body dash-stack"><h2>Configurações</h2><p>Os horários e serviços existentes continuam disponíveis abaixo.</p><div class="dash-actions"><button onclick="showAdminSection('horarios')">Gerenciar horários</button><button onclick="showAdminSection('servicos')">Serviços e preços</button></div><div class="dash-notice"><strong>Integração necessária:</strong> produtos, movimentações e pagamentos dependem de um backend autenticado e das regras de acesso do Firestore. Enquanto o serviço não estiver configurado, estes dados ficam indisponíveis; nenhum registro é inventado ou armazenado localmente.</div></div></div></div>
+<div id="admin-section-configuracoes" class="admin-section"><div class="section-card"><div class="section-card-body dash-stack"><h2>Configurações</h2><p>Os horários e serviços existentes continuam disponíveis abaixo.</p><div class="dash-actions"><button onclick="showAdminSection('horarios')">Gerenciar horários</button><button onclick="showAdminSection('servicos')">Serviços e preços</button></div><div class="dash-notice"><strong>Segurança:</strong> produtos, movimentações e pagamentos dependem do servidor autenticado e das regras de acesso do Firestore. Se o serviço estiver indisponível, o painel informará o problema sem inventar dados.</div></div></div></div>
 
         <!-- AGENDAMENTOS SECTION -->
         <div id="admin-section-agendamentos" class="admin-section">
@@ -2722,7 +2722,7 @@
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
   import { getFirestore, collection, doc, addDoc, query, where, orderBy, getDocs, onSnapshot, updateDoc, deleteDoc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-  import { getAuth, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signOut, onAuthStateChanged, sendPasswordResetEmail, updateProfile } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+  import { getAuth, signInWithCustomToken, setPersistence, browserSessionPersistence, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signOut, onAuthStateChanged, sendPasswordResetEmail, updateProfile } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 
   const firebaseConfig = {
     apiKey: "AIzaSyC01CzbeROn2pA9htfnGzQ-wXYI8_YOd-s",
@@ -2782,13 +2782,16 @@
   }
   async function managementRequest(resource, body, productId){
     if(!isPanelOpen()) throw Error('Abra o painel administrativo.');
-    const opt={credentials:'same-origin',cache:'no-store',headers:{'Accept':'application/json'}};
+    if (!auth.currentUser) throw Error('Faça login novamente.');
+    const token=await auth.currentUser.getIdToken();
+    const opt={credentials:'same-origin',cache:'no-store',headers:{'Accept':'application/json','Authorization':'Bearer '+token}};
     if(body){opt.method='POST';opt.headers['Content-Type']='application/json'; opt.body=JSON.stringify(body);}
     const r=await fetch(apiUrl+'?resource='+encodeURIComponent(resource)+(productId?'&productId='+encodeURIComponent(productId):''),opt);
-    if(!r.ok) throw Error('Serviço de gestão indisponível ou acesso não autorizado ('+r.status+').');
+    if(!r.ok) { let message='Serviço de gestão indisponível ou acesso não autorizado ('+r.status+').'; try {const d=await r.json(); if(typeof d.error==='string') message=d.error;} catch(_){} throw Error(message); }
     const type=r.headers.get('content-type')||''; if(!type.includes('application/json')) throw Error('Resposta inválida do serviço de gestão.');
     return r.json();
   }
+  window.refreshManagement = function() { if(isPanelOpen()) loadManagement(); };
   async function loadManagement(){
     const epoch=++managementEpoch; managementState='loading';renderNewDashboard();
     try{const data=await managementRequest('snapshot');
@@ -2833,27 +2836,28 @@
   window.movePeriod=function(n){const v=annualMode?monthShift($('financeMonth').value,n*12):monthShift($('financeMonth').value,n);if(validPeriod(v)){$('financeMonth').value=v;periodChanged();}};
   window.toggleAnnual=function(){annualMode=!annualMode;renderFinance();};
   window.selectFinanceMonth=function(m){$('financeMonth').value=m;annualMode=false;periodChanged();};
+  function operationId(){ if(window.crypto?.randomUUID) return crypto.randomUUID(); if(window.crypto?.getRandomValues){const b=crypto.getRandomValues(new Uint8Array(16)); b[6]=(b[6]&15)|64;b[8]=(b[8]&63)|128;const h=Array.from(b,x=>x.toString(16).padStart(2,'0')).join('');return h.slice(0,8)+'-'+h.slice(8,12)+'-'+h.slice(12,16)+'-'+h.slice(16,20)+'-'+h.slice(20);} showToast('Use um navegador atualizado e uma conexão segura (HTTPS).','error'); throw Error('Identificador seguro indisponível.'); }
   window.openPaymentForm=function(){if(managementState!=='ready'){ $('financeStatus').textContent='Não é possível registrar: o serviço seguro de pagamentos não está disponível.';return;}
     const existing=new Map(managementData.payments.map(p=>[p.bookingId,p]));
     const candidates=allAdminBookings.filter(b=>b.status!=='cancelado' && existing.get(b.id)?.status!=='pago');
     $('payBooking').innerHTML=candidates.map(b=>`<option value="${escHtml(b.id)}">${escHtml(b.date||'Sem data')} · ${escHtml(b.petName||'Pet')} · ${escHtml(b.service||'Serviço')}</option>`).join('');
     if(!candidates.length){$('financeStatus').textContent='Nenhum atendimento disponível para registro.';return;}
-    $('payDate').value=spToday();$('paymentMessage').textContent='';$('paymentForm').hidden=false;};
+    $('payDate').value=spToday();$('paymentMessage').textContent='';$('paymentForm').dataset.requestId=operationId();$('paymentForm').hidden=false;};
   window.savePayment=async function(e){e.preventDefault();const status=$('payStatus').value, amount=Number($('payAmount').value),date=$('payDate').value, bookingId=$('payBooking').value;
     if(managementState!=='ready'||!allAdminBookings.some(b=>b.id===bookingId&&b.status!=='cancelado')||!numeric(amount)||$('payAmount').value===''||(status==='pago'&&!/^\d{4}-\d{2}-\d{2}$/.test(date))){$('paymentMessage').textContent='Confira os campos e a data do pagamento.';return;}
-    const btn=e.submitter;btn.disabled=true;$('paymentMessage').textContent='Salvando…';try{await managementRequest('payment',{bookingId,status,amount,paymentDate:status==='pago'?date:null});$('paymentForm').hidden=true;await loadManagement();$('financeStatus').textContent=managementState==='ready'?'Registro salvo.':'Registro enviado, mas não foi possível atualizar os dados.';}catch(err){$('paymentMessage').textContent='Não foi possível salvar. Confira sua autorização e tente novamente.';}finally{btn.disabled=false;}};
+    const btn=e.submitter;btn.disabled=true;$('paymentMessage').textContent='Salvando…';try{await managementRequest('payment',{requestId:$('paymentForm').dataset.requestId,bookingId,status,amount,paymentDate:status==='pago'?date:null});$('paymentForm').hidden=true;await loadManagement();$('financeStatus').textContent=managementState==='ready'?'Registro salvo.':'Registro enviado, mas não foi possível atualizar os dados.';}catch(err){$('paymentMessage').textContent='Não foi possível salvar. '+err.message;}finally{btn.disabled=false;}};
   function renderProducts(){
     if(managementState!=='ready'){$('inventoryStatus').textContent=managementState==='loading'?'Carregando estoque…':'Estoque indisponível. É necessário configurar o serviço seguro de gestão.';$('inventoryList').innerHTML='';return;}
     $('inventoryStatus').textContent=managementData.products.length?'':'Nenhum produto cadastrado ainda.';
     $('inventoryList').innerHTML=managementData.products.map((p,i)=>`<div class="dash-item"><div class="dash-head"><div><h3>${escHtml(p.name)}</h3><p>Saldo: ${escHtml(p.quantity)} ${escHtml(p.unit)} · Mínimo: ${escHtml(p.minimum)} ${escHtml(p.unit)}</p><p>${p.quantity<=p.minimum?'Estoque baixo. ':''}${p.quantity<=p.minimum&&numeric(p.targetStock)&&p.targetStock>p.quantity?'Reposição sugerida para atingir o estoque-alvo: '+escHtml((p.targetStock-p.quantity).toFixed(3).replace(/\.?0+$/,''))+' '+escHtml(p.unit)+'. ':''}${p.supplier?'Fornecedor: '+escHtml(p.supplier):''}${numeric(p.cost)?' · Custo: '+escHtml(brl(p.cost)):''}</p></div><div class="dash-actions"><button class="dash-mini" onclick="editProduct(${i})">Editar</button><button class="dash-mini" onclick="moveProduct(${i})">Movimentar</button><button class="dash-mini" onclick="productHistory(${i})">Histórico</button></div></div></div>`).join('');
   }
-  window.newProduct=function(){if(managementState!=='ready'){$('inventoryStatus').textContent='Não é possível cadastrar: serviço seguro de gestão indisponível.';return;}$('productForm').reset();$('productId').value='';$('productQty').disabled=false;$('productTitle').textContent='Novo produto';$('productMessage').textContent='';$('productForm').hidden=false;};
+  window.newProduct=function(){if(managementState!=='ready'){$('inventoryStatus').textContent='Não é possível cadastrar: serviço seguro de gestão indisponível.';return;}$('productForm').reset();$('productId').value='';$('productQty').disabled=false;$('productTitle').textContent='Novo produto';$('productMessage').textContent='';$('productForm').dataset.requestId=operationId();$('productForm').hidden=false;};
   window.editProduct=function(i){const p=managementData.products[i];if(!p)return;newProduct();$('productId').value=p.id;$('productName').value=p.name;$('productUnit').value=p.unit;$('productQty').value=p.quantity;$('productQty').disabled=true;$('productMin').value=p.minimum;$('productCost').value=numeric(p.cost)?p.cost:'';$('productSupplier').value=p.supplier||'';$('productTitle').textContent='Editar produto';};
   window.saveProduct=async function(e){e.preventDefault();let id=$('productId').value, name=$('productName').value.trim(),unit=$('productUnit').value.trim(),minimum=Number($('productMin').value),quantity=Number($('productQty').value),cost=$('productCost').value===''?null:Number($('productCost').value),supplier=$('productSupplier').value.trim();
     if(managementState!=='ready'||!name||!unit||!numeric(minimum)||!numeric(quantity)||(cost!==null&&!numeric(cost))||id&&!managementData.products.some(p=>p.id===id)){$('productMessage').textContent='Confira nome, unidade e valores não negativos.';return;}
-    const btn=e.submitter;btn.disabled=true;$('productMessage').textContent='Salvando…';try{await managementRequest('product',{id:id||null,name,unit,minimum,cost,supplier,...(!id?{quantity}: {})});$('productForm').hidden=true;await loadManagement();$('inventoryStatus').textContent=managementState==='ready'?'Produto salvo.':'Produto enviado, mas a atualização falhou.';}catch(err){$('productMessage').textContent='Não foi possível salvar. Confira sua autorização e tente novamente.';}finally{btn.disabled=false;}};
-  window.moveProduct=function(i){const p=managementData.products[i];if(!p)return;$('movementForm').reset();$('movementId').value=p.id;$('movementProduct').textContent=p.name+' — saldo atual: '+p.quantity+' '+p.unit;$('movementMessage').textContent='';$('movementForm').hidden=false;};
-  window.saveMovement=async function(e){e.preventDefault();const id=$('movementId').value,p=managementData.products.find(x=>x.id===id),type=$('movementType').value,quantity=Number($('movementQty').value),note=$('movementNote').value.trim();if(managementState!=='ready'||!p||!['entrada','consumo','venda','ajuste'].includes(type)||!numeric(quantity)||$('movementQty').value===''||!note||(type!=='ajuste'&&quantity<=0)||(['venda','consumo'].includes(type)&&quantity>p.quantity)){$('movementMessage').textContent='Confira quantidade, saldo disponível e motivo.';return;}const btn=e.submitter;btn.disabled=true;$('movementMessage').textContent='Registrando…';try{await managementRequest('movement',{productId:id,type,quantity,note});$('movementForm').hidden=true;await loadManagement();$('inventoryStatus').textContent=managementState==='ready'?'Movimentação registrada.':'Movimento enviado, mas a atualização falhou.';}catch(err){$('movementMessage').textContent='Não foi possível registrar. Atualize o saldo e tente novamente.';}finally{btn.disabled=false;}};
+    const btn=e.submitter;btn.disabled=true;$('productMessage').textContent='Salvando…';try{await managementRequest('product',{requestId:$('productForm').dataset.requestId,id:id||null,name,unit,minimum,cost,supplier,...(!id?{quantity}: {})});$('productForm').hidden=true;await loadManagement();$('inventoryStatus').textContent=managementState==='ready'?'Produto salvo.':'Produto enviado, mas a atualização falhou.';}catch(err){$('productMessage').textContent='Não foi possível salvar. '+err.message;}finally{btn.disabled=false;}};
+  window.moveProduct=function(i){const p=managementData.products[i];if(!p)return;$('movementForm').reset();$('movementId').value=p.id;$('movementProduct').textContent=p.name+' — saldo atual: '+p.quantity+' '+p.unit;$('movementMessage').textContent='';$('movementForm').dataset.requestId=operationId();$('movementForm').hidden=false;};
+  window.saveMovement=async function(e){e.preventDefault();const id=$('movementId').value,p=managementData.products.find(x=>x.id===id),type=$('movementType').value,quantity=Number($('movementQty').value),note=$('movementNote').value.trim();if(managementState!=='ready'||!p||!['entrada','consumo','venda','ajuste'].includes(type)||!numeric(quantity)||$('movementQty').value===''||!note||(type!=='ajuste'&&quantity<=0)||(['venda','consumo'].includes(type)&&quantity>p.quantity)){$('movementMessage').textContent='Confira quantidade, saldo disponível e motivo.';return;}const btn=e.submitter;btn.disabled=true;$('movementMessage').textContent='Registrando…';try{await managementRequest('movement',{requestId:$('movementForm').dataset.requestId,productId:id,type,quantity,note});$('movementForm').hidden=true;await loadManagement();$('inventoryStatus').textContent=managementState==='ready'?'Movimentação registrada.':'Movimento enviado, mas a atualização falhou.';}catch(err){$('movementMessage').textContent='Não foi possível registrar. '+err.message;}finally{btn.disabled=false;}};
   window.productHistory=async function(i){const p=managementData.products[i];if(!p)return;const el=$('movementHistory');el.textContent='Carregando histórico…';try{const data=await managementRequest('history',null,p.id);if(!Array.isArray(data.movements))throw Error();el.innerHTML='<h3>Histórico: '+escHtml(p.name)+'</h3>'+(data.movements.length?data.movements.map(m=>`<div class="dash-item"><strong>${escHtml(m.type)}</strong> · ${escHtml(m.quantity)} ${escHtml(p.unit)}<p>${escHtml(m.createdAt||'Data indisponível')} · ${escHtml(m.note||'Sem observação')}</p></div>`).join(''):'<p>Nenhuma movimentação registrada.</p>');}catch(err){el.textContent='Não foi possível carregar o histórico.';}};
   async function loadPuter(){if(window.puter?.ai)return;await new Promise((resolve,reject)=>{let s=document.querySelector('script[data-puter-sdk]');if(s){s.addEventListener('load',resolve,{once:true});s.addEventListener('error',reject,{once:true});return;}s=document.createElement('script');s.src='https://js.puter.com/v2/';s.dataset.puterSdk='true';s.onload=resolve;s.onerror=()=>{s.remove();reject(Error('Não foi possível carregar o Puter.js.'));};document.head.appendChild(s);});if(!window.puter?.ai)throw Error('Puter AI indisponível.');}
   window.runAnalysis=async function(){const month=$('analysisMonth').value;if(!validPeriod(month)){$('analysisStatus').textContent='Escolha um mês válido entre 2000 e 2100.';return;}if(bookingLoadState!=='ready'){$('analysisStatus').textContent='Os agendamentos precisam estar carregados antes da análise.';return;}
@@ -3116,18 +3120,20 @@
         body: JSON.stringify({ user, pass })
       });
       const data = await res.json();
-      if (res.ok && data.success === true) {
+      if (res.ok && data.success === true && typeof data.customToken === 'string') {
+        await setPersistence(auth, browserSessionPersistence);
+        await signInWithCustomToken(auth, data.customToken);
         adminPanelAuthorized = true;
         document.getElementById('adminPass').value = '';
         document.getElementById('adminLoginModal').classList.remove('open');
         openAdminPanel();
       } else {
-        errEl.textContent = 'Usuário ou senha incorretos.';
+        errEl.textContent = res.status === 429 ? 'Muitas tentativas. Aguarde e tente novamente.' : (res.status >= 500 ? 'Login indisponível. Confira a configuração do servidor.' : 'Usuário ou senha incorretos.');
         errEl.classList.add('show');
         document.getElementById('adminPass').value = '';
       }
     } catch (e) {
-      errEl.textContent = 'Erro de conexão. Tente novamente.';
+      errEl.textContent = 'Não foi possível autenticar. Confira a conexão e a configuração do Firebase.';
       errEl.classList.add('show');
     }
 
@@ -3151,7 +3157,7 @@
     }
   }
 
-  window.adminLogout = function() {
+  window.adminLogout = async function() {
     adminPanelAuthorized = false; panelEpoch++; managementEpoch++;
     sessionStorage.removeItem('mors_admin_logged');
     document.getElementById('adminPanel').classList.remove('open');
@@ -3159,6 +3165,7 @@
     if (adminFirestoreUnsubscribe) { adminFirestoreUnsubscribe(); adminFirestoreUnsubscribe = null; }
     if (window._adminRefreshTimer) { clearInterval(window._adminRefreshTimer); window._adminRefreshTimer = null; }
     allAdminBookings = []; managementData={products:[],payments:[]}; managementState='unavailable'; bookingLoadState='loading';
+    try { await signOut(auth); } catch (_) { showToast('Não foi possível encerrar a sessão Firebase. Feche o navegador.', 'error'); }
   };
 
   // ===== ADMIN FIRESTORE =====
@@ -3172,6 +3179,7 @@
       updateAdminStats();
       renderAdminBookings();
       renderNewDashboard();
+      if (managementState === 'ready') loadManagement();
       renderReceitaSection();
     }, () => { bookingLoadState='error'; document.getElementById('adminBookingsList').innerHTML='<div class="dash-notice">Não foi possível carregar os agendamentos. Confira sua conexão e permissão.</div>'; renderNewDashboard(); showToast('Erro ao conectar com Firestore.', 'error'); });
     loadAdminHours();
@@ -3317,7 +3325,7 @@
     const getPetEmoji = (t) => t==='Cachorro'?'🐶':t==='Gato'?'🐱':t==='Coelho'?'🐰':'🐾';
     const fmtDate = (d) => d ? new Date(d+'T12:00:00').toLocaleDateString('pt-BR') : '-';
     const configs = {
-      concluir: { icon: '✅', title: 'Marcar como Concluído', msg: `Deseja realmente marcar o atendimento de <strong>${escHtml(name)}</strong> como concluído?`, okClass: 'orange' },
+      concluir: { icon: '✅', title: 'Concluir e registrar pagamento', msg: `Confirma que o atendimento de <strong>${escHtml(name)}</strong> foi concluído e pago? O valor definido será registrado como recebido hoje. Se não houver valor, o atendimento ficará sem informação de pagamento.`, okClass: 'orange' },
       cancelar: { icon: '⚠️', title: 'Cancelar Agendamento', msg: `Deseja realmente cancelar o agendamento de <strong>${escHtml(name)}</strong>?`, okClass: '' },
       excluir: { icon: '🗑️', title: 'Excluir Agendamento', msg: `Deseja realmente excluir permanentemente o agendamento de <strong>${escHtml(name)}</strong>? Esta ação não pode ser desfeita.`, okClass: '' }
     };
@@ -3359,8 +3367,9 @@
     closeConfirm();
     try {
       if (type === 'concluir') {
-        await updateDoc(doc(db, 'bookings', id), { status: 'concluido' });
-        showToast('✅ Marcado como concluído!', 'success');
+        const result = await managementRequest('complete',{bookingId:id,requestId:operationId()});
+        await loadManagement();
+        showToast(result.paymentState==='sem_preco' ? 'Atendimento concluído sem preço; pagamento não registrado.' : result.paymentState==='ja_pago' ? 'Atendimento concluído; pagamento já estava registrado.' : 'Atendimento concluído e pagamento registrado.', 'success');
       } else if (type === 'cancelar') {
         await updateDoc(doc(db, 'bookings', id), { status: 'cancelado' });
         showToast('Agendamento cancelado.', 'info');
@@ -3385,7 +3394,7 @@
         renderAdminCatalogo();
         showToast(`🗑 "${nome}" removido e publicado.`, 'info');
       }
-    } catch(e) { showToast('Erro ao executar ação.', 'error'); }
+    } catch(e) { showToast('Não foi possível executar a ação. '+(e.message||'Tente novamente.'), 'error'); }
   };
 
   // ===== ADMIN HOURS =====
@@ -4335,5 +4344,5 @@
   </div>
 </div>
 
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a51a39635ddb8bfa',t:'MTc5MzE5MzQ4Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
