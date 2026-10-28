@@ -97,11 +97,11 @@ async function enviarNotificacoes() {
             vibrate: [200, 100, 200]
           },
           fcmOptions: {
-            link: "https://morspetrealeza.vercel.app/#agendamento"
+            link: "https://morspetrealeza.com.br/#agendamento"
           }
         },
         data: {
-          url: "https://morspetrealeza.vercel.app/#agendamento"
+          url: "https://morspetrealeza.com.br/#agendamento"
         }
       };
 
