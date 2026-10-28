@@ -36,7 +36,7 @@ messaging.onBackgroundMessage((payload) => {
     requireInteraction: true,
     vibrate: [200, 100, 200],
     data: {
-      url: payload.fcmOptions?.link || 'https://morspetrealeza.vercel.app/#agendamento'
+      url: payload.fcmOptions?.link || 'https://morspetrealeza.com.br/#agendamento'
     },
     actions: [
       { action: 'ver', title: '📅 Ver agendamento' },
@@ -55,7 +55,7 @@ self.addEventListener('notificationclick', (event) => {
 
   const targetUrl =
     event.notification.data?.url ||
-    'https://morspetrealeza.vercel.app/#agendamento';
+    'https://morspetrealeza.com.br/#agendamento';
 
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true })
