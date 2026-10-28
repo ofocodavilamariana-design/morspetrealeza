@@ -1,10 +1,62 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "installCommand": "npm install",
+  "cleanUrls": true,
+  "trailingSlash": false,
   "functions": {
     "api/*.js": {
       "includeFiles": "lib/**",
       "maxDuration": 15
     }
-  }
+  },
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "www.morspetrealeza.com.br" }],
+      "destination": "https://morspetrealeza.com.br/$1",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    },
+    {
+      "source": "/icons/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000" }]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400, must-revalidate" }]
+    },
+    {
+      "source": "/hero.mp4",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000" }]
+    },
+    {
+      "source": "/logo.mp4",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000" }]
+    },
+    {
+      "source": "/cachorro.webm",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000" }]
+    },
+    {
+      "source": "/gatinho.webm",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000" }]
+    },
+    {
+      "source": "/og-image.jpg",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }]
+    },
+    {
+      "source": "/manifest.json",
+      "headers": [{ "key": "Content-Type", "value": "application/manifest+json" }]
+    }
+  ]
 }
